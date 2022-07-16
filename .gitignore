@@ -1,1 +1,8 @@
 /.venv-precoce-ms
+.DS_Store
+*.sqlite3
+*pyc
+__pycache__
+staticfiles
+.ipynb_checkpoints/
+/.vscode
