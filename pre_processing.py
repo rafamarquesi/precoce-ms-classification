@@ -1,4 +1,5 @@
 import pandas as pd
+from sklearn.preprocessing import LabelEncoder
 
 
 def delete_duplicate_rows_by_attribute(data_frame: pd.DataFrame, attribute_name: str) -> pd.DataFrame:
@@ -44,3 +45,31 @@ def delete_nan_rows(data_frame: pd.DataFrame) -> pd.DataFrame:
         data_frame.dropna(inplace=True)
     print('*****FIM DELETE NAN ROWS*********')
     return data_frame
+
+
+def label_encoder_columns(data_frame: pd.DataFrame, columns_label_encoded: dict, columns_names: list) -> tuple:
+    """Label encode the DataFrame, given the columns names, passed as parameters.
+
+    Args:
+        data_frame (pd.DataFrame): DataFrame to be treated.
+        columns_label_encoded (dict): Dictionary with the label encoders for each column.
+        columns_names (list): Array of strings with columns names to label encode.
+
+    Returns:
+        tuple: A tuple with the encoded data_frame and the columns_label_encoded, in this order.
+    """
+    print('\n*****INICIO LABEL ENCODER******')
+    for column in columns_names:
+        if column in data_frame.columns:
+            if column not in columns_label_encoded:
+                encoder_column = LabelEncoder()
+                data_frame[column] = encoder_column.fit_transform(
+                    data_frame[column])
+                columns_label_encoded[column] = encoder_column
+            else:
+                print('!!!>>> A coluna {} já está codificada.'.format(column))
+        else:
+            print(
+                '!!!>>> Coluna {} não encontrada no DataFrame para label encoding.'.format(column))
+    print('*****FIM LABEL ENCODER*********')
+    return data_frame, columns_label_encoded
