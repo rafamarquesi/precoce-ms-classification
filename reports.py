@@ -68,13 +68,29 @@ def duplicate_rows_by_attribute(data_frame: pd.DataFrame, rows_duplicated: pd.Da
     for id in rows_duplicated[attribute].unique():
         print('{}:{}'.format(attribute, id))
         rows_duplicated = data_frame.loc[data_frame[attribute] == id]
-        for columnName, columnData in rows_duplicated.iteritems():
-            comparison = columnData.ne(
-                columnData.shift().bfill()).astype(int).values
+        for column_name, column_data in rows_duplicated.iteritems():
+            comparison = column_data.ne(
+                column_data.shift().bfill()).astype(int).values
             if not np.all(comparison == comparison[0]):
-                print('Nome coluna que diverge: {}'.format(columnName))
+                print('Nome coluna que diverge: {}'.format(column_name))
                 print('Index das linhas e valor na coluna que diverge:')
-                print(columnData.ne(columnData.shift().bfill()).astype(int))
+                print(column_data.ne(column_data.shift().bfill()).astype(int))
                 print('-------------------------------')
         print('Próximo ++++++++++++++')
     print('*****FIM RELATÓRIO LINHAS DUPLICADAS******')
+
+
+def all_attributes(data_frame: pd.DataFrame) -> None:
+    """Report of all attributes.
+
+    Args:
+        data_frame (pd.DataFrame): DataFrame to be treated.
+    """
+    print('\n*****INICIO RELATÓRIO ATRIBUTOS******')
+    print('Número de atributos: {}'.format(len(data_frame.columns)))
+    print('Nome dos atributos: {}'.format(list(data_frame.columns)))
+    for column_name, column_data in data_frame.iteritems():
+        print('Nome da coluna: {}'.format(column_name))
+        print(column_data.value_counts())
+        print('-------------------------------')
+    print('*****FIM RELATÓRIO ATRIBUTOS******')

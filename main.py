@@ -7,6 +7,7 @@ if __name__ == '__main__':
     number_csv_lines = 50000
     label_encoder_columns_names = ['Maturidade']
     columns_label_encoded = {}
+    models_results = {}
 
     # delete_columns_names = ['area so confinamento', 'Lista Trace', 'DataAbate_6m_ANT', 'data_homol_select', 'Frigorifico_CNPJ',
     #                         'Frigorifico_RazaoSocial', 'Motivo', 'data12m', 'data6m', 'data3m', 'data1m', 'data7d', 'med7d_formITUmax', 'med3m_formITUmax',
