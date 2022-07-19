@@ -52,3 +52,14 @@ def load_data(csv_path: str, columns_names: list = None, number_csv_lines: int =
     reports.print_informations(temp_data)
 
     return temp_data
+
+
+def generate_new_csv(data_frame: pd.DataFrame, csv_path: str) -> None:
+    """Generate a new CSV file, given the DataFrame and the path, passed as parameters.
+
+    Args:
+        data_frame (pd.DataFrame): DataFrame to be treated.
+        csv_path (str): Path where the CSV file will be generated.
+    """
+    data_frame.to_csv(csv_path, sep=';', encoding='latin1', index=False)
+    print('\nCSV gerado com sucesso.')

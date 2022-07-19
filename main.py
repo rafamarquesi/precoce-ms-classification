@@ -4,6 +4,7 @@ import reports
 
 if __name__ == '__main__':
     csv_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1.csv'
+    number_csv_lines = 50000
     label_encoder_columns_names = ['Maturidade']
     columns_label_encoded = {}
 
@@ -17,7 +18,7 @@ if __name__ == '__main__':
     #                         'tot7d_Chuva', 'med7d_TempInst', 'med7d_TempMin', 'med7d_UmidInst']
 
     precoce_ms_data_frame = csv_treatments.load_data(
-        csv_path=csv_path, columns_names=None, number_csv_lines=10000)
+        csv_path=csv_path, columns_names=None, number_csv_lines=number_csv_lines)
 
     precoce_ms_data_frame = pre_processing.delete_duplicate_rows_by_attribute(
         data_frame=precoce_ms_data_frame, attribute_name='ID_ANIMAL')
@@ -27,5 +28,5 @@ if __name__ == '__main__':
 
     reports.print_informations(precoce_ms_data_frame)
 
-    precoce_ms_data_frame = pre_processing.label_encoder_columns(
+    precoce_ms_data_frame, columns_label_encoded = pre_processing.label_encoder_columns(
         data_frame=precoce_ms_data_frame, columns_label_encoded=columns_label_encoded, columns_names=label_encoder_columns_names)
