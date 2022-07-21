@@ -1,5 +1,8 @@
 import pandas as pd
 import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import dataframe_image as dfi
 
 
 def print_informations(data_frame: pd.DataFrame) -> None:
@@ -94,3 +97,63 @@ def all_attributes(data_frame: pd.DataFrame) -> None:
         print(column_data.value_counts())
         print('-------------------------------')
     print('*****FIM RELATÓRIO ATRIBUTOS******')
+
+
+def class_distribution(y: np.ndarray) -> None:
+    """Report of class distribution.
+
+    Args:
+        y (np.ndarray): NumPy Array to be treated.
+    """
+    print('\n*****INICIO RELATÓRIO DISTRIBUIÇÃO DE CLASES******')
+    dist_1 = y[y.nonzero()].size / y.size
+    dist_0 = (y.size - y[y.nonzero()].size) / y.size
+    print('Distribuição da classe 1: {0:.0%}'.format(dist_1))
+    print('Distribuição da classe 0: {0:.0%}'.format(dist_0))
+    if dist_1 > dist_0:
+        print('Erro majoritário: {0:.0%}'.format(1 - dist_1))
+    else:
+        print('Erro majoritário: {0:.0%}'.format(1 - dist_0))
+    print('*****FIM RELATÓRIO DISTRIBUIÇÃO DE CLASES******')
+
+
+def magnify():
+    return [dict(selector="th", props=[("font-size", "7pt")]),
+            dict(selector="td", props=[('padding', "0em 0em")]),
+            dict(selector="th:hover", props=[("font-size", "12pt")]),
+            dict(selector="tr:hover td:hover", props=[('max-width', '200px'), ('font-size', '12pt')])]
+
+
+def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = None):
+    """Create a correlation matrix from the DataFrame.
+
+    Args:
+        data_frame (pd.DataFrame): DataFrame to be treated.
+        method (str): Method to be used to create the correlation matrix.
+        attribute (str): Attribute to be used to create the correlation matrix.
+    """
+    print('\n*****INICIO CORRELATION MATRIX******')
+    if attribute is None:
+        correlation_matrix = data_frame.corr(method=method)
+        # sns.heatmap(correlation_matrix, xticklabels=correlation_matrix.columns,
+        #             yticklabels=correlation_matrix.columns)
+        # plt.show()
+
+        cmap = sns.diverging_palette(5, 250, as_cmap=True)
+
+        styled_table = correlation_matrix.style.background_gradient(cmap, axis=1)\
+            .set_properties(**{'max-width': '80px', 'font-size': '10pt'})\
+            .set_caption("Hover to magify")\
+            .set_precision(2)\
+            .set_table_styles(magnify())
+        # TODO: Criar local para armarzenar as imagens
+        dfi.export(styled_table, 'correlation_matrix.png', max_cols=-1)
+    else:
+        correlation_matrix = data_frame.corr(method=method)[attribute]
+        # correlation_matrix.to_frame().style.background_gradient(
+        #     cmap=sns.light_palette((260, 75, 60), input="husl", as_cmap=True))
+
+    # print(correlation_matrix.to_frame().style.background_gradient(
+    #     cmap=sns.light_palette((260, 75, 60), input="husl", as_cmap=True)))
+
+    print('*****FIM CORRELATION MATRIX*********')

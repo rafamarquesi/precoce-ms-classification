@@ -63,3 +63,20 @@ def generate_new_csv(data_frame: pd.DataFrame, csv_path: str) -> None:
     """
     data_frame.to_csv(csv_path, sep=';', encoding='latin1', index=False)
     print('\nCSV gerado com sucesso.')
+
+
+def move_cloumns_last_positions(data_frame: pd.DataFrame, columns_names: list) -> pd.DataFrame:
+    """Move columns to the last positions of the DataFrame, given the position of the column names in the array, passed as parameter.
+
+    Args:
+        data_frame (pd.DataFrame): DataFrame to be treated.
+        columns_names (list): Columns names to be moved.
+
+    Returns:
+        pd.DataFrame: A DataFrame with the columns moved to the last positions.
+    """
+    data_frame = data_frame[[c for c in data_frame if c not in columns_names] + [
+        c for c in columns_names if c in data_frame]]
+    # data_frame = data_frame.reindex(
+    #     columns=data_frame.columns.tolist() + columns_names)
+    return data_frame

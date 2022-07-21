@@ -1,14 +1,15 @@
 import csv_treatments
 import pre_processing
 import reports
+import pattern_extraction
 
 if __name__ == '__main__':
     csv_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1.csv'
-    number_csv_lines = 50000
-    label_encoder_columns_names = ['Maturidade']
+    number_csv_lines = 10000
+    label_encoder_columns_names = ['Maturidade', 'classificacao']
     columns_label_encoded = {}
     models_results = {}
-
+    delete_columns_names = None
     # delete_columns_names = ['area so confinamento', 'Lista Trace', 'DataAbate_6m_ANT', 'data_homol_select', 'Frigorifico_CNPJ',
     #                         'Frigorifico_RazaoSocial', 'Motivo', 'data12m', 'data6m', 'data3m', 'data1m', 'data7d', 'med7d_formITUmax', 'med3m_formITUmax',
     #                         'dif_datas', 'tot12m_Chuva', 'med12m_TempInst', 'med12m_TempMin', 'med12m_UmidInst',
@@ -19,7 +20,10 @@ if __name__ == '__main__':
     #                         'tot7d_Chuva', 'med7d_TempInst', 'med7d_TempMin', 'med7d_UmidInst']
 
     precoce_ms_data_frame = csv_treatments.load_data(
-        csv_path=csv_path, columns_names=None, number_csv_lines=number_csv_lines)
+        csv_path=csv_path, columns_names=delete_columns_names, number_csv_lines=number_csv_lines)
+
+    precoce_ms_data_frame = csv_treatments.move_cloumns_last_positions(
+        data_frame=precoce_ms_data_frame, columns_names=['classificacao'])
 
     precoce_ms_data_frame = pre_processing.delete_duplicate_rows_by_attribute(
         data_frame=precoce_ms_data_frame, attribute_name='ID_ANIMAL')
@@ -31,3 +35,13 @@ if __name__ == '__main__':
 
     precoce_ms_data_frame, columns_label_encoded = pre_processing.label_encoder_columns(
         data_frame=precoce_ms_data_frame, columns_label_encoded=columns_label_encoded, columns_names=label_encoder_columns_names)
+
+    reports.correlation_matrix(
+        data_frame=precoce_ms_data_frame, method='pearson', attribute=None)
+
+    x, y = pattern_extraction.create_x_y_data(data_frame=precoce_ms_data_frame)
+
+    print('X: ', type(x))
+    print('Y: ', type(y))
+
+    reports.class_distribution(y)
