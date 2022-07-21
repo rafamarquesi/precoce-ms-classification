@@ -106,7 +106,7 @@ def class_distribution(y: np.ndarray) -> None:
     Args:
         y (np.ndarray): NumPy Array to be treated.
     """
-    print('\n*****INICIO RELATÓRIO DISTRIBUIÇÃO DE CLASES******')
+    print('\n*****INICIO RELATÓRIO DISTRIBUIÇÃO DE CLASSES******')
     dist_1 = y[y.nonzero()].size / y.size
     dist_0 = (y.size - y[y.nonzero()].size) / y.size
     print('Distribuição da classe 1: {0:.0%}'.format(dist_1))
@@ -115,7 +115,7 @@ def class_distribution(y: np.ndarray) -> None:
         print('Erro majoritário: {0:.0%}'.format(1 - dist_1))
     else:
         print('Erro majoritário: {0:.0%}'.format(1 - dist_0))
-    print('*****FIM RELATÓRIO DISTRIBUIÇÃO DE CLASES******')
+    print('*****FIM RELATÓRIO DISTRIBUIÇÃO DE CLASSES******')
 
 
 def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = None, display_matrix: bool = False, export_matrix: bool = False, path_save_matrix: str = None) -> None:
