@@ -4,12 +4,13 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 
 
-def delete_duplicate_rows_by_attribute(data_frame: pd.DataFrame, attribute_name: str) -> pd.DataFrame:
+def delete_duplicate_rows_by_attribute(data_frame: pd.DataFrame, attribute_name: str, print_report: bool = False) -> pd.DataFrame:
     """Delete duplicate rows from the DataFrame, given the attribute name, passed as parameter.
 
     Args:
         data_frame (pd.DataFrame): DataFrame to be treated.
         attribute_name (str): Attribute name to be used to delete duplicates.
+        print_report (bool, optional): Print the report. Defaults to False.
 
     Returns:
         pd.DataFrame: A DataFrame with deleted duplicate rows.
@@ -21,19 +22,21 @@ def delete_duplicate_rows_by_attribute(data_frame: pd.DataFrame, attribute_name:
     if rows_duplicated.size > 0:
         print('Linhas duplicadas encontradas para o atributo {}.'.format(
             attribute_name))
-        # reports.duplicate_rows_by_attribute(
-        #     data_frame=data_frame, rows_duplicated=rows_duplicated, attribute=attribute_name)
+        if print_report:
+            reports.duplicate_rows_by_attribute(
+                data_frame=data_frame, rows_duplicated=rows_duplicated, attribute=attribute_name)
         data_frame.drop_duplicates(
             subset=attribute_name, keep='first', inplace=True)
     print('*****FIM DELETE DUPLICATE ROWS BY ATTRIBUTE*********')
     return data_frame
 
 
-def delete_nan_rows(data_frame: pd.DataFrame) -> pd.DataFrame:
+def delete_nan_rows(data_frame: pd.DataFrame, print_report: bool = False) -> pd.DataFrame:
     """Delete nan rows from the DataFrame.
 
     Args:
         data_frame (pd.DataFrame): DataFrame to be treated.
+        print_report (bool, optional): Print the report. Defaults to False.
 
     Returns:
         pd.DataFrame: A DataFrame with deleted nan rows.
@@ -42,7 +45,8 @@ def delete_nan_rows(data_frame: pd.DataFrame) -> pd.DataFrame:
     nan_rows = data_frame.isna().sum().sum()
     if nan_rows > 0:
         print('Linhas com valores NaN encontradas.')
-        # reports.nan_attributes(data_frame=data_frame, total_nan=nan_rows)
+        if print_report:
+            reports.nan_attributes(data_frame=data_frame, total_nan=nan_rows)
         data_frame.dropna(inplace=True)
     else:
         print('Nenhuma linha com valores NaNN encontrada.')
