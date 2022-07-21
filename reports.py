@@ -1,8 +1,9 @@
+from sys import displayhook
 import pandas as pd
 import numpy as np
 import seaborn as sns
-import matplotlib.pyplot as plt
 import dataframe_image as dfi
+from datetime import datetime
 
 
 def print_informations(data_frame: pd.DataFrame) -> None:
@@ -117,27 +118,20 @@ def class_distribution(y: np.ndarray) -> None:
     print('*****FIM RELATÓRIO DISTRIBUIÇÃO DE CLASES******')
 
 
-def magnify():
-    return [dict(selector="th", props=[("font-size", "7pt")]),
-            dict(selector="td", props=[('padding', "0em 0em")]),
-            dict(selector="th:hover", props=[("font-size", "12pt")]),
-            dict(selector="tr:hover td:hover", props=[('max-width', '200px'), ('font-size', '12pt')])]
-
-
-def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = None):
+def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = None, display_matrix: bool = False, export_matrix: bool = False, path_save_matrix: str = None) -> None:
     """Create a correlation matrix from the DataFrame.
 
     Args:
         data_frame (pd.DataFrame): DataFrame to be treated.
         method (str): Method to be used to create the correlation matrix.
         attribute (str): Attribute to be used to create the correlation matrix.
+        display_matrix (bool): Flag to display the correlation matrix.
+        export_matrix (bool): Flag to export the correlation matrix.
+        path_save_matrix (str): Path to save the correlation matrix.
     """
     print('\n*****INICIO CORRELATION MATRIX******')
     if attribute is None:
         correlation_matrix = data_frame.corr(method=method)
-        # sns.heatmap(correlation_matrix, xticklabels=correlation_matrix.columns,
-        #             yticklabels=correlation_matrix.columns)
-        # plt.show()
 
         cmap = sns.diverging_palette(5, 250, as_cmap=True)
 
@@ -145,15 +139,47 @@ def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = N
             .set_properties(**{'max-width': '80px', 'font-size': '10pt'})\
             .set_caption("Hover to magify")\
             .set_precision(2)\
-            .set_table_styles(magnify())
-        # TODO: Criar local para armarzenar as imagens
-        dfi.export(styled_table, 'correlation_matrix.png', max_cols=-1)
+            .set_table_styles(__magnify())
     else:
         correlation_matrix = data_frame.corr(method=method)[attribute]
-        # correlation_matrix.to_frame().style.background_gradient(
-        #     cmap=sns.light_palette((260, 75, 60), input="husl", as_cmap=True))
+        styled_table = correlation_matrix.to_frame().style.background_gradient(
+            cmap=sns.light_palette((260, 75, 60), input="husl", as_cmap=True))
 
-    # print(correlation_matrix.to_frame().style.background_gradient(
-    #     cmap=sns.light_palette((260, 75, 60), input="husl", as_cmap=True)))
+    if display_matrix:
+        displayhook(styled_table)
+
+    if export_matrix:
+        if path_save_matrix is None:
+            path_save_matrix = 'correlation_matrix-{}.png'.format(
+                __get_current_datetime())
+        else:
+            path_save_matrix = path_save_matrix + '/correlation_matrix-{}.png'.format(
+                __get_current_datetime())
+
+        dfi.export(styled_table, path_save_matrix, max_cols=-1)
 
     print('*****FIM CORRELATION MATRIX*********')
+
+############# PRIVATE METHODS #############
+
+
+def __magnify() -> list:
+    """Style a table from a dataframe.
+
+    Returns:
+        list: Dataframe table style attributes.
+    """
+
+    return [dict(selector="th", props=[("font-size", "7pt")]),
+            dict(selector="td", props=[('padding', "0em 0em")]),
+            dict(selector="th:hover", props=[("font-size", "12pt")]),
+            dict(selector="tr:hover td:hover", props=[('max-width', '200px'), ('font-size', '12pt')])]
+
+
+def __get_current_datetime() -> str:
+    """Get the current datetime.
+
+    Returns:
+        str: Current datetime.
+    """
+    return datetime.now().strftime('%d-%m-%Y_%H:%M:%S')
