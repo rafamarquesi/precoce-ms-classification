@@ -37,11 +37,12 @@ if __name__ == '__main__':
         data_frame=precoce_ms_data_frame, columns_label_encoded=columns_label_encoded, columns_names=label_encoder_columns_names)
 
     reports.correlation_matrix(
-        data_frame=precoce_ms_data_frame, method='pearson', attribute=None)
+        data_frame=precoce_ms_data_frame, method='pearson', attribute='classificacao',
+        display_matrix=False, export_matrix=True, path_save_matrix='./plots')
 
     x, y = pattern_extraction.create_x_y_data(data_frame=precoce_ms_data_frame)
 
-    print('X: ', type(x))
+    print('\nX: ', type(x))
     print('Y: ', type(y))
 
     reports.class_distribution(y)
