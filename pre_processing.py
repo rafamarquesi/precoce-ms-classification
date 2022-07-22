@@ -80,3 +80,5 @@ def label_encoder_columns(data_frame: pd.DataFrame, columns_label_encoded: dict,
                 '!!!>>> Coluna {} não encontrada no DataFrame para label encoding.'.format(column))
     print('*****FIM LABEL ENCODER*********')
     return data_frame, columns_label_encoded
+
+# TODO: Implementar a função de tratamento de atributos correlacionados do livro do Albon.
