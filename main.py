@@ -15,8 +15,9 @@ from sklearn.ensemble import RandomForestClassifier
 
 if __name__ == '__main__':
     csv_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1.csv'
-    number_csv_lines = 10000
-    label_encoder_columns_names = ['Maturidade', 'classificacao']
+    number_csv_lines = 50000
+    label_encoder_columns_names = [
+        'Tipificacao', 'Maturidade', 'Acabamento', 'classificacao']
     columns_label_encoded = {}
 
     delete_columns_names = None
@@ -33,7 +34,7 @@ if __name__ == '__main__':
     classifiers = {}
     models_results = {}
 
-    execute_classifiers = True
+    execute_classifiers = False
 
     ######### CSV TREATMENTS #########
 
@@ -42,6 +43,8 @@ if __name__ == '__main__':
 
     precoce_ms_data_frame = csv_treatments.move_cloumns_last_positions(
         data_frame=precoce_ms_data_frame, columns_names=['classificacao'])
+
+    reports.print_list_columns(precoce_ms_data_frame)
 
     ######### PRE PROCESSING #########
 
@@ -59,6 +62,9 @@ if __name__ == '__main__':
     reports.correlation_matrix(
         data_frame=precoce_ms_data_frame, method='pearson', attribute='classificacao',
         display_matrix=False, export_matrix=True, path_save_matrix='./plots')
+
+    precoce_ms_data_frame = pre_processing.drop_feature_by_correlation(
+        data_frame=precoce_ms_data_frame, method='pearson', columns_names=['Maturidade', 'Acabamento', 'Peso', 'classificacao'])
 
     ######### PATTERN EXTRACTION #########
 
