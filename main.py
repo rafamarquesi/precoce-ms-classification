@@ -76,6 +76,8 @@ if __name__ == '__main__':
     reports.class_distribution(y)
 
     if execute_classifiers:
+        # TODO: Implement the classifiers and parameters optimization.
+
         # K vizinhos próximos
         # Parâmetro algorithm{‘auto’, ‘ball_tree’, ‘kd_tree’, ‘brute’}, default=’auto’ por enquanto está em auto
         # ‘auto’ will attempt to decide the most appropriate algorithm based on the values passed to fit method.
