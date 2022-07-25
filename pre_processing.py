@@ -81,4 +81,42 @@ def label_encoder_columns(data_frame: pd.DataFrame, columns_label_encoded: dict,
     print('*****FIM LABEL ENCODER*********')
     return data_frame, columns_label_encoded
 
-# TODO: Implementar a função de tratamento de atributos correlacionados do livro do Albon.
+
+def drop_feature_by_correlation(data_frame: pd.DataFrame, method: str, columns_names: list, threshold: float = 0.9) -> pd.DataFrame:
+    """Drop the features by correlation, given the columns names, passed as parameters.
+    The threshold parameter is used to define the threshold of correlation.
+    The default value is 0.9.
+
+    Args:
+        data_frame (pd.DataFrame): DataFrame to be treated.
+        method (str): Method to be used to calculate the correlation.
+        columns_names (list): Array of strings with columns names to drop.
+        threshold (float, optional): Threshold of correlation. Defaults to 0.9.
+
+    Returns:
+        pd.DataFrame: A DataFrame with dropped features.
+    """
+    # TODO: Verify de function in execution, if not OK look the Albon book (10.3 Handling Highly Correlated Features).
+    print('\n*****INICIO DROP FEATURE BY CORRELATION******')
+    for column in columns_names:
+        if column in data_frame.columns:
+            correlation_matrix = data_frame.corr(method=method)
+            correlation_matrix = correlation_matrix.loc[column, :]
+            correlation_matrix = correlation_matrix.sort_values(
+                ascending=False)
+            correlation_matrix = correlation_matrix[correlation_matrix > threshold]
+            correlation_matrix = correlation_matrix.drop(column)
+            correlation_matrix = correlation_matrix.dropna()
+            correlation_matrix = correlation_matrix.index.tolist()
+            if len(correlation_matrix) > 0:
+                print('>>> Correlação entre a coluna {} e as colunas {} foi encontrada.'.format(
+                    column, correlation_matrix))
+                data_frame.drop(columns=correlation_matrix, inplace=True)
+            else:
+                print(
+                    '>>> Nenhuma correlação entre a coluna {} e as colunas encontrada.'.format(column))
+        else:
+            print(
+                '!!!>>> Coluna {} não encontrada no DataFrame para drop feature by correlation.'.format(column))
+    print('*****FIM DROP FEATURE BY CORRELATION*********')
+    return data_frame
