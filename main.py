@@ -78,12 +78,12 @@ if __name__ == '__main__':
     if execute_classifiers:
         # TODO: Implement the classifiers and parameters optimization.
 
-        # K vizinhos próximos
-        # Parâmetro algorithm{‘auto’, ‘ball_tree’, ‘kd_tree’, ‘brute’}, default=’auto’ por enquanto está em auto
+        # k-nearest neighbors
+        # Algorithm parameter{‘auto’, ‘ball_tree’, ‘kd_tree’, ‘brute’}, default=’auto’ for now is in auto
         # ‘auto’ will attempt to decide the most appropriate algorithm based on the values passed to fit method.
         # leaf_sizeint, default=30
-        # É a melhor opção?
-        # Variando o número de k vizinhos para o cálculo de peso
+        # Is the best option?
+        # Varying the k neighbors parameter, we can find the best k value for the classification.
         param_dist = {
             'n_neighbors': list(np.arange(3, 20, 2)),
             'metric': ['euclidean'],
@@ -93,20 +93,20 @@ if __name__ == '__main__':
             KNeighborsClassifier(), param_dist]
 
         # Naive bayes
-        # Algoritmo a ser batido. Usado como base.
-        # Está gerando bem abaixo. Será que porque os atríbutos não são discretos (palavras)?
-        # Para atríbutos não discretos deveria utilizar outro algoritmo?
+        # Algorithm to be beaten. Used as base.
+        # It's generating low values. Is it because the attributes are not discrete (words)?
+        # For non-discrete attributes, should I use another algorithm?
         param_dist = {}
         classifiers[GaussianNB().__class__.__name__] = [
             GaussianNB(), param_dist]
 
-        # Árvores de Decisão (c4.5)
-        # Ajustes de atributos do algoritmo, procurar mais sobre (olhar documentação):
-        # min_impurity_decrease ??? O algoritmo apresenta erro quando adicionado valor maior que 0.0
-        # ccp_alpha ??? apresenta erro quando aumentado o valor
-        # max_depth -> utilizar um great search para calibrar
+        # Decision Trees (c4.5)
+        # Algorithm parameter settings, look for more (see documentation):
+        # min_impurity_decrease ??? The algorithm presents an error when a value greater than 0.0 is added
+        # ccp_alpha ??? the algorithm has an error when increasing the value
+        # max_depth -> use a great search to calibrate
         # class_weight
-        # identifiquei, que para os parâmetros default, a profundidade máxima da árvore criada é de 9. Para a quantidade de dados atual.
+        # I identified, that for the default parameters, the maximum depth of the created tree is 9. For the current amount of data.
         # criterion{“gini”, “entropy”},
         param_dist = {
             'criterion': ['gini', 'entropy'],
@@ -117,13 +117,13 @@ if __name__ == '__main__':
         classifiers[DecisionTreeClassifier().__class__.__name__] = [
             DecisionTreeClassifier(), param_dist]
 
-        # Rede Neural
+        # Neural Network
         # param_dist = {'solver': ['sgd'], 'learning_rate' : ['constant'], 'momentum' : scipy.stats.expon(scale=.1),
         # 'alpha' : scipy.stats.expon(scale=.0001), 'activation' : ['logistic'],
         # 'learning_rate_init' : scipy.stats.expon(scale=.01), 'hidden_layer_sizes':(200,100), 'max_iter':[500]}
-        # learning_rate_init -> variar esse parametro caso o resultado não seja bom
-        # max_iter -> também pode ajudar a melhorar o resultado
-        # hidden_layer_sizes -> (camada_x_com_y_neoronios, camada_x_com_y_neoronios)
+        # learning_rate_init -> change this parameter if the result is not good
+        # max_iter -> can also help to improve the result
+        # hidden_layer_sizes -> (layer_x_with_y_neurons, layer_x_with_y_neurons)
         param_dist = {
             'solver': ['adam'],
             'learning_rate': ['constant'],
@@ -135,7 +135,7 @@ if __name__ == '__main__':
         classifiers[MLPClassifier().__class__.__name__] = [
             MLPClassifier(), param_dist]
 
-        # Máquina de vetor de suporte
+        # Vector Support Machine
         # kernel: ‘linear’, ‘poly’, ‘rbf’
         #     # C: 10^x (-2 a 2)
         #     # 'max_iter': [100, 1000]
