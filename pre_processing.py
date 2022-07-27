@@ -1,6 +1,7 @@
 import reports
 
 import pandas as pd
+import numpy as np
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
 
@@ -150,3 +151,19 @@ def min_max_scaler_columns(data_frame: pd.DataFrame, columns_min_max_scaled: dic
                 '!!!>>> Coluna {} não encontrada no DataFrame para min-max scaler.'.format(column))
     print('*****FIM MIN-MAX SCALER*********')
     return data_frame, columns_min_max_scaled
+
+
+def detect_outliers(series: pd.Series, whis: float = 1.5) -> pd.Series:
+    """Detect outliers in a series.
+
+    Args:
+        series (pd.Series): Series to be treated.
+        whis (float, optional): Whisker value. Defaults to 1.5.
+
+    Returns:
+        pd.Series: A Series with the outliers detected.
+    """
+
+    q75, q25 = np.percentile(series, [75, 25])
+    iqr = q75 - q25
+    return ~((series - series.median()).abs() <= (whis * iqr))
