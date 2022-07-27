@@ -1,7 +1,7 @@
 import reports
 
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
 
 def delete_duplicate_rows_by_attribute(data_frame: pd.DataFrame, attribute_name: str, print_report: bool = False) -> pd.DataFrame:
@@ -120,3 +120,33 @@ def drop_feature_by_correlation(data_frame: pd.DataFrame, method: str, columns_n
                 '!!!>>> Coluna {} não encontrada no DataFrame para drop feature by correlation.'.format(column))
     print('*****FIM DROP FEATURE BY CORRELATION*********')
     return data_frame
+
+
+def min_max_scaler_columns(data_frame: pd.DataFrame, columns_min_max_scaled: dict, columns_names: list) -> tuple:
+    """Min-Max scale the DataFrame, given the columns names, passed as parameters.
+
+    Args:
+        data_frame (pd.DataFrame): DataFrame to be treated.
+        columns_min_max_scaled (dict): Dictionary with the min-max scalers for each column.
+        columns_names (list): Array of strings with columns names to scale.
+
+    Returns:
+        tuple: A tuple with the scaled data_frame and the columns_scalers, in this order.
+    """
+    print('\n*****INICIO MIN-MAX SCALER******')
+    for column in columns_names:
+        if column in data_frame.columns:
+            if column not in columns_min_max_scaled:
+                scaler_column = MinMaxScaler()
+                # data_frame[column] = scaler_column.fit_transform(
+                #     data_frame[column])
+                data_frame[column] = scaler_column.fit_transform(
+                    data_frame[column].values.reshape(-1, 1))
+                columns_min_max_scaled[column] = scaler_column
+            else:
+                print('!!!>>> A coluna {} já está normalizada.'.format(column))
+        else:
+            print(
+                '!!!>>> Coluna {} não encontrada no DataFrame para min-max scaler.'.format(column))
+    print('*****FIM MIN-MAX SCALER*********')
+    return data_frame, columns_min_max_scaled

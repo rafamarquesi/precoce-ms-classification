@@ -19,6 +19,10 @@ if __name__ == '__main__':
     label_encoder_columns_names = [
         'Tipificacao', 'Maturidade', 'Acabamento', 'classificacao']
     columns_label_encoded = {}
+    min_max_scaler_columns_names = [
+        'Peso', 'tot1m_Chuva', 'med1m_TempInst', 'med1m_UmidInst', 'med1m_formITUinst', 'med1m_NDVI',
+        'med1m_EVI', 'med1m_preR_soja', 'med1m_preR_milho', 'med1m_preR_boi']
+    columns_min_max_scaled = {}
 
     delete_columns_names = None
     # delete_columns_names = ['area so confinamento', 'Lista Trace', 'DataAbate_6m_ANT', 'data_homol_select', 'Frigorifico_CNPJ',
@@ -58,6 +62,9 @@ if __name__ == '__main__':
 
     precoce_ms_data_frame, columns_label_encoded = pre_processing.label_encoder_columns(
         data_frame=precoce_ms_data_frame, columns_label_encoded=columns_label_encoded, columns_names=label_encoder_columns_names)
+
+    precoce_ms_data_frame, columns_min_max_scaled = pre_processing.min_max_scaler_columns(
+        data_frame=precoce_ms_data_frame, columns_min_max_scaled=columns_min_max_scaled, columns_names=min_max_scaler_columns_names)
 
     reports.correlation_matrix(
         data_frame=precoce_ms_data_frame, method='pearson', attribute='classificacao',
