@@ -124,10 +124,10 @@ def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = N
     Args:
         data_frame (pd.DataFrame): DataFrame to be treated.
         method (str): Method to be used to create the correlation matrix.
-        attribute (str): Attribute to be used to create the correlation matrix.
-        display_matrix (bool): Flag to display the correlation matrix.
-        export_matrix (bool): Flag to export the correlation matrix.
-        path_save_matrix (str): Path to save the correlation matrix.
+        attribute (str, optional): Attribute to be used to create the correlation matrix. Defaults to None.
+        display_matrix (bool, optional): Flag to display the correlation matrix. Defaults to False.
+        export_matrix (bool, optional): Flag to export the correlation matrix. Defaults to False.
+        path_save_matrix (str, optional): Path to save the correlation matrix. Defaults to None.
     """
     print('\n*****INICIO CORRELATION MATRIX******')
     if attribute is None:
