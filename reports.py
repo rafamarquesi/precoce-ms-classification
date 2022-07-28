@@ -100,11 +100,11 @@ def all_attributes(data_frame: pd.DataFrame) -> None:
     print('*****FIM RELATÓRIO ATRIBUTOS******')
 
 
-def class_distribution(y: np.ndarray) -> None:
+def class_distribution(y: np.array) -> None:
     """Report of class distribution.
 
     Args:
-        y (np.ndarray): NumPy Array to be treated.
+        y (np.array): NumPy Array to be treated.
     """
     print('\n*****INICIO RELATÓRIO DISTRIBUIÇÃO DE CLASSES******')
     dist_1 = y[y.nonzero()].size / y.size
