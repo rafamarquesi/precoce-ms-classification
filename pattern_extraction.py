@@ -60,6 +60,8 @@ def run_models(x: np.array, y: np.array, models: dict, models_results: dict, n_s
         x_train, x_test = x[train_index], x[test_index]
         y_train, y_test = y[train_index], y[test_index]
 
+        print('\n========== Iteração {} =========='.format(count))
+
         # Definning the best parameters for the models
         for key, models_params in models.items():
             model = __tunning_parameters(
@@ -76,14 +78,18 @@ def run_models(x: np.array, y: np.array, models: dict, models_results: dict, n_s
             # Predicting the test data
             y_pred = model.predict(x_test)
 
-            print('Na iteração {}, não foi predito o Label: {}'.format(
-                count, set(y_test) - set(y_pred)))
+            label_not_predicted = set(y_test) - set(y_pred)
+            if len(label_not_predicted) > 0:
+                print('Na iteração {}, não foi predito o Label: {}'.format(
+                    count, label_not_predicted))
 
             # Calculating the metrics
-            results = __evaluate_model(y_test=y_test, y_pred=y_pred)
-            results['Iteração'] = count
-            models_results[key] = models_results[key].append(
-                results, ignore_index=True)
+            dict_results = __evaluate_model(y_test=y_test, y_pred=y_pred)
+            dict_results['Iteração'] = count
+            # models_results[key] = models_results[key].append(
+            #     dict_results, ignore_index=True)
+            models_results[key] = pd.concat(
+                [models_results[key], pd.DataFrame.from_records([dict_results])], ignore_index=True)
 
         count += 1
 
@@ -137,7 +143,7 @@ def __tunning_parameters(model_params: dict, x: np.array, y: np.array, train_siz
         print('Params of model {} not defined. Keeping the default parameters.'.format(
             model_name))
 
-    print('{} best params: {}\n'.format(model_name, best_params))
+    print('{} best params: {}'.format(model_name, best_params))
     print('------ FINISHED {} parameters tuning\n\n'.format(model_name))
 
     return model_params[0]
