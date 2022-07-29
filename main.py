@@ -15,30 +15,40 @@ from sklearn.ensemble import RandomForestClassifier
 
 if __name__ == '__main__':
     csv_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1.csv'
-    number_csv_lines = 50000
+    number_csv_lines = 10000
     label_encoder_columns_names = [
-        'Tipificacao', 'Maturidade', 'Acabamento', 'classificacao']
+        'EstabelecimentoMunicipio', 'DataAbate', 'QuestionarioClassificacaoEstabel',
+        'Tipificacao', 'Maturidade', 'Acabamento', 'ANO', 'CATEGORIA', 'classificacao']
     columns_label_encoded = {}
     min_max_scaler_columns_names = [
-        'Peso', 'tot1m_Chuva', 'med1m_TempInst', 'med1m_UmidInst', 'med1m_formITUinst', 'med1m_NDVI',
-        'med1m_EVI', 'med1m_preR_soja', 'med1m_preR_milho', 'med1m_preR_boi']
+        'Peso',
+        'med7d_formITUinst', 'med7d_preR_soja', 'med7d_preR_milho', 'med7d_preR_boi',
+        'med1m_formITUinst', 'med1m_preR_soja', 'med1m_preR_milho', 'med1m_preR_boi',
+        'med3m_formITUinst', 'med3m_preR_soja', 'med3m_preR_milho', 'med3m_preR_boi',
+        'med6m_formITUinst', 'med6m_preR_soja', 'med6m_preR_milho', 'med6m_preR_boi',
+        'med12m_formITUinst', 'med12m_preR_soja', 'med12m_preR_milho', 'med12m_preR_boi'
+    ]
     columns_min_max_scaled = {}
 
-    delete_columns_names = None
-    # delete_columns_names = ['area so confinamento', 'Lista Trace', 'DataAbate_6m_ANT', 'data_homol_select', 'Frigorifico_CNPJ',
-    #                         'Frigorifico_RazaoSocial', 'Motivo', 'data12m', 'data6m', 'data3m', 'data1m', 'data7d', 'med7d_formITUmax', 'med3m_formITUmax',
-    #                         'dif_datas', 'tot12m_Chuva', 'med12m_TempInst', 'med12m_TempMin', 'med12m_UmidInst',
-    #                         'med12m_NDVI', 'med12m_EVI', 'med6m_NDVI', 'med6m_EVI', 'med3m_NDVI', 'med3m_EVI',
-    #                         'tot6m_Chuva', 'med6m_TempInst', 'med6m_UmidInst', 'med1m_NDVI', 'med1m_EVI',
-    #                         'tot3m_Chuva', 'med3m_TempInst', 'med3m_UmidInst', 'med7d_NDVI', 'med7d_EVI',
-    #                         'tot1m_Chuva', 'med1m_TempInst', 'med1m_UmidInst',
-    #                         'tot7d_Chuva', 'med7d_TempInst', 'med7d_TempMin', 'med7d_UmidInst']
+    # delete_columns_names = None
+    delete_columns_names = [
+        'Frigorifico_ID', 'Municipio_Frigorifico', 'Frigorifico_RazaoSocial', 'Frigorifico_CNPJ',
+        'EstabelecimentoIdentificador',
+        'Data_homol', 'Questionario_ID',
+        'area so confinamento', 'Lista Trace', 'Motivo', 'data_homol_select', 'dif_datas',
+        'DataAbate_6m_ANT', 'data12m', 'data6m', 'data3m', 'data1m', 'data7d',
+        'tot7d_Chuva', 'med7d_TempInst', 'med7d_TempMin', 'med7d_UmidInst', 'med7d_formITUmax', 'med7d_NDVI', 'med7d_EVI',
+        'tot1m_Chuva', 'med1m_TempInst', 'med1m_UmidInst', 'med1m_NDVI', 'med1m_EVI',
+        'tot3m_Chuva', 'med3m_TempInst', 'med3m_UmidInst', 'med3m_formITUmax', 'med3m_NDVI', 'med3m_EVI',
+        'tot6m_Chuva', 'med6m_TempInst', 'med6m_UmidInst', 'med6m_NDVI', 'med6m_EVI',
+        'tot12m_Chuva', 'med12m_TempInst', 'med12m_TempMin', 'med12m_UmidInst', 'med12m_NDVI', 'med12m_EVI',
+    ]
 
     # Dictionary containing the instantiated classes of classifiers and the parameters for optimization.
     classifiers = {}
     models_results = {}
 
-    execute_classifiers = False
+    execute_classifiers = True
 
     ######### CSV TREATMENTS #########
 
@@ -50,10 +60,15 @@ if __name__ == '__main__':
 
     reports.print_list_columns(precoce_ms_data_frame)
 
+    # reports.all_attributes(data_frame=precoce_ms_data_frame)
+
     ######### PRE PROCESSING #########
 
     precoce_ms_data_frame = pre_processing.delete_duplicate_rows_by_attribute(
         data_frame=precoce_ms_data_frame, attribute_name='ID_ANIMAL')
+
+    precoce_ms_data_frame = pre_processing.delete_columns(
+        data_frame=precoce_ms_data_frame, columns_names=['ID_ANIMAL'])
 
     precoce_ms_data_frame = pre_processing.delete_nan_rows(
         data_frame=precoce_ms_data_frame)
@@ -68,7 +83,7 @@ if __name__ == '__main__':
 
     reports.correlation_matrix(
         data_frame=precoce_ms_data_frame, method='pearson', attribute='classificacao',
-        display_matrix=False, export_matrix=True, path_save_matrix='./plots')
+        display_matrix=False, export_matrix=False, path_save_matrix='./plots')
 
     precoce_ms_data_frame = pre_processing.drop_feature_by_correlation(
         data_frame=precoce_ms_data_frame, method='pearson', columns_names=['Maturidade', 'Acabamento', 'Peso', 'classificacao'])
@@ -83,8 +98,6 @@ if __name__ == '__main__':
     reports.class_distribution(y)
 
     if execute_classifiers:
-        # TODO: Implement the classifiers and parameters optimization.
-
         # k-nearest neighbors
         # Algorithm parameter{‘auto’, ‘ball_tree’, ‘kd_tree’, ‘brute’}, default=’auto’ for now is in auto
         # ‘auto’ will attempt to decide the most appropriate algorithm based on the values passed to fit method.
@@ -107,61 +120,66 @@ if __name__ == '__main__':
         classifiers[GaussianNB().__class__.__name__] = [
             GaussianNB(), param_dist]
 
-        # Decision Trees (c4.5)
-        # Algorithm parameter settings, look for more (see documentation):
-        # min_impurity_decrease ??? The algorithm presents an error when a value greater than 0.0 is added
-        # ccp_alpha ??? the algorithm has an error when increasing the value
-        # max_depth -> use a great search to calibrate
-        # class_weight
-        # I identified, that for the default parameters, the maximum depth of the created tree is 9. For the current amount of data.
-        # criterion{“gini”, “entropy”},
-        param_dist = {
-            'criterion': ['gini', 'entropy'],
-            'max_depth': list(np.arange(1, 11)) + [None],
-            'random_state': [0],
-            'class_weight': ['balanced', None]
-        }
-        classifiers[DecisionTreeClassifier().__class__.__name__] = [
-            DecisionTreeClassifier(), param_dist]
+        # # Decision Trees (c4.5)
+        # # Algorithm parameter settings, look for more (see documentation):
+        # # min_impurity_decrease ??? The algorithm presents an error when a value greater than 0.0 is added
+        # # ccp_alpha ??? the algorithm has an error when increasing the value
+        # # max_depth -> use a great search to calibrate
+        # # class_weight
+        # # I identified, that for the default parameters, the maximum depth of the created tree is 9. For the current amount of data.
+        # # criterion{“gini”, “entropy”},
+        # param_dist = {
+        #     'criterion': ['gini', 'entropy'],
+        #     'max_depth': list(np.arange(1, 11)) + [None],
+        #     'random_state': [0],
+        #     'class_weight': ['balanced', None]
+        # }
+        # classifiers[DecisionTreeClassifier().__class__.__name__] = [
+        #     DecisionTreeClassifier(), param_dist]
 
-        # Neural Network
-        # param_dist = {'solver': ['sgd'], 'learning_rate' : ['constant'], 'momentum' : scipy.stats.expon(scale=.1),
-        # 'alpha' : scipy.stats.expon(scale=.0001), 'activation' : ['logistic'],
-        # 'learning_rate_init' : scipy.stats.expon(scale=.01), 'hidden_layer_sizes':(200,100), 'max_iter':[500]}
-        # learning_rate_init -> change this parameter if the result is not good
-        # max_iter -> can also help to improve the result
-        # hidden_layer_sizes -> (layer_x_with_y_neurons, layer_x_with_y_neurons)
-        param_dist = {
-            'solver': ['adam'],
-            'learning_rate': ['constant'],
-            'alpha': [0.001],
-            'activation': ['relu'],
-            'hidden_layer_sizes': (200, 100),
-            'max_iter': [1000]
-        }
-        classifiers[MLPClassifier().__class__.__name__] = [
-            MLPClassifier(), param_dist]
+        # # Neural Network
+        # # param_dist = {'solver': ['sgd'], 'learning_rate' : ['constant'], 'momentum' : scipy.stats.expon(scale=.1),
+        # # 'alpha' : scipy.stats.expon(scale=.0001), 'activation' : ['logistic'],
+        # # 'learning_rate_init' : scipy.stats.expon(scale=.01), 'hidden_layer_sizes':(200,100), 'max_iter':[500]}
+        # # learning_rate_init -> change this parameter if the result is not good
+        # # max_iter -> can also help to improve the result
+        # # hidden_layer_sizes -> (layer_x_with_y_neurons, layer_x_with_y_neurons)
+        # param_dist = {
+        #     'solver': ['adam'],
+        #     'learning_rate': ['constant'],
+        #     'alpha': [0.001],
+        #     'activation': ['relu'],
+        #     'hidden_layer_sizes': (200, 100),
+        #     'max_iter': [1000]
+        # }
+        # classifiers[MLPClassifier().__class__.__name__] = [
+        #     MLPClassifier(), param_dist]
 
-        # Vector Support Machine
-        # kernel: ‘linear’, ‘poly’, ‘rbf’
-        #     # C: 10^x (-2 a 2)
-        #     # 'max_iter': [100, 1000]
-        #     # gamma : auto
-        param_dist = {
-            'kernel': ['linear', 'poly', 'rbf'],
-            'C': list(np.power(10, np.arange(-2, 2, dtype=np.float16))),
-            'max_iter': [10000],
-            'gamma': ['auto']
-        }
-        classifiers[SVC().__class__.__name__] = [SVC(), param_dist]
+        # # Vector Support Machine
+        # # kernel: ‘linear’, ‘poly’, ‘rbf’
+        # #     # C: 10^x (-2 a 2)
+        # #     # 'max_iter': [100, 1000]
+        # #     # gamma : auto
+        # param_dist = {
+        #     'kernel': ['linear', 'poly', 'rbf'],
+        #     'C': list(np.power(10, np.arange(-2, 2, dtype=np.float16))),
+        #     'max_iter': [10000],
+        #     'gamma': ['auto']
+        # }
+        # classifiers[SVC().__class__.__name__] = [SVC(), param_dist]
 
-        # Random forest classifier
-        param_dist = {
-            'n_estimators': [10, 50, 100],
-            'criterion': ['gini', 'entropy'],
-            'max_depth': list(np.arange(1, 11)) + [None],
-            'random_state': [0],
-            'class_weight': ['balanced', None]
-        }
-        classifiers[RandomForestClassifier().__class__.__name__] = [
-            RandomForestClassifier(), param_dist]
+        # # Random forest classifier
+        # param_dist = {
+        #     'n_estimators': [10, 50, 100],
+        #     'criterion': ['gini', 'entropy'],
+        #     'max_depth': list(np.arange(1, 11)) + [None],
+        #     'random_state': [0],
+        #     'class_weight': ['balanced', None]
+        # }
+        # classifiers[RandomForestClassifier().__class__.__name__] = [
+        #     RandomForestClassifier(), param_dist]
+
+        # Running the classifiers
+        models_results = pattern_extraction.run_models(
+            x=x, y=y, models=classifiers, models_results=models_results)
+        print(models_results)
