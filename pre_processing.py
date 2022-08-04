@@ -2,7 +2,7 @@ import reports
 
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import LabelEncoder, MinMaxScaler
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler, OneHotEncoder
 
 
 def delete_columns(data_frame: pd.DataFrame, columns_names: list) -> pd.DataFrame:
@@ -19,6 +19,7 @@ def delete_columns(data_frame: pd.DataFrame, columns_names: list) -> pd.DataFram
     for column in columns_names:
         if column in data_frame.columns:
             data_frame.drop(column, axis=1, inplace=True)
+            print('Coluna {} deletada.'.format(column))
         else:
             print(
                 '!!!>>> Coluna {} não encontrada no DataFrame para delete.'.format(column))
@@ -102,6 +103,37 @@ def label_encoder_columns(data_frame: pd.DataFrame, columns_label_encoded: dict,
                 '!!!>>> Coluna {} não encontrada no DataFrame para label encoding.'.format(column))
     print('*****FIM LABEL ENCODER*********')
     return data_frame, columns_label_encoded
+
+
+def one_hot_encoder_columns(data_frame: pd.DataFrame, columns_one_hot_encoded: dict, columns_names: list) -> tuple:
+    """One-hot encode the DataFrame, given the columns names, passed as parameters.
+
+    Args:
+        data_frame (pd.DataFrame): DataFrame to be treated.
+        columns_one_hot_encoded (dict): Dictionary with the one-hot encoders for each column.
+        columns_names (list): Array of strings with columns names to one-hot encode.
+
+    Returns:
+        tuple: A tuple with the encoded data_frame and the columns_one_hot_encoded, in this order.
+    """
+    print('\n*****INICIO ONE-HOT ENCODER******')
+    for column in columns_names:
+        if column in data_frame.columns:
+            if column not in columns_one_hot_encoded:
+                encoder_column = OneHotEncoder(sparse=False)
+                encoded_df = pd.DataFrame(encoder_column.fit_transform(
+                    data_frame[[column]]), columns=encoder_column.get_feature_names_out())
+                data_frame = pd.concat([data_frame, encoded_df], axis=1)
+                data_frame = delete_columns(
+                    data_frame=data_frame, columns_names=[column])
+                columns_one_hot_encoded[column] = encoder_column
+            else:
+                print('!!!>>> A coluna {} já está codificada.'.format(column))
+        else:
+            print(
+                '!!!>>> Coluna {} não encontrada no DataFrame para one-hot encoding.'.format(column))
+    print('*****FIM ONE-HOT ENCODER*********')
+    return data_frame, columns_one_hot_encoded
 
 
 def drop_feature_by_correlation(data_frame: pd.DataFrame, method: str, columns_names: list, threshold: float = 0.9) -> pd.DataFrame:
