@@ -13,13 +13,24 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 
+# TODO: Treat imbalanced classes (Book Albon - Chapter 5.5)
+
 if __name__ == '__main__':
+
     csv_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1.csv'
-    number_csv_lines = 10000
+    number_csv_lines = None
+
+    # TODO: Verify if the label encoder is encoding the correct values, example: Maturidade 'd' -> 0, '2' -> 1, '4' -> 2 ...
     label_encoder_columns_names = [
-        'EstabelecimentoMunicipio', 'DataAbate', 'QuestionarioClassificacaoEstabel',
-        'Tipificacao', 'Maturidade', 'Acabamento', 'ANO', 'CATEGORIA', 'classificacao']
+        'Maturidade', 'Acabamento', 'QuestionarioClassificacaoEstabel', 'CATEGORIA', 'classificacao'
+    ]
     columns_label_encoded = {}
+
+    one_hot_encoder_columns_names = [
+        'EstabelecimentoMunicipio', 'DataAbate', 'Tipificacao', 'ANO'
+    ]
+    columns_one_not_encoded = {}
+
     min_max_scaler_columns_names = [
         'Peso',
         'med7d_formITUinst', 'med7d_preR_soja', 'med7d_preR_milho', 'med7d_preR_boi',
@@ -32,9 +43,8 @@ if __name__ == '__main__':
 
     # delete_columns_names = None
     delete_columns_names = [
-        'Frigorifico_ID', 'Municipio_Frigorifico', 'Frigorifico_RazaoSocial', 'Frigorifico_CNPJ',
-        'EstabelecimentoIdentificador',
-        'Data_homol', 'Questionario_ID',
+        'Frigorifico_ID', 'Frigorifico_CNPJ', 'Frigorifico_RazaoSocial', 'Municipio_Frigorifico',
+        'EstabelecimentoIdentificador', 'Data_homol', 'Questionario_ID',
         'area so confinamento', 'Lista Trace', 'Motivo', 'data_homol_select', 'dif_datas',
         'DataAbate_6m_ANT', 'data12m', 'data6m', 'data3m', 'data1m', 'data7d',
         'tot7d_Chuva', 'med7d_TempInst', 'med7d_TempMin', 'med7d_UmidInst', 'med7d_formITUmax', 'med7d_NDVI', 'med7d_EVI',
@@ -48,7 +58,8 @@ if __name__ == '__main__':
     classifiers = {}
     models_results = {}
 
-    execute_classifiers = True
+    execute_pre_processing = False
+    execute_classifiers = False
 
     ######### CSV TREATMENTS #########
 
@@ -58,46 +69,54 @@ if __name__ == '__main__':
     precoce_ms_data_frame = csv_treatments.move_cloumns_last_positions(
         data_frame=precoce_ms_data_frame, columns_names=['classificacao'])
 
-    reports.print_list_columns(precoce_ms_data_frame)
+    # reports.print_informations(data_frame=precoce_ms_data_frame)
 
-    # reports.all_attributes(data_frame=precoce_ms_data_frame)
+    # reports.print_list_columns(data_frame=precoce_ms_data_frame)
+
+    reports.all_attributes(data_frame=precoce_ms_data_frame)
 
     ######### PRE PROCESSING #########
+    if execute_pre_processing:
 
-    precoce_ms_data_frame = pre_processing.delete_duplicate_rows_by_attribute(
-        data_frame=precoce_ms_data_frame, attribute_name='ID_ANIMAL')
+        precoce_ms_data_frame = pre_processing.delete_duplicate_rows_by_attribute(
+            data_frame=precoce_ms_data_frame, attribute_name='ID_ANIMAL')
 
-    precoce_ms_data_frame = pre_processing.delete_columns(
-        data_frame=precoce_ms_data_frame, columns_names=['ID_ANIMAL'])
+        precoce_ms_data_frame = pre_processing.delete_columns(
+            data_frame=precoce_ms_data_frame, columns_names=['ID_ANIMAL'])
 
-    precoce_ms_data_frame = pre_processing.delete_nan_rows(
-        data_frame=precoce_ms_data_frame)
+        precoce_ms_data_frame = pre_processing.delete_nan_rows(
+            data_frame=precoce_ms_data_frame)
 
-    reports.print_informations(precoce_ms_data_frame)
+        reports.print_informations(precoce_ms_data_frame)
 
-    precoce_ms_data_frame, columns_label_encoded = pre_processing.label_encoder_columns(
-        data_frame=precoce_ms_data_frame, columns_label_encoded=columns_label_encoded, columns_names=label_encoder_columns_names)
+        precoce_ms_data_frame, columns_label_encoded = pre_processing.label_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_label_encoded=columns_label_encoded, columns_names=label_encoder_columns_names)
 
-    precoce_ms_data_frame, columns_min_max_scaled = pre_processing.min_max_scaler_columns(
-        data_frame=precoce_ms_data_frame, columns_min_max_scaled=columns_min_max_scaled, columns_names=min_max_scaler_columns_names)
+        precoce_ms_data_frame, columns_one_not_encoded = pre_processing.one_hot_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_one_not_encoded=columns_one_not_encoded, columns_names=one_hot_encoder_columns_names)
 
-    reports.correlation_matrix(
-        data_frame=precoce_ms_data_frame, method='pearson', attribute='classificacao',
-        display_matrix=False, export_matrix=False, path_save_matrix='./plots')
+        precoce_ms_data_frame, columns_min_max_scaled = pre_processing.min_max_scaler_columns(
+            data_frame=precoce_ms_data_frame, columns_min_max_scaled=columns_min_max_scaled, columns_names=min_max_scaler_columns_names)
 
-    precoce_ms_data_frame = pre_processing.drop_feature_by_correlation(
-        data_frame=precoce_ms_data_frame, method='pearson', columns_names=['Maturidade', 'Acabamento', 'Peso', 'classificacao'])
+        reports.correlation_matrix(
+            data_frame=precoce_ms_data_frame, method='pearson', attribute='classificacao',
+            display_matrix=False, export_matrix=False, path_save_matrix='./plots')
+
+        precoce_ms_data_frame = pre_processing.drop_feature_by_correlation(
+            data_frame=precoce_ms_data_frame, method='pearson', columns_names=['Maturidade', 'Acabamento', 'Peso', 'classificacao'])
 
     ######### PATTERN EXTRACTION #########
-
-    x, y = pattern_extraction.create_x_y_data(data_frame=precoce_ms_data_frame)
-
-    print('\nX: ', type(x))
-    print('Y: ', type(y))
-
-    reports.class_distribution(y)
-
     if execute_classifiers:
+
+        x, y = pattern_extraction.create_x_y_data(
+            data_frame=precoce_ms_data_frame)
+
+        print('\nX: ', type(x))
+        print('Y: ', type(y))
+
+        reports.class_distribution(y)
+
+        # TODO: Implement XGBoost and TabNet
         # k-nearest neighbors
         # Algorithm parameter{‘auto’, ‘ball_tree’, ‘kd_tree’, ‘brute’}, default=’auto’ for now is in auto
         # ‘auto’ will attempt to decide the most appropriate algorithm based on the values passed to fit method.
