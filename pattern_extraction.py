@@ -36,6 +36,7 @@ def run_models(x: np.array, y: np.array, models: dict, models_results: dict, n_s
     Returns:
         dict: Return a dictionary with the avaliation results of each model.
     """
+    # TODO: Implment to save the best parameters of each model
 
     if type_of_target(y) == 'unknown':
         y = np.array(y).astype(int)
@@ -43,7 +44,7 @@ def run_models(x: np.array, y: np.array, models: dict, models_results: dict, n_s
     results = pd.DataFrame(
         columns=[
             'Iteração', 'Acurácia', 'Micro Revocação', 'Macro Revocação',
-            'Micro Precisao', 'Macro Precisao', 'Micro F1', 'Macro F1'
+            'Micro Precisao', 'Macro Precisao', 'Micro F1', 'Macro F1', 'Melhores Parâmetros'
         ]
     )
 
@@ -86,6 +87,7 @@ def run_models(x: np.array, y: np.array, models: dict, models_results: dict, n_s
             # Calculating the metrics
             dict_results = __evaluate_model(y_test=y_test, y_pred=y_pred)
             dict_results['Iteração'] = count
+            dict_results['Melhores Parâmetros'] = model.get_params()
             # models_results[key] = models_results[key].append(
             #     dict_results, ignore_index=True)
             models_results[key] = pd.concat(
