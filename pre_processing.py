@@ -123,7 +123,7 @@ def one_hot_encoder_columns(data_frame: pd.DataFrame, columns_one_hot_encoded: d
                 encoder_column = OneHotEncoder(
                     sparse=False, handle_unknown='infrequent_if_exist', drop='if_binary')
                 encoded_df = pd.DataFrame(encoder_column.fit_transform(
-                    data_frame[[column]]), columns=encoder_column.get_feature_names_out())
+                    data_frame[[column]]), columns=encoder_column.get_feature_names_out(), index=data_frame.index.values.tolist())
                 data_frame = pd.concat([data_frame, encoded_df], axis=1)
                 data_frame = delete_columns(
                     data_frame=data_frame, columns_names=[column])
