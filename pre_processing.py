@@ -40,16 +40,20 @@ def delete_duplicate_rows_by_attribute(data_frame: pd.DataFrame, attribute_name:
     """
 
     print('\n*****INICIO DELETE DUPLICATE ROWS BY ATTRIBUTE******')
-    rows_duplicated = data_frame[data_frame.duplicated(
-        attribute_name, keep=False)].sort_values(attribute_name)
-    if rows_duplicated.size > 0:
-        print('Linhas duplicadas encontradas para o atributo {}.'.format(
-            attribute_name))
-        if print_report:
-            reports.duplicate_rows_by_attribute(
-                data_frame=data_frame, rows_duplicated=rows_duplicated, attribute=attribute_name)
-        data_frame.drop_duplicates(
-            subset=attribute_name, keep='first', inplace=True)
+    if attribute_name in data_frame.columns:
+        rows_duplicated = data_frame[data_frame.duplicated(
+            attribute_name, keep=False)].sort_values(attribute_name)
+        if rows_duplicated.size > 0:
+            print('Linhas duplicadas encontradas para o atributo {}.'.format(
+                attribute_name))
+            if print_report:
+                reports.duplicate_rows_by_attribute(
+                    data_frame=data_frame, rows_duplicated=rows_duplicated, attribute=attribute_name)
+            data_frame.drop_duplicates(
+                subset=attribute_name, keep='first', inplace=True)
+    else:
+        print(
+            '!!!>>> Atributo {} não encontrado no DataFrame para delete duplicates rows by attibute.'.format(attribute_name))
     print('*****FIM DELETE DUPLICATE ROWS BY ATTRIBUTE*********')
     return data_frame
 
