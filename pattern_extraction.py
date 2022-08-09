@@ -36,7 +36,6 @@ def run_models(x: np.array, y: np.array, models: dict, models_results: dict, n_s
     Returns:
         dict: Return a dictionary with the avaliation results of each model.
     """
-    # TODO: Implment to save the best parameters of each model
 
     if type_of_target(y) == 'unknown':
         y = np.array(y).astype(int)
