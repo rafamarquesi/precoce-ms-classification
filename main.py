@@ -18,7 +18,7 @@ from sklearn.ensemble import RandomForestClassifier
 if __name__ == '__main__':
 
     csv_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1.csv'
-    number_csv_lines = None
+    number_csv_lines = 5000
 
     # TODO: Verify if the label encoder is encoding the correct values, example: Maturidade 'd' -> 0, '2' -> 1, '4' -> 2 ...
     label_encoder_columns_names = [
@@ -41,8 +41,8 @@ if __name__ == '__main__':
     ]
     columns_min_max_scaled = {}
 
-    # delete_columns_names = None
-    delete_columns_names = [
+    # delete_columns_names_on_load_data = None
+    delete_columns_names_on_load_data = [
         'Frigorifico_ID', 'Frigorifico_CNPJ', 'Frigorifico_RazaoSocial', 'Municipio_Frigorifico',
         'EstabelecimentoIdentificador', 'Data_homol', 'Questionario_ID',
         'area so confinamento', 'Lista Trace', 'Motivo', 'data_homol_select', 'dif_datas',
@@ -56,24 +56,22 @@ if __name__ == '__main__':
 
     # Dictionary containing the instantiated classes of classifiers and the parameters for optimization.
     classifiers = {}
+
     models_results = {}
 
-    execute_pre_processing = False
-    execute_classifiers = False
+    execute_pre_processing = True
+    execute_classifiers = True
 
     ######### CSV TREATMENTS #########
 
     precoce_ms_data_frame = csv_treatments.load_data(
-        csv_path=csv_path, columns_names=delete_columns_names, number_csv_lines=number_csv_lines)
+        csv_path=csv_path, columns_names=delete_columns_names_on_load_data, number_csv_lines=number_csv_lines)
 
-    precoce_ms_data_frame = csv_treatments.move_cloumns_last_positions(
-        data_frame=precoce_ms_data_frame, columns_names=['classificacao'])
-
-    # reports.print_informations(data_frame=precoce_ms_data_frame)
+    reports.print_informations(data_frame=precoce_ms_data_frame)
 
     # reports.print_list_columns(data_frame=precoce_ms_data_frame)
 
-    reports.all_attributes(data_frame=precoce_ms_data_frame)
+    # reports.all_attributes(data_frame=precoce_ms_data_frame)
 
     ######### PRE PROCESSING #########
     if execute_pre_processing:
@@ -93,7 +91,7 @@ if __name__ == '__main__':
             data_frame=precoce_ms_data_frame, columns_label_encoded=columns_label_encoded, columns_names=label_encoder_columns_names)
 
         precoce_ms_data_frame, columns_one_not_encoded = pre_processing.one_hot_encoder_columns(
-            data_frame=precoce_ms_data_frame, columns_one_not_encoded=columns_one_not_encoded, columns_names=one_hot_encoder_columns_names)
+            data_frame=precoce_ms_data_frame, columns_one_hot_encoded=columns_one_not_encoded, columns_names=one_hot_encoder_columns_names)
 
         precoce_ms_data_frame, columns_min_max_scaled = pre_processing.min_max_scaler_columns(
             data_frame=precoce_ms_data_frame, columns_min_max_scaled=columns_min_max_scaled, columns_names=min_max_scaler_columns_names)
@@ -104,6 +102,9 @@ if __name__ == '__main__':
 
         precoce_ms_data_frame = pre_processing.drop_feature_by_correlation(
             data_frame=precoce_ms_data_frame, method='pearson', columns_names=['Maturidade', 'Acabamento', 'Peso', 'classificacao'])
+
+        precoce_ms_data_frame = csv_treatments.move_cloumns_last_positions(
+            data_frame=precoce_ms_data_frame, columns_names=['classificacao'])
 
     ######### PATTERN EXTRACTION #########
     if execute_classifiers:
@@ -201,4 +202,6 @@ if __name__ == '__main__':
         # Running the classifiers
         models_results = pattern_extraction.run_models(
             x=x, y=y, models=classifiers, models_results=models_results)
-        print(models_results)
+
+        reports.print_models_results(
+            models_results=models_results, path_save_fig='./plots')
