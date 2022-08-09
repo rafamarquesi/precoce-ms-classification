@@ -1,9 +1,11 @@
+import random
 from sys import displayhook
 import pandas as pd
 import numpy as np
 import seaborn as sns
 import dataframe_image as dfi
 from datetime import datetime
+import matplotlib.pyplot as plt
 
 
 def print_informations(data_frame: pd.DataFrame) -> None:
@@ -156,9 +158,98 @@ def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = N
             path_save_matrix = path_save_matrix + '/correlation_matrix-{}.png'.format(
                 __get_current_datetime())
 
-        dfi.export(styled_table, path_save_matrix, max_cols=-1)
+        dfi.export(styled_table, path_save_matrix, max_cols=-1, max_rows=-1)
 
     print('*****FIM CORRELATION MATRIX*********')
+
+
+def print_models_results(models_results: dict, path_save_fig: str = None, display_results: bool = False) -> None:
+    """Print the models results.
+
+    Args:
+        models_results (dict): Results of the models.
+        path_save_fig (str, optional): Path to save the figures. If None, save the figures in root path of project. Defaults to None.
+        display_results (bool, optional): Flag to display the results, for example in jupyter notebook. Defaults to False.
+    """
+    print('\n*****INICIO IMPRIMIR RESULTADOS MODELOS******')
+    accuracy_graphic = pd.DataFrame()
+
+    if path_save_fig is None:
+        path_save_fig = ''
+    else:
+        path_save_fig = path_save_fig + '/'
+
+    for key, value in models_results.items():
+
+        cm = sns.light_palette(
+            __generate_random_rgb_color(), input="husl", as_cmap=True)
+
+        print('---> Algoritmo: {} \nResultado:\n'.format(key))
+
+        value_styled = value.style.background_gradient(cmap=cm)
+
+        if display_results:
+            displayhook(value_styled)
+        else:
+            print('{}\n\n'.format(value))
+
+        dfi.export(
+            value_styled,
+            path_save_fig +
+            'evaluation-measures-{}-{}'.format(key, __get_current_datetime()),
+            max_cols=-1,
+            max_rows=-1
+        )
+
+        print(
+            '\nDescribe:\n{}\n\n\n'.format(value.drop(columns=['Iteração']).describe()))
+
+        accuracy_graphic = pd.concat(
+            [
+                accuracy_graphic,
+                pd.DataFrame(
+                    models_results[key].Acurácia.values, columns=[key])
+            ],
+            axis=1
+        )
+
+        fig = plt.figure()
+        accuracy_graphic[key].to_frame().boxplot()
+        fig.savefig(
+            path_save_fig + 'boxplot-accuracy-{}-{}.png'.format(key, __get_current_datetime()))
+
+        if display_results:
+            plt.show()
+
+    fig = plt.figure()
+    accuracy_graphic.boxplot()
+    fig.savefig(path_save_fig +
+                'boxplot-accuracy-all-models-{}.png'.format(__get_current_datetime()))
+
+    if display_results:
+        print('\nBoxplot de acurácia de todos os modelos:')
+        plt.show()
+
+    print('Desvio padrão da acurácia dos algoritmos:')
+    displayhook(accuracy_graphic.std())
+
+    print('\nMédia da acurácia dos algoritmos:')
+    displayhook(accuracy_graphic.mean())
+
+    # Ghraphic of mean and standard deviation, of all iterations, of each algorithm
+    pd.DataFrame(
+        [accuracy_graphic.mean(), accuracy_graphic.std()],
+        index=['Média', 'Desvio\nPadrão']
+    ).plot.barh().get_figure().savefig(
+        path_save_fig +
+        'barh-accuracy-meand-std-all-models-{}.png'.format(
+            __get_current_datetime())
+    )
+
+    if display_results:
+        plt.show()
+
+    print('*****FIM IMPRIMIR RESULTADOS MODELOS******')
 
 ############# PRIVATE METHODS #############
 
@@ -183,3 +274,13 @@ def __get_current_datetime() -> str:
         str: Current datetime.
     """
     return datetime.now().strftime('%d-%m-%Y_%H:%M:%S')
+
+
+def __generate_random_rgb_color() -> list:
+    """Generate a random rgb color.
+
+    Returns:
+        list: Random rgb color.
+    """
+    # return '#%02x%02x%02x' % (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+    return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 70))
