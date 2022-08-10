@@ -2,7 +2,7 @@ import reports
 
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import LabelEncoder, MinMaxScaler, OneHotEncoder
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler, OneHotEncoder, OrdinalEncoder
 
 
 def delete_columns(data_frame: pd.DataFrame, columns_names: list) -> pd.DataFrame:
@@ -79,6 +79,37 @@ def delete_nan_rows(data_frame: pd.DataFrame, print_report: bool = False) -> pd.
         print('Nenhuma linha com valores NaNN encontrada.')
     print('*****FIM DELETE NAN ROWS*********')
     return data_frame
+
+
+def ordinal_encoder_columns(data_frame: pd.DataFrame, columns_ordinal_encoded: dict, columns_names: dict) -> tuple:
+    """Ordinal encode the DataFrame, given the columns names, passed as parameters.
+
+    Args:
+        data_frame (pd.DataFrame): DataFrame to be treated.
+        columns_ordinal_encoded (dict): Dictionary with the ordinal encoders for each column.
+        columns_names (dict): Dictionary with column name, as key, and order of the categories. To keep the original order of the categories pass None as value.
+
+    Returns:
+        tuple: A tuple with the encoded data_frame and the columns_ordinal_encoded, in this order.
+    """
+    print('\n*****INICIO ORDINAL ENCODER******')
+    for column, categories in columns_names.items():
+        if column in data_frame.columns:
+            if column not in columns_ordinal_encoded:
+                if categories is None:
+                    encoder_column = OrdinalEncoder()
+                else:
+                    encoder_column = OrdinalEncoder(categories=[categories])
+                data_frame[column] = encoder_column.fit_transform(
+                    data_frame[[column]])
+                columns_ordinal_encoded[column] = encoder_column
+            else:
+                print('!!!>>> A coluna {} já está codificada.'.format(column))
+        else:
+            print(
+                '!!!>>> Coluna {} não encontrada no DataFrame para ordinal encoding.'.format(column))
+    print('*****FIM ORDINAL ENCODER*********')
+    return data_frame, columns_ordinal_encoded
 
 
 def label_encoder_columns(data_frame: pd.DataFrame, columns_label_encoded: dict, columns_names: list) -> tuple:
