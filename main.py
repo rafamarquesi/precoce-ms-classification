@@ -18,11 +18,23 @@ from sklearn.ensemble import RandomForestClassifier
 if __name__ == '__main__':
 
     csv_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1.csv'
-    number_csv_lines = 5000
+    number_csv_lines = 20000
+
+    ordinal_encoder_columns_names = {
+        'Maturidade': ['d', '2', '4', '6', '8'],
+        'Acabamento': [
+            'Magra - Gordura Ausente',
+            'Gordura Escassa - 1 A 3 Mm De Espessura',
+            'Gordura Mediana - Acima De 3 A Até 6 Mm De Espessura',
+            'Gordura Uniforme - Acima De 6 E Até 10 Mm De Espessura',
+            'Gordura Excessiva - Acima De 10 Mm De Espessura'
+        ]
+    }
+    columns_ordinal_encoded = {}
 
     # TODO: Verify if the label encoder is encoding the correct values, example: Maturidade 'd' -> 0, '2' -> 1, '4' -> 2 ...
     label_encoder_columns_names = [
-        'Maturidade', 'Acabamento', 'QuestionarioClassificacaoEstabel', 'CATEGORIA', 'classificacao'
+        'QuestionarioClassificacaoEstabel', 'CATEGORIA', 'classificacao'
     ]
     columns_label_encoded = {}
 
@@ -60,7 +72,7 @@ if __name__ == '__main__':
     models_results = {}
 
     execute_pre_processing = True
-    execute_classifiers = True
+    execute_classifiers = False
 
     ######### CSV TREATMENTS #########
 
@@ -86,6 +98,9 @@ if __name__ == '__main__':
             data_frame=precoce_ms_data_frame)
 
         reports.print_informations(precoce_ms_data_frame)
+
+        precoce_ms_data_frame, columns_ordinal_encoded = pre_processing.ordinal_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_ordinal_encoded=columns_ordinal_encoded, columns_names=ordinal_encoder_columns_names)
 
         precoce_ms_data_frame, columns_label_encoded = pre_processing.label_encoder_columns(
             data_frame=precoce_ms_data_frame, columns_label_encoded=columns_label_encoded, columns_names=label_encoder_columns_names)
