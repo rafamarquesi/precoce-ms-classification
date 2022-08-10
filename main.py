@@ -28,13 +28,14 @@ if __name__ == '__main__':
             'Gordura Mediana - Acima De 3 A Até 6 Mm De Espessura',
             'Gordura Uniforme - Acima De 6 E Até 10 Mm De Espessura',
             'Gordura Excessiva - Acima De 10 Mm De Espessura'
-        ]
+        ],
+        'QuestionarioClassificacaoEstabel': ['0', '21', '26', '30'],
+        'CATEGORIA': ['AAA', 'AA', 'BBB', 'BB', 'C', 'D']
     }
     columns_ordinal_encoded = {}
 
-    # TODO: Verify if the label encoder is encoding the correct values, example: Maturidade 'd' -> 0, '2' -> 1, '4' -> 2 ...
     label_encoder_columns_names = [
-        'QuestionarioClassificacaoEstabel', 'CATEGORIA', 'classificacao'
+        'classificacao'
     ]
     columns_label_encoded = {}
 
