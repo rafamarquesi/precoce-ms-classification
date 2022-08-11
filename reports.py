@@ -1,10 +1,10 @@
 import random
+import utils
 from sys import displayhook
 import pandas as pd
 import numpy as np
 import seaborn as sns
 import dataframe_image as dfi
-from datetime import datetime
 import matplotlib.pyplot as plt
 
 
@@ -153,10 +153,10 @@ def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = N
     if export_matrix:
         if path_save_matrix is None:
             path_save_matrix = 'correlation_matrix-{}.png'.format(
-                __get_current_datetime())
+                utils.get_current_datetime())
         else:
             path_save_matrix = path_save_matrix + '/correlation_matrix-{}.png'.format(
-                __get_current_datetime())
+                utils.get_current_datetime())
 
         dfi.export(styled_table, path_save_matrix, max_cols=-1, max_rows=-1)
 
@@ -196,7 +196,10 @@ def print_models_results(models_results: dict, path_save_fig: str = None, displa
         dfi.export(
             value_styled,
             path_save_fig +
-            'evaluation-measures-{}-{}'.format(key, __get_current_datetime()),
+            'evaluation-measures-{}-{}'.format(
+                key,
+                utils.get_current_datetime()
+            ),
             max_cols=-1,
             max_rows=-1
         )
@@ -216,7 +219,7 @@ def print_models_results(models_results: dict, path_save_fig: str = None, displa
         fig = plt.figure()
         accuracy_graphic[key].to_frame().boxplot()
         fig.savefig(
-            path_save_fig + 'boxplot-accuracy-{}-{}.png'.format(key, __get_current_datetime()))
+            path_save_fig + 'boxplot-accuracy-{}-{}.png'.format(key, utils.get_current_datetime()))
 
         if display_results:
             plt.show()
@@ -224,7 +227,7 @@ def print_models_results(models_results: dict, path_save_fig: str = None, displa
     fig = plt.figure()
     accuracy_graphic.boxplot()
     fig.savefig(path_save_fig +
-                'boxplot-accuracy-all-models-{}.png'.format(__get_current_datetime()))
+                'boxplot-accuracy-all-models-{}.png'.format(utils.get_current_datetime()))
 
     if display_results:
         print('\nBoxplot de acurácia de todos os modelos:')
@@ -243,7 +246,7 @@ def print_models_results(models_results: dict, path_save_fig: str = None, displa
     ).plot.barh().get_figure().savefig(
         path_save_fig +
         'barh-accuracy-meand-std-all-models-{}.png'.format(
-            __get_current_datetime())
+            utils.get_current_datetime())
     )
 
     if display_results:
@@ -265,15 +268,6 @@ def __magnify() -> list:
             dict(selector="td", props=[('padding', "0em 0em")]),
             dict(selector="th:hover", props=[("font-size", "12pt")]),
             dict(selector="tr:hover td:hover", props=[('max-width', '200px'), ('font-size', '12pt')])]
-
-
-def __get_current_datetime() -> str:
-    """Get the current datetime.
-
-    Returns:
-        str: Current datetime.
-    """
-    return datetime.now().strftime('%d-%m-%Y_%H:%M:%S')
 
 
 def __generate_random_rgb_color() -> list:
