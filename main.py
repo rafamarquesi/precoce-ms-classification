@@ -3,6 +3,7 @@ import csv_treatments
 import pre_processing
 import reports
 import pattern_extraction
+import utils
 import numpy as np
 
 # classification models
@@ -18,41 +19,7 @@ from sklearn.ensemble import RandomForestClassifier
 if __name__ == '__main__':
 
     csv_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1.csv'
-    number_csv_lines = 20000
-
-    ordinal_encoder_columns_names = {
-        'Maturidade': ['d', '2', '4', '6', '8'],
-        'Acabamento': [
-            'Magra - Gordura Ausente',
-            'Gordura Escassa - 1 A 3 Mm De Espessura',
-            'Gordura Mediana - Acima De 3 A Até 6 Mm De Espessura',
-            'Gordura Uniforme - Acima De 6 E Até 10 Mm De Espessura',
-            'Gordura Excessiva - Acima De 10 Mm De Espessura'
-        ],
-        'QuestionarioClassificacaoEstabel': ['0', '21', '26', '30'],
-        'CATEGORIA': ['AAA', 'AA', 'BBB', 'BB', 'C', 'D']
-    }
-    columns_ordinal_encoded = {}
-
-    label_encoder_columns_names = [
-        'classificacao'
-    ]
-    columns_label_encoded = {}
-
-    one_hot_encoder_columns_names = [
-        'EstabelecimentoMunicipio', 'DataAbate', 'Tipificacao', 'ANO'
-    ]
-    columns_one_not_encoded = {}
-
-    min_max_scaler_columns_names = [
-        'Peso',
-        'med7d_formITUinst', 'med7d_preR_soja', 'med7d_preR_milho', 'med7d_preR_boi',
-        'med1m_formITUinst', 'med1m_preR_soja', 'med1m_preR_milho', 'med1m_preR_boi',
-        'med3m_formITUinst', 'med3m_preR_soja', 'med3m_preR_milho', 'med3m_preR_boi',
-        'med6m_formITUinst', 'med6m_preR_soja', 'med6m_preR_milho', 'med6m_preR_boi',
-        'med12m_formITUinst', 'med12m_preR_soja', 'med12m_preR_milho', 'med12m_preR_boi'
-    ]
-    columns_min_max_scaled = {}
+    number_csv_lines = None
 
     # delete_columns_names_on_load_data = None
     delete_columns_names_on_load_data = [
@@ -89,6 +56,43 @@ if __name__ == '__main__':
     ######### PRE PROCESSING #########
     if execute_pre_processing:
 
+        path_save_csv_after_pre_processing = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1_after_pre_processing-{}.csv'.format(
+            utils.get_current_datetime())
+
+        ordinal_encoder_columns_names = {
+            'Maturidade': ['d', '2', '4', '6', '8'],
+            'Acabamento': [
+                'Magra - Gordura Ausente',
+                'Gordura Escassa - 1 A 3 Mm De Espessura',
+                'Gordura Mediana - Acima De 3 A Até 6 Mm De Espessura',
+                'Gordura Uniforme - Acima De 6 E Até 10 Mm De Espessura',
+                'Gordura Excessiva - Acima De 10 Mm De Espessura'
+            ],
+            'QuestionarioClassificacaoEstabel': ['0', '21', '26', '30'],
+            'CATEGORIA': ['AAA', 'AA', 'BBB', 'BB', 'C', 'D']
+        }
+        columns_ordinal_encoded = {}
+
+        label_encoder_columns_names = [
+            'classificacao'
+        ]
+        columns_label_encoded = {}
+
+        one_hot_encoder_columns_names = [
+            'EstabelecimentoMunicipio', 'DataAbate', 'Tipificacao', 'ANO'
+        ]
+        columns_one_not_encoded = {}
+
+        min_max_scaler_columns_names = [
+            'Peso',
+            'med7d_formITUinst', 'med7d_preR_soja', 'med7d_preR_milho', 'med7d_preR_boi',
+            'med1m_formITUinst', 'med1m_preR_soja', 'med1m_preR_milho', 'med1m_preR_boi',
+            'med3m_formITUinst', 'med3m_preR_soja', 'med3m_preR_milho', 'med3m_preR_boi',
+            'med6m_formITUinst', 'med6m_preR_soja', 'med6m_preR_milho', 'med6m_preR_boi',
+            'med12m_formITUinst', 'med12m_preR_soja', 'med12m_preR_milho', 'med12m_preR_boi'
+        ]
+        columns_min_max_scaled = {}
+
         precoce_ms_data_frame = pre_processing.delete_duplicate_rows_by_attribute(
             data_frame=precoce_ms_data_frame, attribute_name='ID_ANIMAL')
 
@@ -121,6 +125,9 @@ if __name__ == '__main__':
 
         precoce_ms_data_frame = csv_treatments.move_cloumns_last_positions(
             data_frame=precoce_ms_data_frame, columns_names=['classificacao'])
+
+        csv_treatments.generate_new_csv(
+            data_frame=precoce_ms_data_frame, csv_path=path_save_csv_after_pre_processing)
 
     ######### PATTERN EXTRACTION #########
     if execute_classifiers:
