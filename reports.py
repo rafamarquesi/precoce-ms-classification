@@ -19,6 +19,8 @@ def print_informations(data_frame: pd.DataFrame) -> None:
     # self.relatorio_atributos_base_dados(dados=dados_temp)
     print('Número total de linhas do DataFrame: {}'.format(len(data_frame.index)))
     print('Número de colunas: {}'.format(data_frame.columns.size))
+    print('Informações do DataFrame:')
+    data_frame.info(verbose=True, memory_usage='deep')
     print('*****FIM PRINT INFOS*********')
 
 
@@ -253,6 +255,19 @@ def print_models_results(models_results: dict, path_save_fig: str = None, displa
         plt.show()
 
     print('*****FIM IMPRIMIR RESULTADOS MODELOS******')
+
+
+def print_min_max_column(data_frame: pd.DataFrame) -> None:
+    """Print the min and max of the column in the data frame.
+
+    Args:
+        data_frame (pd.DataFrame): Data frame to be treated.
+    """
+    print('\n*****INICIO IMPRIMIR MIN MAX COLUMN******')
+    for column in data_frame.columns:
+        print('\nColumn:{}\nMin:{}\nMax:{}'.format(
+            column, data_frame[column].min(), data_frame[column].max()))
+    print('*****FIM IMPRIMIR MIN MAX COLUMN******')
 
 ############# PRIVATE METHODS #############
 
