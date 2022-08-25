@@ -45,6 +45,8 @@ def load_data(csv_path: str, columns_names: list = None, number_csv_lines: int =
             csv_path, sep=';', encoding='latin1', decimal=',')
 
     reports.print_informations(temp_data)
+    # Used to print min and max of each column
+    # reports.print_min_max_column(temp_data)
 
     if columns_names != None:
         temp_data = delete_columns(temp_data, columns_names)
