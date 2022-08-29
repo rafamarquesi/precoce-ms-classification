@@ -21,6 +21,117 @@ if __name__ == '__main__':
     csv_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1.csv'
     number_csv_lines = None
 
+    dtype_dict = {
+        'ID_ANIMAL': 'uint32',
+        'EstabelecimentoMunicipio': 'category',
+        'Frigorifico_ID': 'uint8',
+        'Frigorifico_CNPJ': 'uint64',
+        'Frigorifico_RazaoSocial': 'category',
+        'Municipio_Frigorifico': 'category',
+        'Tipificacao': 'category',
+        'Maturidade': 'category',
+        'Acabamento': 'category',
+        'Peso': 'float16',
+        'EstabelecimentoIdentificador': 'uint16',
+        'Questionario_ID': 'uint16',
+        'QuestionarioClassificacaoEstabel': 'uint8',
+        'FERTIIRRIGACAO': 'uint8',
+        'ILP': 'uint8',
+        'IFP': 'uint8',
+        'ILPF': 'uint8',
+        'CONCEN_VOLUM': 'UInt8',
+        'CREEPFEEDING': 'UInt8',
+        'FORN_ESTRAT_SILAGEM': 'UInt8',
+        'PROTEICO': 'UInt8',
+        'PROTEICO_ENERGETICO': 'UInt8',
+        'RACAO_BAL_CONS_INFERIOR': 'UInt8',
+        'SAL_MINERAL': 'UInt8',
+        'SALMINERAL_UREIA': 'UInt8',
+        'RACAOO_BAL_CONSUMO_IG': 'UInt8',
+        'GRAO_INTEIRO': 'UInt8',
+        'ALTO_CONCENTR_VOLUM': 'UInt8',
+        'ALTO_CONCENTRADO': 'UInt8',
+        'QuestionarioPossuiOutrosIncentiv': 'uint8',
+        'QuestionarioFabricaRacao': 'uint8',
+        'area so confinamento': 'UInt8',
+        'regua de manejo': 'UInt8',
+        'boa cobertura vegetal, com baixa': 'UInt8',
+        'erosaoo laminar ou em sulco igua': 'UInt8',
+        'identificacao individual': 'UInt8',
+        'rastreamento SISBOV': 'UInt8',
+        'Lista Trace': 'UInt8',
+        'BPA': 'UInt8',
+        'participa de aliancas mercadolog': 'UInt8',
+        'QuestionarioPraticaRecuperacaoPa': 'uint8',
+        'Confinamento': 'UInt8',
+        'Suplementacao_a_campo': 'UInt8',
+        'SemiConfinamento': 'UInt8',
+        'dif_datas': 'uint16',
+        'tot7d_Chuva': 'float32',
+        'med7d_TempInst': 'float32',
+        'med7d_TempMin': 'float32',
+        'med7d_UmidInst': 'float32',
+        'med7d_formITUinst': 'float32',
+        'med7d_formITUmax': 'float32',
+        'med7d_NDVI': 'float32',
+        'med7d_EVI': 'float32',
+        'med7d_preR_soja': 'float32',
+        'med7d_preR_milho': 'float32',
+        'med7d_preR_boi': 'float32',
+        'tot1m_Chuva': 'float32',
+        'med1m_TempInst': 'float32',
+        'med1m_UmidInst': 'float32',
+        'med1m_formITUinst': 'float32',
+        'med1m_NDVI': 'float32',
+        'med1m_EVI': 'float32',
+        'med1m_preR_soja': 'float32',
+        'med1m_preR_milho': 'float32',
+        'med1m_preR_boi': 'float32',
+        'tot3m_Chuva': 'float32',
+        'med3m_TempInst': 'float32',
+        'med3m_UmidInst': 'float32',
+        'med3m_formITUinst': 'float32',
+        'med3m_formITUmax': 'float32',
+        'med3m_NDVI': 'float32',
+        'med3m_EVI': 'float32',
+        'med3m_preR_soja': 'float32',
+        'med3m_preR_milho': 'float32',
+        'med3m_preR_boi': 'float32',
+        'tot6m_Chuva': 'float32',
+        'med6m_TempInst': 'float32',
+        'med6m_UmidInst': 'float32',
+        'med6m_formITUinst': 'float32',
+        'med6m_NDVI': 'float32',
+        'med6m_EVI': 'float32',
+        'med6m_preR_soja': 'float32',
+        'med6m_preR_milho': 'float32',
+        'med6m_preR_boi': 'float32',
+        'tot12m_Chuva': 'float32',
+        'med12m_TempInst': 'float32',
+        'med12m_TempMin': 'float32',
+        'med12m_UmidInst': 'float32',
+        'med12m_formITUinst': 'float32',
+        'med12m_NDVI': 'float32',
+        'med12m_EVI': 'float32',
+        'med12m_preR_soja': 'float32',
+        'med12m_preR_milho': 'float32',
+        'med12m_preR_boi': 'float32',
+        'cnt7d_CL_ITUinst': 'float32',
+        'cnt1m_CL_ITUinst': 'float32',
+        'cnt3m_CL_ITUinst': 'float32',
+        'cnt6m_CL_ITUinst': 'float32',
+        'cnt12m_CL_ITUinst': 'float32',
+        'ANO': 'uint16',
+        'CATEGORIA': 'category',
+        'classificacao': 'category',
+        'Motivo': 'category'
+    }
+
+    parse_dates = [
+        'DataAbate', 'Data_homol', 'DataAbate_6m_ANT', 'data_homol_select', 'data12m', 'data6m',
+        'data3m', 'data1m', 'data7d'
+    ]
+
     # delete_columns_names_on_load_data = None
     delete_columns_names_on_load_data = [
         'Frigorifico_ID', 'Frigorifico_CNPJ', 'Frigorifico_RazaoSocial', 'Municipio_Frigorifico',
@@ -39,13 +150,13 @@ if __name__ == '__main__':
 
     models_results = {}
 
-    execute_pre_processing = True
+    execute_pre_processing = False
     execute_classifiers = False
 
     ######### CSV TREATMENTS #########
 
     precoce_ms_data_frame = csv_treatments.load_data(
-        csv_path=csv_path, columns_names=delete_columns_names_on_load_data, number_csv_lines=number_csv_lines)
+        csv_path=csv_path, columns_names=delete_columns_names_on_load_data, number_csv_lines=number_csv_lines, dtype_dict=dtype_dict, parse_dates=parse_dates)
 
     reports.print_informations(data_frame=precoce_ms_data_frame)
 
@@ -69,7 +180,7 @@ if __name__ == '__main__':
                 'Gordura Excessiva - Acima De 10 Mm De Espessura'
             ],
             'QuestionarioClassificacaoEstabel': ['0', '21', '26', '30'],
-            'CATEGORIA': ['AAA', 'AA', 'BBB', 'BB', 'C', 'D']
+            'CATEGORIA': ['D', 'C', 'BB', 'BBB', 'AA', 'AAA']
         }
         columns_ordinal_encoded = {}
 
