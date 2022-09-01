@@ -19,7 +19,7 @@ from sklearn.ensemble import RandomForestClassifier
 if __name__ == '__main__':
 
     csv_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1.csv'
-    number_csv_lines = None
+    number_csv_lines = 2000000
 
     dtype_dict = {
         'ID_ANIMAL': 'uint32',
@@ -31,7 +31,7 @@ if __name__ == '__main__':
         'Tipificacao': 'category',
         'Maturidade': 'category',
         'Acabamento': 'category',
-        'Peso': 'float16',
+        'Peso': 'float32',
         'EstabelecimentoIdentificador': 'uint16',
         'Questionario_ID': 'uint16',
         'QuestionarioClassificacaoEstabel': 'uint8',
@@ -150,7 +150,7 @@ if __name__ == '__main__':
 
     models_results = {}
 
-    execute_pre_processing = False
+    execute_pre_processing = True
     execute_classifiers = False
 
     ######### CSV TREATMENTS #########
@@ -158,7 +158,7 @@ if __name__ == '__main__':
     precoce_ms_data_frame = csv_treatments.load_data(
         csv_path=csv_path, columns_names=delete_columns_names_on_load_data, number_csv_lines=number_csv_lines, dtype_dict=dtype_dict, parse_dates=parse_dates)
 
-    reports.print_informations(data_frame=precoce_ms_data_frame)
+    # reports.print_informations(data_frame=precoce_ms_data_frame)
 
     # reports.print_list_columns(data_frame=precoce_ms_data_frame)
 
@@ -211,7 +211,7 @@ if __name__ == '__main__':
             data_frame=precoce_ms_data_frame, columns_names=['ID_ANIMAL'])
 
         precoce_ms_data_frame = pre_processing.delete_nan_rows(
-            data_frame=precoce_ms_data_frame)
+            data_frame=precoce_ms_data_frame, print_report=True)
 
         reports.print_informations(precoce_ms_data_frame)
 
@@ -229,7 +229,7 @@ if __name__ == '__main__':
 
         reports.correlation_matrix(
             data_frame=precoce_ms_data_frame, method='pearson', attribute='classificacao',
-            display_matrix=False, export_matrix=False, path_save_matrix='./plots')
+            display_matrix=False, export_matrix=True, path_save_matrix='./plots')
 
         precoce_ms_data_frame = pre_processing.drop_feature_by_correlation(
             data_frame=precoce_ms_data_frame, method='pearson', columns_names=['Maturidade', 'Acabamento', 'Peso', 'classificacao'])

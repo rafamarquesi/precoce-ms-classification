@@ -69,20 +69,20 @@ def duplicate_rows_by_attribute(data_frame: pd.DataFrame, rows_duplicated: pd.Da
         attribute (str): Attribute to be used to report.
     """
     print('\n*****INICIO RELATÓRIO LINHAS DUPLICADAS******')
-    # print('Linhas duplicadas: {}'.format(rows_duplicated))
-    print('Data Frame do Atríbuto {} duplicado: {}'.format(
+    print('Data Frame do Atríbuto {} com as linhas duplicadas:\n{}'.format(
         attribute, rows_duplicated))
-    print('Relatório das colunas que divergem, entre os registros que tem o atributo {} igual.'.format(attribute))
+    print('Relatório dos atributos que divergem, entre os registros que tem o atributo {} igual.'.format(attribute))
     for id in rows_duplicated[attribute].unique():
         print('{}:{}'.format(attribute, id))
         rows_duplicated = data_frame.loc[data_frame[attribute] == id]
         for column_name, column_data in rows_duplicated.iteritems():
             comparison = column_data.ne(
-                column_data.shift().bfill()).astype(int).values
+                column_data.shift().bfill().astype(column_data.dtype.name)).astype('uint8').values
             if not np.all(comparison == comparison[0]):
                 print('Nome coluna que diverge: {}'.format(column_name))
-                print('Index das linhas e valor na coluna que diverge:')
-                print(column_data.ne(column_data.shift().bfill()).astype(int))
+                print('Index das linhas e valor na coluna que diverge:\n{}'.format(
+                    column_data))
+                # print(column_data.ne(column_data.shift().bfill()).astype('uint8'))
                 print('-------------------------------')
         print('Próximo ++++++++++++++')
     print('*****FIM RELATÓRIO LINHAS DUPLICADAS******')
@@ -135,7 +135,7 @@ def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = N
     """
     print('\n*****INICIO CORRELATION MATRIX******')
     if attribute is None:
-        correlation_matrix = data_frame.corr(method=method)
+        correlation_matrix = data_frame.corr(method=method).astype('float32')
 
         cmap = sns.diverging_palette(5, 250, as_cmap=True)
 
@@ -145,7 +145,8 @@ def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = N
             .set_precision(2)\
             .set_table_styles(__magnify())
     else:
-        correlation_matrix = data_frame.corr(method=method)[attribute]
+        correlation_matrix = data_frame.corr(
+            method=method).astype('float32')[attribute]
         styled_table = correlation_matrix.to_frame().style.background_gradient(
             cmap=sns.light_palette((260, 75, 60), input="husl", as_cmap=True))
 

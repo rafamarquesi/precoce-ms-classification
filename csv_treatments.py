@@ -22,7 +22,7 @@ def delete_columns(data_frame: pd.DataFrame, columns_names: list) -> pd.DataFram
             print('Coluna {} excluída.'.format(column))
         else:
             print(
-                '!!!>>> Coluna {} não encontrada no DataFrame para exclusão.'.format(column))
+                '!!!>>> Coluna " {} " não encontrada no DataFrame para exclusão.'.format(column))
     print('*****FIM DELETE COLUNAS*********')
     return data_frame
 

@@ -51,6 +51,7 @@ def delete_duplicate_rows_by_attribute(data_frame: pd.DataFrame, attribute_name:
                     data_frame=data_frame, rows_duplicated=rows_duplicated, attribute=attribute_name)
             data_frame.drop_duplicates(
                 subset=attribute_name, keep='first', inplace=True)
+            print('Linhas duplicadas deletadas.')
     else:
         print(
             '!!!>>> Atributo {} não encontrado no DataFrame para delete duplicates rows by attibute.'.format(attribute_name))
@@ -101,7 +102,7 @@ def ordinal_encoder_columns(data_frame: pd.DataFrame, columns_ordinal_encoded: d
                 else:
                     encoder_column = OrdinalEncoder(categories=[categories])
                 data_frame[column] = encoder_column.fit_transform(
-                    data_frame[[column]])
+                    data_frame[[column]]).astype('uint8')
                 columns_ordinal_encoded[column] = encoder_column
             else:
                 print('!!!>>> A coluna {} já está codificada.'.format(column))
@@ -129,7 +130,7 @@ def label_encoder_columns(data_frame: pd.DataFrame, columns_label_encoded: dict,
             if column not in columns_label_encoded:
                 encoder_column = LabelEncoder()
                 data_frame[column] = encoder_column.fit_transform(
-                    data_frame[column])
+                    data_frame[column]).astype('uint8')
                 columns_label_encoded[column] = encoder_column
             else:
                 print('!!!>>> A coluna {} já está codificada.'.format(column))
@@ -157,8 +158,11 @@ def one_hot_encoder_columns(data_frame: pd.DataFrame, columns_one_hot_encoded: d
             if column not in columns_one_hot_encoded:
                 encoder_column = OneHotEncoder(
                     sparse=False, handle_unknown='infrequent_if_exist', drop='if_binary')
-                encoded_df = pd.DataFrame(encoder_column.fit_transform(
-                    data_frame[[column]]), columns=encoder_column.get_feature_names_out(), index=data_frame.index.values.tolist())
+                encoded_df = pd.DataFrame(
+                    encoder_column.fit_transform(data_frame[[column]]),
+                    columns=encoder_column.get_feature_names_out(),
+                    index=data_frame.index.values.tolist(), dtype='uint8'
+                )
                 data_frame = pd.concat([data_frame, encoded_df], axis=1)
                 data_frame = delete_columns(
                     data_frame=data_frame, columns_names=[column])
