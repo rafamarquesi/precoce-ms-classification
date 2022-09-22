@@ -271,7 +271,7 @@ def min_max_column(data_frame: pd.DataFrame) -> None:
     print('*****FIM IMPRIMIR MIN MAX COLUMN******')
 
 
-def print_unique_values_for_each_column(data_frame: pd.DataFrame) -> None:
+def unique_values_for_each_column(data_frame: pd.DataFrame) -> None:
     """Print the unique values for each column in the data frame.
 
     Args:

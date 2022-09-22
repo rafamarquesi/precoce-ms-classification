@@ -189,7 +189,7 @@ if __name__ == '__main__':
         # reports.print_list_columns(data_frame=precoce_ms_data_frame)
 
         # Print the unique values for each column
-        reports.print_unique_values_for_each_column(
+        reports.unique_values_for_each_column(
             data_frame=precoce_ms_data_frame
         )
 
