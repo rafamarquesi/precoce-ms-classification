@@ -262,21 +262,17 @@ def detect_outliers(series: pd.Series, whis: float = 1.5) -> pd.Series:
     return ~((series - series.median()).abs() <= (whis * iqr))
 
 
-def delete_columns_with_single_value(data_frame: pd.DataFrame, summarize: bool = False) -> pd.DataFrame:
+def delete_columns_with_single_value(data_frame: pd.DataFrame) -> pd.DataFrame:
     """Delete the columns with single value.
 
     Args:
         data_frame (pd.DataFrame): DataFrame to be treated.
-        summarize (bool, optional): If True, summarize the number of unique in each column. Defaults to False.
 
     Returns:
         pd.DataFrame: A DataFrame with the columns with single value deleted.
     """
     print('\n*****INICIO DELETE COLUMNS WITH SINGLE VALUE******')
     counts = data_frame.nunique()
-
-    if summarize:
-        print(counts)
 
     to_del = [i for i, v in counts.items() if v == 1]
 
