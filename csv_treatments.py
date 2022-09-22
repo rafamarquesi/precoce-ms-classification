@@ -55,7 +55,7 @@ def load_data(csv_path: str, sep: str = ';', encoding: str = 'latin1', decimal: 
             csv_path, sep=sep, encoding=encoding, decimal=decimal, dtype=dtype_dict, parse_dates=parse_dates
         )
 
-    reports.print_informations(temp_data)
+    reports.informations(temp_data)
     # Used to print min and max of each column
     # reports.print_min_max_column(temp_data)
 
@@ -64,7 +64,7 @@ def load_data(csv_path: str, sep: str = ';', encoding: str = 'latin1', decimal: 
             data_frame=temp_data, delete_columns_names=delete_columns_names
         )
 
-    reports.print_informations(temp_data)
+    reports.informations(temp_data)
     print('*****FIM LOAD DATA******')
 
     return temp_data

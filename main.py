@@ -173,6 +173,7 @@ if __name__ == '__main__':
     # Dictionary containing the execution results of the models
     models_results = dict()
 
+    print_informations_dataset = True
     execute_pre_processing = False
     execute_classifiers = False
 
@@ -184,14 +185,13 @@ if __name__ == '__main__':
         number_csv_lines=number_csv_lines, dtype_dict=dtype_dict, parse_dates=parse_dates
     )
 
-    # Print the unique values for each column
-    reports.print_unique_values_for_each_column(
-        data_frame=precoce_ms_data_frame
-    )
+    if print_informations_dataset:
+        # reports.print_list_columns(data_frame=precoce_ms_data_frame)
 
-    # reports.print_informations(data_frame=precoce_ms_data_frame)
-
-    # reports.print_list_columns(data_frame=precoce_ms_data_frame)
+        # Print the unique values for each column
+        reports.print_unique_values_for_each_column(
+            data_frame=precoce_ms_data_frame
+        )
 
     ################################################## PRE PROCESSING ##################################################
 
@@ -247,7 +247,7 @@ if __name__ == '__main__':
         precoce_ms_data_frame = pre_processing.delete_nan_rows(
             data_frame=precoce_ms_data_frame, print_report=True)
 
-        reports.print_informations(precoce_ms_data_frame)
+        reports.informations(precoce_ms_data_frame)
 
         precoce_ms_data_frame, columns_ordinal_encoded = pre_processing.ordinal_encoder_columns(
             data_frame=precoce_ms_data_frame, columns_ordinal_encoded=columns_ordinal_encoded, columns_names=ordinal_encoder_columns_names)

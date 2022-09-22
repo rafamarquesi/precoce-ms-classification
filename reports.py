@@ -8,7 +8,7 @@ import dataframe_image as dfi
 import matplotlib.pyplot as plt
 
 
-def print_informations(data_frame: pd.DataFrame) -> None:
+def informations(data_frame: pd.DataFrame) -> None:
     """Print some informations of the DataFrame.
 
     Args:
