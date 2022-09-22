@@ -373,7 +373,7 @@ if __name__ == '__main__':
         models_results = pattern_extraction.run_models(
             x=x, y=y, models=classifiers, models_results=models_results)
 
-        reports.print_models_results(
+        reports.models_results(
             models_results=models_results, path_save_fig='./plots')
 
     # run_log_file.close()

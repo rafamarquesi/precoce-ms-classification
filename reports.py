@@ -166,7 +166,7 @@ def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = N
     print('*****FIM CORRELATION MATRIX*********')
 
 
-def print_models_results(models_results: dict, path_save_fig: str = None, display_results: bool = False) -> None:
+def models_results(models_results: dict, path_save_fig: str = None, display_results: bool = False) -> None:
     """Print the models results.
 
     Args:
