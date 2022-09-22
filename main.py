@@ -16,11 +16,19 @@ from sklearn.ensemble import RandomForestClassifier
 
 # TODO: Treat imbalanced classes (Book Albon - Chapter 5.5)
 
+# TODO: Use the cross_validate function, for evaluation of multiple metrics (https://scikit-learn.org/stable/modules/cross_validation.html#multimetric-cross-validation)
+
+# TODO: Implement function that detect columns with unique values and delete the column with single value (https://machinelearningmastery.com/basic-data-cleaning-for-machine-learning/)
+
 if __name__ == '__main__':
 
+    # Path to the dataset
     csv_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1.csv'
+
+    # Number of lines to be read from the dataset
     number_csv_lines = 2000000
 
+    # Dictionay with type of data for each column
     dtype_dict = {
         'ID_ANIMAL': 'uint32',
         'EstabelecimentoMunicipio': 'category',
@@ -127,11 +135,14 @@ if __name__ == '__main__':
         'Motivo': 'category'
     }
 
+    # List with dates to parse
     parse_dates = [
-        'DataAbate', 'Data_homol', 'DataAbate_6m_ANT', 'data_homol_select', 'data12m', 'data6m',
+        'DataAbate', 'Data_homol', 'DataAbate_6m_ANT',
+        'data_homol_select', 'data12m', 'data6m',
         'data3m', 'data1m', 'data7d'
     ]
 
+    # List with columns to delete when loading dataset
     # delete_columns_names_on_load_data = None
     delete_columns_names_on_load_data = [
         'Frigorifico_ID', 'Frigorifico_CNPJ', 'Frigorifico_RazaoSocial', 'Municipio_Frigorifico',
@@ -145,18 +156,21 @@ if __name__ == '__main__':
         'tot12m_Chuva', 'med12m_TempInst', 'med12m_TempMin', 'med12m_UmidInst', 'med12m_NDVI', 'med12m_EVI',
     ]
 
-    # Dictionary containing the instantiated classes of classifiers and the parameters for optimization.
-    classifiers = {}
+    # Dictionary containing the instantiated classes of classifiers and the parameters for optimization
+    classifiers = dict()
 
-    models_results = {}
+    # Dictionary containing the execution results of the models
+    models_results = dict()
 
-    execute_pre_processing = True
+    execute_pre_processing = False
     execute_classifiers = False
 
     ######### CSV TREATMENTS #########
 
     precoce_ms_data_frame = csv_treatments.load_data(
-        csv_path=csv_path, columns_names=delete_columns_names_on_load_data, number_csv_lines=number_csv_lines, dtype_dict=dtype_dict, parse_dates=parse_dates)
+        csv_path=csv_path, delete_columns_names=delete_columns_names_on_load_data,
+        number_csv_lines=number_csv_lines, dtype_dict=dtype_dict, parse_dates=parse_dates
+    )
 
     # reports.print_informations(data_frame=precoce_ms_data_frame)
 
@@ -227,6 +241,7 @@ if __name__ == '__main__':
         precoce_ms_data_frame, columns_min_max_scaled = pre_processing.min_max_scaler_columns(
             data_frame=precoce_ms_data_frame, columns_min_max_scaled=columns_min_max_scaled, columns_names=min_max_scaler_columns_names)
 
+        # TODO: Spearman's Correlation, Further, the two variables being considered may have a non-Gaussian distribution. (https://machinelearningmastery.com/how-to-use-correlation-to-understand-the-relationship-between-variables/)
         reports.correlation_matrix(
             data_frame=precoce_ms_data_frame, method='pearson', attribute='classificacao',
             display_matrix=False, export_matrix=True, path_save_matrix='./plots')
