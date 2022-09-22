@@ -258,7 +258,7 @@ def models_results(models_results: dict, path_save_fig: str = None, display_resu
     print('*****FIM IMPRIMIR RESULTADOS MODELOS******')
 
 
-def print_min_max_column(data_frame: pd.DataFrame) -> None:
+def min_max_column(data_frame: pd.DataFrame) -> None:
     """Print the min and max of the column in the data frame.
 
     Args:
