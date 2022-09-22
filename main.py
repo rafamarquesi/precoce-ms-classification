@@ -7,6 +7,7 @@ import reports
 import pattern_extraction
 import utils
 import numpy as np
+import pandas as pd
 
 # classification models
 from sklearn.neighbors import KNeighborsClassifier
@@ -15,6 +16,8 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
+
+pd.set_option('display.max_rows', 5000)
 
 # TODO: Treat imbalanced classes (Book Albon - Chapter 5.5)
 
@@ -34,7 +37,7 @@ if __name__ == '__main__':
     csv_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1.csv'
 
     # Number of lines to be read from the dataset
-    number_csv_lines = 200000
+    number_csv_lines = 1000000
 
     # Dictionay with type of data for each column
     dtype_dict = {
@@ -181,18 +184,22 @@ if __name__ == '__main__':
         number_csv_lines=number_csv_lines, dtype_dict=dtype_dict, parse_dates=parse_dates
     )
 
+    # Print the unique values for each column
+    reports.print_unique_values_for_each_column(
+        data_frame=precoce_ms_data_frame
+    )
+
     # reports.print_informations(data_frame=precoce_ms_data_frame)
 
     # reports.print_list_columns(data_frame=precoce_ms_data_frame)
 
     ################################################## PRE PROCESSING ##################################################
 
-    # Identify columns that contain a single value, and delete them
-    pre_processing.delete_columns_with_single_value(
-        data_frame=precoce_ms_data_frame, summarize=False
-    )
-
     if execute_pre_processing:
+        # Identify columns that contain a single value, and delete them
+        pre_processing.delete_columns_with_single_value(
+            data_frame=precoce_ms_data_frame
+        )
 
         path_save_csv_after_pre_processing = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1_after_pre_processing-{}.csv'.format(
             utils.get_current_datetime())
