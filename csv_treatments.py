@@ -44,6 +44,7 @@ def load_data(csv_path: str, sep: str = ';', encoding: str = 'latin1', decimal: 
         pd.DataFrame: A DataFrame with the data loaded from the CSV file.
     """
 
+    print('\n*****INICIO LOAD DATA******')
     if number_csv_lines != None:
         temp_data = pd.read_csv(
             csv_path, sep=sep, encoding=encoding, decimal=decimal,
@@ -64,6 +65,7 @@ def load_data(csv_path: str, sep: str = ';', encoding: str = 'latin1', decimal: 
         )
 
     reports.print_informations(temp_data)
+    print('*****FIM LOAD DATA******')
 
     return temp_data
 
