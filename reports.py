@@ -270,7 +270,18 @@ def print_min_max_column(data_frame: pd.DataFrame) -> None:
             column, data_frame[column].min(), data_frame[column].max()))
     print('*****FIM IMPRIMIR MIN MAX COLUMN******')
 
-############# PRIVATE METHODS #############
+
+def print_unique_values_for_each_column(data_frame: pd.DataFrame) -> None:
+    """Print the unique values for each column in the data frame.
+
+    Args:
+        data_frame (pd.DataFrame): Data frame to be treated.
+    """
+    print('\n*****INICIO IMPRIMIR UNIQUE VALUES FOR EACH COLUMN******')
+    print(data_frame.nunique())
+    print('*****FIM IMPRIMIR UNIQUE VALUES FOR EACH COLUMN******')
+
+################################################## PRIVATE METHODS ##################################################
 
 
 def __magnify() -> list:
