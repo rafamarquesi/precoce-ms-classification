@@ -1,3 +1,5 @@
+# import sys
+
 # utilities
 import csv_treatments
 import pre_processing
@@ -22,11 +24,17 @@ from sklearn.ensemble import RandomForestClassifier
 
 if __name__ == '__main__':
 
+    # # Create a log file
+    # run_log_file = open(
+    #     'logs/run_log-{}.txt'.format(utils.get_current_datetime()), 'w'
+    # )
+    # sys.stdout = run_log_file
+
     # Path to the dataset
     csv_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1.csv'
 
     # Number of lines to be read from the dataset
-    number_csv_lines = 2000000
+    number_csv_lines = 200000
 
     # Dictionay with type of data for each column
     dtype_dict = {
@@ -165,8 +173,9 @@ if __name__ == '__main__':
     execute_pre_processing = False
     execute_classifiers = False
 
-    ######### CSV TREATMENTS #########
+    ################################################## CSV TREATMENTS ##################################################
 
+    # Load the dataset
     precoce_ms_data_frame = csv_treatments.load_data(
         csv_path=csv_path, delete_columns_names=delete_columns_names_on_load_data,
         number_csv_lines=number_csv_lines, dtype_dict=dtype_dict, parse_dates=parse_dates
@@ -176,9 +185,13 @@ if __name__ == '__main__':
 
     # reports.print_list_columns(data_frame=precoce_ms_data_frame)
 
-    # reports.all_attributes(data_frame=precoce_ms_data_frame)
+    ################################################## PRE PROCESSING ##################################################
 
-    ######### PRE PROCESSING #########
+    # Identify columns that contain a single value, and delete them
+    pre_processing.delete_columns_with_single_value(
+        data_frame=precoce_ms_data_frame, summarize=False
+    )
+
     if execute_pre_processing:
 
         path_save_csv_after_pre_processing = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1_after_pre_processing-{}.csv'.format(
@@ -255,7 +268,8 @@ if __name__ == '__main__':
         csv_treatments.generate_new_csv(
             data_frame=precoce_ms_data_frame, csv_path=path_save_csv_after_pre_processing)
 
-    ######### PATTERN EXTRACTION #########
+    ################################################## PATTERN EXTRACTION ##################################################
+
     if execute_classifiers:
 
         x, y = pattern_extraction.create_x_y_data(
@@ -354,3 +368,5 @@ if __name__ == '__main__':
 
         reports.print_models_results(
             models_results=models_results, path_save_fig='./plots')
+
+    # run_log_file.close()
