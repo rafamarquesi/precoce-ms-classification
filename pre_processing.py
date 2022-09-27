@@ -52,6 +52,9 @@ def delete_duplicate_rows_by_attribute(data_frame: pd.DataFrame, attribute_name:
             data_frame.drop_duplicates(
                 subset=attribute_name, keep='first', inplace=True)
             print('Linhas duplicadas deletadas.')
+        else:
+            print('Nenhuma linha duplicada encontrada para o atributo {}.'.format(
+                attribute_name))
     else:
         print(
             '!!!>>> Atributo {} não encontrado no DataFrame para delete duplicates rows by attibute.'.format(attribute_name))
