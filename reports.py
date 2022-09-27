@@ -69,8 +69,9 @@ def duplicate_rows_by_attribute(data_frame: pd.DataFrame, rows_duplicated: pd.Da
         attribute (str): Attribute to be used to report.
     """
     print('\n*****INICIO RELATÓRIO LINHAS DUPLICADAS******')
-    print('Data Frame do Atríbuto {} com as linhas duplicadas:\n{}'.format(
-        attribute, rows_duplicated))
+    print('Data Frame do Atríbuto {} com as linhas duplicadas:\n'.format(
+        attribute))
+    displayhook(rows_duplicated)
     print('Relatório dos atributos que divergem, entre os registros que tem o atributo {} igual.'.format(attribute))
     for id in rows_duplicated[attribute].unique():
         print('{}:{}'.format(attribute, id))
@@ -280,6 +281,23 @@ def unique_values_for_each_column(data_frame: pd.DataFrame) -> None:
     print('\n*****INICIO IMPRIMIR UNIQUE VALUES FOR EACH COLUMN******')
     print(data_frame.nunique())
     print('*****FIM IMPRIMIR UNIQUE VALUES FOR EACH COLUMN******')
+
+
+def percentage_unique_values_for_each_column(data_frame: pd.DataFrame, threshold: float = 100) -> None:
+    """Print the percentage of unique values for each column in the data frame.
+
+    Args:
+        data_frame (pd.DataFrame): Data frame to be treated.
+        threshold (float, optional): If 100, print percentage for all columns. Other threshold, print the percentage for columns less than threshold. Defaults to 100.
+    """
+    print('\n*****INICIO IMPRIMIR PERCENTAGE UNIQUE VALUES FOR EACH COLUMN******')
+    for i in data_frame:
+        num = len(np.unique(data_frame[i].values))
+        percentage = float(num) / data_frame.shape[0] * 100
+        if percentage < threshold:
+            print('Column: {} - {} - {}%'.format(i, num, percentage))
+    # print(data_frame.nunique() / len(data_frame))
+    print('*****FIM IMPRIMIR PERCENTAGE UNIQUE VALUES FOR EACH COLUMN******')
 
 ################################################## PRIVATE METHODS ##################################################
 
