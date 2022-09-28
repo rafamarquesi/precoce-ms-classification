@@ -1,5 +1,7 @@
 import random
 import utils
+import pattern_extraction
+import pre_processing
 from sys import displayhook
 import pandas as pd
 import numpy as np
@@ -301,9 +303,33 @@ def percentage_unique_values_for_each_column(data_frame: pd.DataFrame, threshold
         num = len(np.unique(data_frame[i].values))
         percentage = float(num) / data_frame.shape[0] * 100
         if percentage < threshold:
-            print('Column: {} - {} - {}%'.format(i, num, percentage))
+            print('Column: {} - {} - {:.2f}%'.format(i, num, percentage))
     # print(data_frame.nunique() / len(data_frame))
     print('*****FIM IMPRIMIR PERCENTAGE UNIQUE VALUES FOR EACH COLUMN******')
+
+
+def simulate_delete_columns_with_low_variance(data_frame: pd.DataFrame, thresholds: np.arange) -> None:
+    """Plot and print the simulation of delete columns with low variance.
+
+    Args:
+        data_frame (pd.DataFrame): Data frame to be treated.
+        threshold (np.arange): Thresholds to remove the columns.
+    """
+    print('\n*****INICIO IMPRIMIR SIMULATE DELETE COLUMNS WITH LOW VARIANCE******')
+    x, _ = pattern_extraction.create_x_y_data(data_frame=data_frame)
+    print('Shape do X antes: {}.'.format(x.shape))
+
+    results = list()
+    for threshold in thresholds:
+        x = pre_processing.delete_columns_with_low_variance(
+            x=x, threshold=threshold, separate_numeric_columns=True)
+        results.append(x.shape[1])
+
+    print('Shape do X depois: {}.'.format(x.shape))
+
+    plt.plot(thresholds, results)
+    plt.show()
+    print('*****FIM IMPRIMIR SIMULATE DELETE COLUMNS WITH LOW VARIANCE******')
 
 ################################################## PRIVATE METHODS ##################################################
 

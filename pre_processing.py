@@ -1,8 +1,10 @@
 import reports
+import utils
 
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler, OneHotEncoder, OrdinalEncoder
+from sklearn.feature_selection import VarianceThreshold
 
 
 def delete_columns(data_frame: pd.DataFrame, columns_names: list) -> pd.DataFrame:
@@ -287,3 +289,29 @@ def delete_columns_with_single_value(data_frame: pd.DataFrame) -> pd.DataFrame:
 
     print('*****FIM DELETE COLUMNS WITH SINGLE VALUE*********')
     return data_frame
+
+
+def delete_columns_with_low_variance(x: np.array, threshold: float = 0.0, separate_numeric_columns: bool = False) -> pd.DataFrame:
+    """Delete the columns with low variance.
+
+    Args:
+        data_frame (np.array): Numpy Array to be treated.
+        threshold (float, optional): Threshold of variance. Defaults to 0.8.
+        separate_numeric_columns (bool, optional): Separate the numeric columns. Defaults to False.
+
+    Returns:
+        pd.DataFrame: A DataFrame with the columns with low variance deleted.
+    """
+    print('\n*****INICIO DELETE COLUMNS WITH LOW VARIANCE******')
+    print('>>> Número de colunas antes da remoção: {}'.format(x.shape[1]))
+    transform = VarianceThreshold(threshold=threshold)
+    if separate_numeric_columns:
+        x, x_numeric = utils.separate_numeric_columns(x=x)
+        x_numeric = transform.fit_transform(x_numeric)
+        x = np.concatenate((x, x_numeric), axis=1)
+    else:
+        x = transform.fit_transform(x)
+    print('>>> Threshold: {:.2f}\nNúmero de colunas depois da remoção: {}'.format(
+        threshold, x.shape[1]))
+    print('*****FIM DELETE COLUMNS WITH LOW VARIANCE*********')
+    return x
