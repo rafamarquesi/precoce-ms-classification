@@ -188,10 +188,33 @@ if __name__ == '__main__':
     if print_informations_dataset:
         # reports.print_list_columns(data_frame=precoce_ms_data_frame)
 
+        # Print a report of all attributes
+        reports.all_attributes(data_frame=precoce_ms_data_frame)
+
+        # Delete the duplicated rows by attribute, and print the report
+        precoce_ms_data_frame = pre_processing.delete_duplicate_rows_by_attribute(
+            data_frame=precoce_ms_data_frame, attribute_name='ID_ANIMAL', print_report=True)
+
+        precoce_ms_data_frame = pre_processing.delete_columns(
+            data_frame=precoce_ms_data_frame, columns_names=['ID_ANIMAL'])
+
+        # Delete NaN rows
+        precoce_ms_data_frame = pre_processing.delete_nan_rows(
+            data_frame=precoce_ms_data_frame, print_report=True)
+
         # Print the unique values for each column
         reports.unique_values_for_each_column(
             data_frame=precoce_ms_data_frame
         )
+
+        # Print the percentage of unique values for each column
+        reports.percentage_unique_values_for_each_column(
+            data_frame=precoce_ms_data_frame, threshold=1
+        )
+
+        # Simulate delete columns with low variance
+        reports.simulate_delete_columns_with_low_variance(
+            data_frame=precoce_ms_data_frame, thresholds=np.arange(0.0, 0.55, 0.05))
 
     ################################################## PRE PROCESSING ##################################################
 
@@ -200,6 +223,23 @@ if __name__ == '__main__':
         pre_processing.delete_columns_with_single_value(
             data_frame=precoce_ms_data_frame
         )
+
+        # TODO: Verify how implement function to delete columns with low variance in pre processing
+        # pre_processing.delete_columns_with_low_variance(
+
+        # Delete duplicated rows by attribute
+        precoce_ms_data_frame = pre_processing.delete_duplicate_rows_by_attribute(
+            data_frame=precoce_ms_data_frame, attribute_name='ID_ANIMAL')
+
+        # Delete column by names
+        precoce_ms_data_frame = pre_processing.delete_columns(
+            data_frame=precoce_ms_data_frame, columns_names=['ID_ANIMAL'])
+
+        # Delete NaN rows
+        precoce_ms_data_frame = pre_processing.delete_nan_rows(
+            data_frame=precoce_ms_data_frame)
+
+        reports.informations(precoce_ms_data_frame)
 
         path_save_csv_after_pre_processing = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1_after_pre_processing-{}.csv'.format(
             utils.get_current_datetime())
@@ -237,17 +277,6 @@ if __name__ == '__main__':
             'med12m_formITUinst', 'med12m_preR_soja', 'med12m_preR_milho', 'med12m_preR_boi'
         ]
         columns_min_max_scaled = {}
-
-        precoce_ms_data_frame = pre_processing.delete_duplicate_rows_by_attribute(
-            data_frame=precoce_ms_data_frame, attribute_name='ID_ANIMAL')
-
-        precoce_ms_data_frame = pre_processing.delete_columns(
-            data_frame=precoce_ms_data_frame, columns_names=['ID_ANIMAL'])
-
-        precoce_ms_data_frame = pre_processing.delete_nan_rows(
-            data_frame=precoce_ms_data_frame, print_report=True)
-
-        reports.informations(precoce_ms_data_frame)
 
         precoce_ms_data_frame, columns_ordinal_encoded = pre_processing.ordinal_encoder_columns(
             data_frame=precoce_ms_data_frame, columns_ordinal_encoded=columns_ordinal_encoded, columns_names=ordinal_encoder_columns_names)
