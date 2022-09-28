@@ -52,7 +52,13 @@ def nan_attributes(data_frame: pd.DataFrame, total_nan: int) -> None:
     df_nan = pd.DataFrame(columns=['Coluna', 'total_NaN'])
     for column in data_frame.columns[data_frame.isna().any()].tolist():
         df_nan = pd.concat([df_nan, pd.DataFrame.from_records(
-            [{'Coluna': column, 'total_NaN': data_frame[column].isna().sum()}])])
+            [
+                {
+                    'Coluna': column,
+                    'total_NaN': data_frame[column].isna().sum(),
+                    'Porcentagem': data_frame[column].isna().sum() / len(data_frame[column]) * 100
+                }
+            ])])
         # df_nan = df_nan.append(
         #     {'Coluna': column, 'total_NaN': data_frame[column].isna().sum()}, ignore_index=True)
     df_nan = df_nan.sort_values(['total_NaN'], ascending=[False])
