@@ -308,28 +308,32 @@ def percentage_unique_values_for_each_column(data_frame: pd.DataFrame, threshold
     print('*****FIM IMPRIMIR PERCENTAGE UNIQUE VALUES FOR EACH COLUMN******')
 
 
-def simulate_delete_columns_with_low_variance(data_frame: pd.DataFrame, thresholds: np.arange) -> None:
-    """Plot and print the simulation of delete columns with low variance.
+def simulate_delete_columns_with_low_variance(data_frame: pd.DataFrame, thresholds: np.arange, separate_numeric_columns: bool = False) -> None:
+    """Plot and print the simulation of delete columns with low variance. This function works only numeric columns.
 
     Args:
         data_frame (pd.DataFrame): Data frame to be treated.
-        threshold (np.arange): Thresholds to remove the columns.
+        thresholds (np.arange): Thresholds to remove the columns.
+        separate_numeric_columns (bool, optional): Separate the numeric columns. Defaults to False.
     """
     print('\n*****INICIO IMPRIMIR SIMULATE DELETE COLUMNS WITH LOW VARIANCE******')
     x, _ = pattern_extraction.create_x_y_data(data_frame=data_frame)
     print('Shape do X antes: {}.'.format(x.shape))
 
-    results = list()
-    for threshold in thresholds:
-        x = pre_processing.delete_columns_with_low_variance(
-            x=x, threshold=threshold, separate_numeric_columns=True)
-        results.append(x.shape[1])
+    if separate_numeric_columns:
+        x, x_numeric = utils.separate_numeric_columns(x=x)
+        x, results = __execute_delete_columns_with_low_variance(
+            x=x_numeric, thresholds=thresholds)
+        x = np.concatenate((x, x_numeric), axis=1)
+    else:
+        x, results = __execute_delete_columns_with_low_variance(
+            x=x, thresholds=thresholds)
 
-    print('Shape do X depois: {}.'.format(x.shape))
+    print('\nShape do X depois: {}.'.format(x.shape))
 
     plt.plot(thresholds, results)
     plt.show()
-    print('*****FIM IMPRIMIR SIMULATE DELETE COLUMNS WITH LOW VARIANCE******')
+    print('\n*****FIM IMPRIMIR SIMULATE DELETE COLUMNS WITH LOW VARIANCE******')
 
 ################################################## PRIVATE METHODS ##################################################
 
@@ -355,3 +359,21 @@ def __generate_random_rgb_color() -> list:
     """
     # return '#%02x%02x%02x' % (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
     return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 70))
+
+
+def __execute_delete_columns_with_low_variance(x: np.array, thresholds: np.arange) -> list:
+    """Execute the delete columns with low variance.
+
+    Args:
+        x (np.array): Numpy array to be treated.
+        thresholds (np.arange): Thresholds to remove the columns.
+
+    Returns:
+        tuple: Tuple with the x, with features removed, and the results of execution.
+    """
+    results = list()
+    for threshold in thresholds:
+        x = pre_processing.delete_columns_with_low_variance(
+            x=x, threshold=threshold, separate_numeric_columns=False)
+        results.append(x.shape[1])
+    return x, results

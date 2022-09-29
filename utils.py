@@ -20,9 +20,8 @@ def separate_numeric_columns(x: np.array) -> tuple:
     Returns:
         tuple: Tuple with the non-numeric columns (x) and the numeric columns (x_aux).
     """
-    print('X shape: {}'.format(x.shape))
+    print('X shape (Dados originais): {}'.format(x.shape))
     x_aux = np.empty(shape=[x.shape[0], 0])
-    print('X_aux shape: {}'.format(x_aux.shape))
     for i in range(0, x.shape[1]):
         try:
             if isinstance(x[:, i][0], (int, float)):
@@ -31,6 +30,7 @@ def separate_numeric_columns(x: np.array) -> tuple:
                 x = np.delete(x, i, axis=1)
         except IndexError:
             break
-    print('X shape: {}'.format(x.shape))
-    print('X_aux shape: {}'.format(x_aux.shape))
+    print('Após separar os atributos numéricos.')
+    print('X shape (Dados não numéricos): {}'.format(x.shape))
+    print('X_aux shape (Dados numéricos): {}'.format(x_aux.shape))
     return x, x_aux
