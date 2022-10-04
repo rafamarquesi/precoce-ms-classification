@@ -303,7 +303,7 @@ def percentage_unique_values_for_each_column(data_frame: pd.DataFrame, threshold
         num = len(np.unique(data_frame[i].values))
         percentage = float(num) / data_frame.shape[0] * 100
         if percentage < threshold:
-            print('Column: {} - {} - {:.2f}%'.format(i, num, percentage))
+            print('Column: {} - {} - {:.10f}%'.format(i, num, percentage))
     # print(data_frame.nunique() / len(data_frame))
     print('*****FIM IMPRIMIR PERCENTAGE UNIQUE VALUES FOR EACH COLUMN******')
 
