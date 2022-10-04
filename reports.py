@@ -64,7 +64,7 @@ def nan_attributes(data_frame: pd.DataFrame, total_nan: int) -> None:
         # df_nan = df_nan.append(
         #     {'Coluna': column, 'total_NaN': data_frame[column].isna().sum()}, ignore_index=True)
     df_nan = df_nan.sort_values(['total_NaN'], ascending=[False])
-    print(df_nan)
+    displayhook(df_nan)
     print('*****FIM RELATÓRIO ATRIBUTOS NAN******')
 
 
@@ -287,24 +287,34 @@ def unique_values_for_each_column(data_frame: pd.DataFrame) -> None:
         data_frame (pd.DataFrame): Data frame to be treated.
     """
     print('\n*****INICIO IMPRIMIR UNIQUE VALUES FOR EACH COLUMN******')
-    print(data_frame.nunique())
+    displayhook(data_frame.nunique())
     print('*****FIM IMPRIMIR UNIQUE VALUES FOR EACH COLUMN******')
 
 
 def percentage_unique_values_for_each_column(data_frame: pd.DataFrame, threshold: float = 100) -> None:
-    """Print the percentage of unique values for each column in the data frame.
+    """To help highlight columns of near-zero variance, can calculate the number of unique values for each variable as a percentage of the total number of rows in the dataset.
 
     Args:
         data_frame (pd.DataFrame): Data frame to be treated.
         threshold (float, optional): If 100, print percentage for all columns. Other threshold, print the percentage for columns less than threshold. Defaults to 100.
     """
     print('\n*****INICIO IMPRIMIR PERCENTAGE UNIQUE VALUES FOR EACH COLUMN******')
-    for i in data_frame:
-        num = len(np.unique(data_frame[i].values))
-        percentage = float(num) / data_frame.shape[0] * 100
+    df_percentage = pd.DataFrame()
+    for column in data_frame:
+        total_unique = len(np.unique(data_frame[column].values))
+        percentage = float(total_unique) / data_frame.shape[0] * 100
         if percentage < threshold:
-            print('Column: {} - {} - {:.10f}%'.format(i, num, percentage))
-    # print(data_frame.nunique() / len(data_frame))
+            df_percentage = pd.concat([df_percentage, pd.DataFrame.from_records(
+                [
+                    {
+                        'Coluna': column,
+                        'total_Unique': total_unique,
+                        'Porcentagem': percentage
+                    }
+                ])])
+    df_percentage = df_percentage.sort_values(
+        by=['Porcentagem'], ascending=[True])
+    displayhook(df_percentage)
     print('*****FIM IMPRIMIR PERCENTAGE UNIQUE VALUES FOR EACH COLUMN******')
 
 
