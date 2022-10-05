@@ -327,7 +327,7 @@ def simulate_delete_columns_with_low_variance(data_frame: pd.DataFrame, threshol
         separate_numeric_columns (bool, optional): Separate the numeric columns. Defaults to False.
     """
     print('\n*****INICIO IMPRIMIR SIMULATE DELETE COLUMNS WITH LOW VARIANCE******')
-    x, _ = pattern_extraction.create_x_y_data(data_frame=data_frame)
+    x, _ = utils.create_x_y_numpy_data(data_frame=data_frame)
     print('Shape do X antes: {}.'.format(x.shape))
 
     if separate_numeric_columns:

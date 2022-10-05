@@ -58,3 +58,23 @@ def delete_columns(data_frame: pd.DataFrame, delete_columns_names: list) -> pd.D
                 '!!!>>> Coluna " {} " não encontrada no DataFrame para exclusão.'.format(column))
     print('*****FIM DELETE COLUNAS*********')
     return data_frame
+
+
+def create_x_y_numpy_data(data_frame: pd.DataFrame, print_memory_usage: bool = False) -> tuple:
+    """Create x and y data from a DataFrame.
+
+    Args:
+        data_frame (pd.DataFrame): DataFrame with last cloumn as a targe class (y).
+        print_memory_usage (bool, optional): If True, print the memory usage of x and y. Defaults to False.
+
+    Returns:
+        tuple: Return x and y data from the DataFrame, being x and y of type numpy.array.
+    """
+    x = np.array(data_frame)[:, :-1]
+    y = np.array(data_frame)[:, -1]
+    if print_memory_usage:
+        print('Data frame memory usage: {} Bytes'.format(
+            data_frame.memory_usage(index=True, deep=True).sum()))
+        print('X memory usage: {} Bytes'.format(x.nbytes))
+        print('Y memory usage: {} Bytes'.format(y.nbytes))
+    return x, y

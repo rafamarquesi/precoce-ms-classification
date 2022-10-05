@@ -6,20 +6,6 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_sc
 from sklearn.model_selection import GridSearchCV, StratifiedKFold, train_test_split
 
 
-def create_x_y_data(data_frame: pd.DataFrame) -> tuple:
-    """Create x and y data from a DataFrame.
-
-    Args:
-        data_frame (pd.DataFrame): DataFrame with last cloumn as a targe class (y).
-
-    Returns:
-        tuple: Return x and y data from the DataFrame, being x and y of type numpy.array.
-    """
-    x = np.array(data_frame)[:, :-1]
-    y = np.array(data_frame)[:, -1]
-    return x, y
-
-
 def run_models(x: np.array, y: np.array, models: dict, models_results: dict, n_splits: int = 10, shuffle: bool = True, random_state: int = 0) -> dict:
     """
     Run models and return the results of each model.

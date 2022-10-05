@@ -310,7 +310,7 @@ if __name__ == '__main__':
 
     if execute_classifiers:
 
-        x, y = pattern_extraction.create_x_y_data(
+        x, y = utils.create_x_y_numpy_data(
             data_frame=precoce_ms_data_frame)
 
         print('\nX: ', type(x))
