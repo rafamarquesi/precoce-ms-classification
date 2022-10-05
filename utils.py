@@ -78,3 +78,23 @@ def create_x_y_numpy_data(data_frame: pd.DataFrame, print_memory_usage: bool = F
         print('X memory usage: {} Bytes'.format(x.nbytes))
         print('Y memory usage: {} Bytes'.format(y.nbytes))
     return x, y
+
+
+def create_x_y_dataframe_data(data_frame: pd.DataFrame, print_memory_usage: bool = False) -> tuple:
+    """Create x and y data from a DataFrame.
+
+    Args:
+        data_frame (pd.DataFrame): DataFrame with last cloumn as a targe class (y).
+        print_memory_usage (bool, optional): If True, print the memory usage of x and y. Defaults to False.
+
+    Returns:
+        tuple: Return x and y data from the DataFrame, being x of a DataFrame type, and y of a Series type.
+    """
+    x = data_frame.iloc[:, :-1]
+    y = data_frame.iloc[:, -1]
+    if print_memory_usage:
+        print('X memory usage: {} Bytes'.format(
+            x.memory_usage(index=True, deep=True).sum()))
+        print('Y memory usage: {} Bytes'.format(
+            y.memory_usage(index=True, deep=True)))
+    return x, y
