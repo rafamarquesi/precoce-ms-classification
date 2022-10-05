@@ -7,28 +7,6 @@ from sklearn.preprocessing import LabelEncoder, MinMaxScaler, OneHotEncoder, Ord
 from sklearn.feature_selection import VarianceThreshold
 
 
-def delete_columns(data_frame: pd.DataFrame, columns_names: list) -> pd.DataFrame:
-    """Delete columns from the DataFrame, given the columns names, passed as parameters.
-
-    Args:
-        data_frame (pd.DataFrame): DataFrame to be treated.
-        columns_names (list): Array of strings with columns names to delete.
-
-    Returns:
-        pd.DataFrame: A DataFrame with deleted columns.
-    """
-    print('\n*****INICIO DELETE COLUMNS******')
-    for column in columns_names:
-        if column in data_frame.columns:
-            data_frame.drop(column, axis=1, inplace=True)
-            print('Coluna {} deletada.'.format(column))
-        else:
-            print(
-                '!!!>>> Coluna {} não encontrada no DataFrame para delete.'.format(column))
-    print('*****FIM DELETE COLUMNS*********')
-    return data_frame
-
-
 def delete_duplicate_rows_by_attribute(data_frame: pd.DataFrame, attribute_name: str, print_report: bool = False) -> pd.DataFrame:
     """Delete duplicate rows from the DataFrame, given the attribute name, passed as parameter.
 
@@ -169,7 +147,7 @@ def one_hot_encoder_columns(data_frame: pd.DataFrame, columns_one_hot_encoded: d
                     index=data_frame.index.values.tolist(), dtype='uint8'
                 )
                 data_frame = pd.concat([data_frame, encoded_df], axis=1)
-                data_frame = delete_columns(
+                data_frame = utils.delete_columns(
                     data_frame=data_frame, columns_names=[column])
                 columns_one_hot_encoded[column] = encoder_column
             else:

@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from datetime import datetime
 
 
@@ -34,3 +35,26 @@ def separate_numeric_columns(x: np.array) -> tuple:
     print('X shape (Dados não numéricos): {}'.format(x.shape))
     print('X_aux shape (Dados numéricos): {}'.format(x_aux.shape))
     return x, x_aux
+
+
+def delete_columns(data_frame: pd.DataFrame, delete_columns_names: list) -> pd.DataFrame:
+    """Delete columns from the DataFrame, given the columns names, passed as parameters.
+
+    Args:
+        data_frame (pd.DataFrame): DataFrame to be treated.
+        delete_columns_names (list): Array of strings with columns names to exclude.
+
+    Returns:
+        pd.DataFrame: A DataFrame with deleted columns.
+    """
+
+    print('*****INICIO DELETE COLUNAS******')
+    for column in delete_columns_names:
+        if column in data_frame.columns:
+            data_frame.drop(column, axis='columns', inplace=True)
+            print('Coluna {} excluída.'.format(column))
+        else:
+            print(
+                '!!!>>> Coluna " {} " não encontrada no DataFrame para exclusão.'.format(column))
+    print('*****FIM DELETE COLUNAS*********')
+    return data_frame

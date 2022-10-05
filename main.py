@@ -23,8 +23,6 @@ pd.set_option('display.max_rows', 5000)
 
 # TODO: Use the cross_validate function, for evaluation of multiple metrics (https://scikit-learn.org/stable/modules/cross_validation.html#multimetric-cross-validation)
 
-# TODO: Implement function that detect columns with unique values and delete the column with single value (https://machinelearningmastery.com/basic-data-cleaning-for-machine-learning/)
-
 if __name__ == '__main__':
 
     # # Create a log file
@@ -37,7 +35,7 @@ if __name__ == '__main__':
     csv_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1.csv'
 
     # Number of lines to be read from the dataset
-    number_csv_lines = 1000000
+    number_csv_lines = 100000
 
     # Dictionay with type of data for each column
     dtype_dict = {
@@ -195,7 +193,7 @@ if __name__ == '__main__':
         precoce_ms_data_frame = pre_processing.delete_duplicate_rows_by_attribute(
             data_frame=precoce_ms_data_frame, attribute_name='ID_ANIMAL', print_report=True)
 
-        precoce_ms_data_frame = pre_processing.delete_columns(
+        precoce_ms_data_frame = utils.delete_columns(
             data_frame=precoce_ms_data_frame, columns_names=['ID_ANIMAL'])
 
         # Delete NaN rows
@@ -214,7 +212,11 @@ if __name__ == '__main__':
 
         # Simulate delete columns with low variance
         reports.simulate_delete_columns_with_low_variance(
-            data_frame=precoce_ms_data_frame, thresholds=np.arange(0.0, 0.55, 0.05))
+            data_frame=precoce_ms_data_frame, thresholds=np.arange(
+                0.0, 0.55, 0.05),
+            separate_numeric_columns=True)
+
+        # TODO: Calculate feature importance with python, after encode categorical features (https://machinelearningmastery.com/calculate-feature-importance-with-python/)
 
     ################################################## PRE PROCESSING ##################################################
 
@@ -232,7 +234,7 @@ if __name__ == '__main__':
             data_frame=precoce_ms_data_frame, attribute_name='ID_ANIMAL')
 
         # Delete column by names
-        precoce_ms_data_frame = pre_processing.delete_columns(
+        precoce_ms_data_frame = utils.delete_columns(
             data_frame=precoce_ms_data_frame, columns_names=['ID_ANIMAL'])
 
         # Delete NaN rows

@@ -1,30 +1,8 @@
 import pandas as pd
 import reports
+import utils
 
 pd.set_option('float_format', '{:f}'.format)
-
-
-def delete_columns(data_frame: pd.DataFrame, delete_columns_names: list) -> pd.DataFrame:
-    """Delete columns from the DataFrame, given the columns names, passed as parameters.
-
-    Args:
-        data_frame (pd.DataFrame): DataFrame to be treated.
-        delete_columns_names (list): Array of strings with columns names to exclude.
-
-    Returns:
-        pd.DataFrame: A DataFrame with deleted columns.
-    """
-
-    print('*****INICIO DELETE COLUNAS******')
-    for column in delete_columns_names:
-        if column in data_frame.columns:
-            data_frame.drop(column, axis='columns', inplace=True)
-            print('Coluna {} excluída.'.format(column))
-        else:
-            print(
-                '!!!>>> Coluna " {} " não encontrada no DataFrame para exclusão.'.format(column))
-    print('*****FIM DELETE COLUNAS*********')
-    return data_frame
 
 
 def load_data(csv_path: str, sep: str = ';', encoding: str = 'latin1', decimal: str = ',', delete_columns_names: list = None, number_csv_lines: int = None, dtype_dict: dict = None, parse_dates: list = None) -> pd.DataFrame:
@@ -60,7 +38,7 @@ def load_data(csv_path: str, sep: str = ';', encoding: str = 'latin1', decimal: 
     # reports.min_max_column(temp_data)
 
     if delete_columns_names != None:
-        temp_data = delete_columns(
+        temp_data = utils.delete_columns(
             data_frame=temp_data, delete_columns_names=delete_columns_names
         )
 
