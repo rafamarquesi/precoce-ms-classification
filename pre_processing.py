@@ -148,7 +148,7 @@ def one_hot_encoder_columns(data_frame: pd.DataFrame, columns_one_hot_encoded: d
                 )
                 data_frame = pd.concat([data_frame, encoded_df], axis=1)
                 data_frame = utils.delete_columns(
-                    data_frame=data_frame, columns_names=[column])
+                    data_frame=data_frame, delete_columns_names=[column])
                 columns_one_hot_encoded[column] = encoder_column
             else:
                 print('!!!>>> A coluna {} já está codificada.'.format(column))
@@ -269,11 +269,11 @@ def delete_columns_with_single_value(data_frame: pd.DataFrame) -> pd.DataFrame:
     return data_frame
 
 
-def delete_columns_with_low_variance(x: np.array, threshold: float = 0.0, separate_numeric_columns: bool = False) -> pd.DataFrame:
+def delete_columns_with_low_variance(x: pd.DataFrame, threshold: float = 0.0, separate_numeric_columns: bool = False) -> pd.DataFrame:
     """Delete the columns with low variance.
 
     Args:
-        data_frame (np.array): Numpy Array to be treated.
+        x (pd.DataFrame): Pandas DataFrame with numeric data to be treated.
         threshold (float, optional): Threshold of variance. Defaults to 0.8.
         separate_numeric_columns (bool, optional): Separate the numeric columns. Defaults to False.
 
@@ -284,11 +284,20 @@ def delete_columns_with_low_variance(x: np.array, threshold: float = 0.0, separa
     print('>>> Número de colunas antes da remoção: {}'.format(x.shape[1]))
     transform = VarianceThreshold(threshold=threshold)
     if separate_numeric_columns:
-        x, x_numeric = utils.separate_numeric_columns(x=x)
-        x_numeric = transform.fit_transform(x_numeric)
-        x = np.concatenate((x, x_numeric), axis=1)
+        x, x_numeric = utils.separate_numeric_dataframe_columns(
+            x=x, exclude_types=utils.TYPES_EXCLUDE_DF)
+        transform.fit_transform(x_numeric)
+        x_numeric = utils.delete_columns(data_frame=x_numeric, delete_columns_names=list(
+            set(transform.feature_names_in_) -
+            set(transform.get_feature_names_out())
+        ))
+        x = utils.concatenate_data_frames(data_frames=[x, x_numeric])
     else:
-        x = transform.fit_transform(x)
+        transform.fit_transform(x)
+        x = utils.delete_columns(data_frame=x, delete_columns_names=list(
+            set(transform.feature_names_in_) -
+            set(transform.get_feature_names_out())
+        ))
     print('>>> Threshold: {:.2f}\nNúmero de colunas depois da remoção: {}'.format(
         threshold, x.shape[1]))
     print('*****FIM DELETE COLUMNS WITH LOW VARIANCE*********')

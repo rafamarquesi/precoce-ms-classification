@@ -194,7 +194,7 @@ if __name__ == '__main__':
             data_frame=precoce_ms_data_frame, attribute_name='ID_ANIMAL', print_report=True)
 
         precoce_ms_data_frame = utils.delete_columns(
-            data_frame=precoce_ms_data_frame, columns_names=['ID_ANIMAL'])
+            data_frame=precoce_ms_data_frame, delete_columns_names=['ID_ANIMAL'])
 
         # Delete NaN rows
         precoce_ms_data_frame = pre_processing.delete_nan_rows(
@@ -235,7 +235,7 @@ if __name__ == '__main__':
 
         # Delete column by names
         precoce_ms_data_frame = utils.delete_columns(
-            data_frame=precoce_ms_data_frame, columns_names=['ID_ANIMAL'])
+            data_frame=precoce_ms_data_frame, delete_columns_names=['ID_ANIMAL'])
 
         # Delete NaN rows
         precoce_ms_data_frame = pre_processing.delete_nan_rows(

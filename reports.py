@@ -333,15 +333,11 @@ def simulate_delete_columns_with_low_variance(data_frame: pd.DataFrame, threshol
     if separate_numeric_columns:
         x, x_numeric = utils.separate_numeric_dataframe_columns(
             x=x,
-            exclude_types=[
-                pd.CategoricalDtype,
-                pd.DatetimeTZDtype,
-                np.datetime64
-            ]
+            exclude_types=utils.TYPES_EXCLUDE_DF
         )
-        x, results = __execute_delete_columns_with_low_variance(
+        x_numeric, results = __execute_delete_columns_with_low_variance(
             x=x_numeric, thresholds=thresholds)
-        x = np.concatenate((x, x_numeric), axis=1)
+        x = utils.concatenate_data_frames(data_frames=[x, x_numeric])
     else:
         x, results = __execute_delete_columns_with_low_variance(
             x=x, thresholds=thresholds)
@@ -378,11 +374,11 @@ def __generate_random_rgb_color() -> list:
     return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 70))
 
 
-def __execute_delete_columns_with_low_variance(x: np.array, thresholds: np.arange) -> list:
+def __execute_delete_columns_with_low_variance(x: pd.DataFrame, thresholds: np.arange) -> list:
     """Execute the delete columns with low variance.
 
     Args:
-        x (np.array): Numpy array to be treated.
+        x (pd.DataFrame): Pandas DataFrame with numeric data to be treated.
         thresholds (np.arange): Thresholds to remove the columns.
 
     Returns:
