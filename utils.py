@@ -2,6 +2,9 @@ import numpy as np
 import pandas as pd
 from datetime import datetime
 
+# Types of columns to be excluded from the DataFrame
+TYPES_EXCLUDE_DF = [pd.CategoricalDtype, pd.DatetimeTZDtype, np.datetime64]
+
 
 def get_current_datetime() -> str:
     """Get the current datetime.
@@ -33,7 +36,7 @@ def separate_numeric_numpy_columns(x: np.array) -> tuple:
             break
     print('Após separar os atributos numéricos.')
     print('X shape (Dados não numéricos): {}'.format(x.shape))
-    print('X_aux shape (Dados numéricos): {}'.format(x_numeric.shape))
+    print('X_numeric shape (Dados numéricos): {}'.format(x_numeric.shape))
     return x, x_numeric
 
 
@@ -53,7 +56,7 @@ def separate_numeric_dataframe_columns(x: pd.DataFrame, exclude_types: list) -> 
         data_frame=x, delete_columns_names=x_numeric.columns.to_list())
     print('Após separar os atributos numéricos.')
     print('X shape (Dados não numéricos): {}'.format(x.shape))
-    print('X_aux shape (Dados numéricos): {}'.format(x_numeric.shape))
+    print('X_numeric shape (Dados numéricos): {}'.format(x_numeric.shape))
     return x, x_numeric
 
 
@@ -118,3 +121,16 @@ def create_x_y_dataframe_data(data_frame: pd.DataFrame, print_memory_usage: bool
         print('Y memory usage: {} Bytes'.format(
             y.memory_usage(index=True, deep=True)))
     return x, y
+
+
+def concatenate_data_frames(data_frames: list) -> pd.DataFrame:
+    """Concatenate a list of DataFrames.
+
+    Args:
+        data_frames (list): List of DataFrames to be concatenated.
+
+    Returns:
+        pd.DataFrame: Concatenated DataFrame.
+    """
+    data_frame = pd.concat(data_frames, axis=1)
+    return data_frame
