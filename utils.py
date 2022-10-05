@@ -12,29 +12,49 @@ def get_current_datetime() -> str:
     return datetime.now().strftime('%d-%m-%Y_%H:%M:%S')
 
 
-def separate_numeric_columns(x: np.array) -> tuple:
+def separate_numeric_numpy_columns(x: np.array) -> tuple:
     """Separate the non-numeric columns from the numeric columns.
 
     Args:
-        data_frame (np.array): Numpy array to be treated.
+        x (np.array): Numpy array to be treated.
 
     Returns:
-        tuple: Tuple with the non-numeric columns (x) and the numeric columns (x_aux).
+        tuple: Tuple with the non-numeric columns (x) and the numeric columns (x_numeric).
     """
     print('X shape (Dados originais): {}'.format(x.shape))
-    x_aux = np.empty(shape=[x.shape[0], 0])
+    x_numeric = np.empty(shape=[x.shape[0], 0])
     for i in range(0, x.shape[1]):
         try:
             if isinstance(x[:, i][0], (int, float)):
-                x_aux = np.append(x_aux, x[:, i].reshape(-1, 1), axis=1)
-                # print(type(x_aux[:, x_aux.shape[1]-1][0]), x_aux[:, x_aux.shape[1]-1][0])
+                x_numeric = np.append(
+                    x_numeric, x[:, i].reshape(-1, 1), axis=1)
                 x = np.delete(x, i, axis=1)
         except IndexError:
             break
     print('Após separar os atributos numéricos.')
     print('X shape (Dados não numéricos): {}'.format(x.shape))
-    print('X_aux shape (Dados numéricos): {}'.format(x_aux.shape))
-    return x, x_aux
+    print('X_aux shape (Dados numéricos): {}'.format(x_numeric.shape))
+    return x, x_numeric
+
+
+def separate_numeric_dataframe_columns(x: pd.DataFrame, exclude_types: list) -> tuple:
+    """Separate the non-numeric columns from the numeric columns.
+
+    Args:
+        x (pd.DataFrame): DataFrame to be treated.
+        exclude_types (list): List of types to be excluded from the DataFrame (x).
+
+    Returns:
+        tuple: Tuple with the non-numeric columns (x) and the numeric columns (x_numeric).
+    """
+    print('X shape (Dados originais): {}'.format(x.shape))
+    x_numeric = x.select_dtypes(exclude=exclude_types)
+    x = delete_columns(
+        data_frame=x, delete_columns_names=x_numeric.columns.to_list())
+    print('Após separar os atributos numéricos.')
+    print('X shape (Dados não numéricos): {}'.format(x.shape))
+    print('X_aux shape (Dados numéricos): {}'.format(x_numeric.shape))
+    return x, x_numeric
 
 
 def delete_columns(data_frame: pd.DataFrame, delete_columns_names: list) -> pd.DataFrame:

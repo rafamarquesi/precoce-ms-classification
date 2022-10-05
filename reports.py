@@ -327,11 +327,18 @@ def simulate_delete_columns_with_low_variance(data_frame: pd.DataFrame, threshol
         separate_numeric_columns (bool, optional): Separate the numeric columns. Defaults to False.
     """
     print('\n*****INICIO IMPRIMIR SIMULATE DELETE COLUMNS WITH LOW VARIANCE******')
-    x, _ = utils.create_x_y_numpy_data(data_frame=data_frame)
+    x, _ = utils.create_x_y_dataframe_data(data_frame=data_frame)
     print('Shape do X antes: {}.'.format(x.shape))
 
     if separate_numeric_columns:
-        x, x_numeric = utils.separate_numeric_columns(x=x)
+        x, x_numeric = utils.separate_numeric_dataframe_columns(
+            x=x,
+            exclude_types=[
+                pd.CategoricalDtype,
+                pd.DatetimeTZDtype,
+                np.datetime64
+            ]
+        )
         x, results = __execute_delete_columns_with_low_variance(
             x=x_numeric, thresholds=thresholds)
         x = np.concatenate((x, x_numeric), axis=1)
