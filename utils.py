@@ -134,3 +134,20 @@ def concatenate_data_frames(data_frames: list) -> pd.DataFrame:
     """
     data_frame = pd.concat(data_frames, axis=1)
     return data_frame
+
+
+def move_cloumns_last_positions(data_frame: pd.DataFrame, columns_names: list) -> pd.DataFrame:
+    """Move columns to the last positions of the DataFrame, given the position of the column names in the array, passed as parameter.
+
+    Args:
+        data_frame (pd.DataFrame): DataFrame to be treated.
+        columns_names (list): Columns names to be moved.
+
+    Returns:
+        pd.DataFrame: A DataFrame with the columns moved to the last positions.
+    """
+    data_frame = data_frame[[c for c in data_frame if c not in columns_names] + [
+        c for c in columns_names if c in data_frame]]
+    # data_frame = data_frame.reindex(
+    #     columns=data_frame.columns.tolist() + columns_names)
+    return data_frame
