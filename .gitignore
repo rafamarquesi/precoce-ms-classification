@@ -8,3 +8,5 @@ staticfiles
 /.vscode
 tests.py
 tests.ipynb
+/plots
+/logs
