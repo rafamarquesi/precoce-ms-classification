@@ -35,7 +35,10 @@ if __name__ == '__main__':
     csv_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1.csv'
 
     # Number of lines to be read from the dataset
-    number_csv_lines = 100000
+    number_csv_lines = 500000
+
+    # Path to save plots
+    path_save_plots = './plots'
 
     # Dictionay with type of data for each column
     dtype_dict = {
@@ -165,6 +168,49 @@ if __name__ == '__main__':
         'tot12m_Chuva', 'med12m_TempInst', 'med12m_TempMin', 'med12m_UmidInst', 'med12m_NDVI', 'med12m_EVI',
     ]
 
+    # Dictionary with column names to apply the ordinal encoder
+    ordinal_encoder_columns_names = {
+        'Maturidade': ['d', '2', '4', '6', '8'],
+        'Acabamento': [
+            'Magra - Gordura Ausente',
+            'Gordura Escassa - 1 A 3 Mm De Espessura',
+            'Gordura Mediana - Acima De 3 A Até 6 Mm De Espessura',
+            'Gordura Uniforme - Acima De 6 E Até 10 Mm De Espessura',
+            'Gordura Excessiva - Acima De 10 Mm De Espessura'
+        ],
+        'QuestionarioClassificacaoEstabel': ['0', '21', '26', '30'],
+        'CATEGORIA': ['D', 'C', 'BB', 'BBB', 'AA', 'AAA']
+    }
+    # Dictionary with the ordinal encode object fitted for each column
+    columns_ordinal_encoded = dict()
+
+    # Dictionary with column names to apply the label encoder
+    label_encoder_columns_names = [
+        'DataAbate', 'classificacao'
+    ]
+    # Dictionary with the label encoder object fitted for each column
+    columns_label_encoded = dict()
+
+    # TODO: Check with the professor how to encode 'DataAbate', I tried with one hot, but, does not work very well
+    # Dictionary with column names to apply the ordinal encoder
+    one_hot_encoder_columns_names = [
+        'EstabelecimentoMunicipio', 'Tipificacao', 'ANO'
+    ]
+    # Dictionary with the one hot encoder object fitted for each column
+    columns_one_not_encoded = dict()
+
+    # Dictionary with column names to apply the min max scaler
+    min_max_scaler_columns_names = [
+        'Peso',
+        'med7d_formITUinst', 'med7d_preR_soja', 'med7d_preR_milho', 'med7d_preR_boi',
+        'med1m_formITUinst', 'med1m_preR_soja', 'med1m_preR_milho', 'med1m_preR_boi',
+        'med3m_formITUinst', 'med3m_preR_soja', 'med3m_preR_milho', 'med3m_preR_boi',
+        'med6m_formITUinst', 'med6m_preR_soja', 'med6m_preR_milho', 'med6m_preR_boi',
+        'med12m_formITUinst', 'med12m_preR_soja', 'med12m_preR_milho', 'med12m_preR_boi'
+    ]
+    # Dictionary with the min max scaler object fitted for each column
+    columns_min_max_scaled = dict()
+
     # Dictionary containing the instantiated classes of classifiers and the parameters for optimization
     classifiers = dict()
 
@@ -210,24 +256,52 @@ if __name__ == '__main__':
             data_frame=precoce_ms_data_frame, threshold=1
         )
 
-        # Simulate delete columns with low variance
-        reports.simulate_delete_columns_with_low_variance(
-            data_frame=precoce_ms_data_frame, thresholds=np.arange(
-                0.0, 0.55, 0.05),
-            separate_numeric_columns=True)
+        # Identify columns that contain a single value, and delete them
+        precoce_ms_data_frame = pre_processing.delete_columns_with_single_value(
+            data_frame=precoce_ms_data_frame
+        )
+
+        # Simulate delete columns with low variance, using VarianceThreshold from sklearn
+        # reports.simulate_delete_columns_with_low_variance(
+        #     data_frame=precoce_ms_data_frame,
+        #     thresholds=np.arange(0.0, 0.10, 0.05),
+        #     separate_numeric_columns=True,
+        #     path_save_fig=path_save_plots,
+        #     display_figure=True
+        # )
+
+        # Apply ordinal encoder to the columns
+        precoce_ms_data_frame, columns_ordinal_encoded = pre_processing.ordinal_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_ordinal_encoded=columns_ordinal_encoded, columns_names=ordinal_encoder_columns_names)
+
+        # Apply label encoder to the columns
+        precoce_ms_data_frame, columns_label_encoded = pre_processing.label_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_label_encoded=columns_label_encoded, columns_names=label_encoder_columns_names)
+
+        # Apply one hot encoder to the columns
+        precoce_ms_data_frame, columns_one_not_encoded = pre_processing.one_hot_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_one_hot_encoded=columns_one_not_encoded, columns_names=one_hot_encoder_columns_names)
+
+        # Apply min max scaler to the columns
+        precoce_ms_data_frame, columns_min_max_scaled = pre_processing.min_max_scaler_columns(
+            data_frame=precoce_ms_data_frame, columns_min_max_scaled=columns_min_max_scaled, columns_names=min_max_scaler_columns_names)
+
+        # Move the target column to the last position in dataframe
+        precoce_ms_data_frame = utils.move_cloumns_last_positions(
+            data_frame=precoce_ms_data_frame, columns_names=['classificacao'])
 
         # TODO: Calculate feature importance with python, after encode categorical features (https://machinelearningmastery.com/calculate-feature-importance-with-python/)
+        # Calculate feature importance with linear models
+        reports.feature_importance_using_coefficients_of_linear_models(
+            data_frame=precoce_ms_data_frame,
+            models=['logistic_regression', 'linear_svc', 'sgd_classifier'],
+            path_save_fig=path_save_plots,
+            display_figure=True
+        )
 
     ################################################## PRE PROCESSING ##################################################
 
     if execute_pre_processing:
-        # Identify columns that contain a single value, and delete them
-        pre_processing.delete_columns_with_single_value(
-            data_frame=precoce_ms_data_frame
-        )
-
-        # TODO: Verify how implement function to delete columns with low variance in pre processing
-        # pre_processing.delete_columns_with_low_variance(
 
         # Delete duplicated rows by attribute
         precoce_ms_data_frame = pre_processing.delete_duplicate_rows_by_attribute(
@@ -241,44 +315,15 @@ if __name__ == '__main__':
         precoce_ms_data_frame = pre_processing.delete_nan_rows(
             data_frame=precoce_ms_data_frame)
 
+        # Identify columns that contain a single value, and delete them
+        precoce_ms_data_frame = pre_processing.delete_columns_with_single_value(
+            data_frame=precoce_ms_data_frame
+        )
+
         reports.informations(precoce_ms_data_frame)
 
         path_save_csv_after_pre_processing = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1_after_pre_processing-{}.csv'.format(
             utils.get_current_datetime())
-
-        ordinal_encoder_columns_names = {
-            'Maturidade': ['d', '2', '4', '6', '8'],
-            'Acabamento': [
-                'Magra - Gordura Ausente',
-                'Gordura Escassa - 1 A 3 Mm De Espessura',
-                'Gordura Mediana - Acima De 3 A Até 6 Mm De Espessura',
-                'Gordura Uniforme - Acima De 6 E Até 10 Mm De Espessura',
-                'Gordura Excessiva - Acima De 10 Mm De Espessura'
-            ],
-            'QuestionarioClassificacaoEstabel': ['0', '21', '26', '30'],
-            'CATEGORIA': ['D', 'C', 'BB', 'BBB', 'AA', 'AAA']
-        }
-        columns_ordinal_encoded = {}
-
-        label_encoder_columns_names = [
-            'classificacao'
-        ]
-        columns_label_encoded = {}
-
-        one_hot_encoder_columns_names = [
-            'EstabelecimentoMunicipio', 'DataAbate', 'Tipificacao', 'ANO'
-        ]
-        columns_one_not_encoded = {}
-
-        min_max_scaler_columns_names = [
-            'Peso',
-            'med7d_formITUinst', 'med7d_preR_soja', 'med7d_preR_milho', 'med7d_preR_boi',
-            'med1m_formITUinst', 'med1m_preR_soja', 'med1m_preR_milho', 'med1m_preR_boi',
-            'med3m_formITUinst', 'med3m_preR_soja', 'med3m_preR_milho', 'med3m_preR_boi',
-            'med6m_formITUinst', 'med6m_preR_soja', 'med6m_preR_milho', 'med6m_preR_boi',
-            'med12m_formITUinst', 'med12m_preR_soja', 'med12m_preR_milho', 'med12m_preR_boi'
-        ]
-        columns_min_max_scaled = {}
 
         precoce_ms_data_frame, columns_ordinal_encoded = pre_processing.ordinal_encoder_columns(
             data_frame=precoce_ms_data_frame, columns_ordinal_encoded=columns_ordinal_encoded, columns_names=ordinal_encoder_columns_names)
@@ -295,12 +340,12 @@ if __name__ == '__main__':
         # TODO: Spearman's Correlation, Further, the two variables being considered may have a non-Gaussian distribution. (https://machinelearningmastery.com/how-to-use-correlation-to-understand-the-relationship-between-variables/)
         reports.correlation_matrix(
             data_frame=precoce_ms_data_frame, method='pearson', attribute='classificacao',
-            display_matrix=False, export_matrix=True, path_save_matrix='./plots')
+            display_matrix=False, export_matrix=True, path_save_matrix=path_save_plots)
 
         precoce_ms_data_frame = pre_processing.drop_feature_by_correlation(
             data_frame=precoce_ms_data_frame, method='pearson', columns_names=['Maturidade', 'Acabamento', 'Peso', 'classificacao'])
 
-        precoce_ms_data_frame = csv_treatments.move_cloumns_last_positions(
+        precoce_ms_data_frame = utils.move_cloumns_last_positions(
             data_frame=precoce_ms_data_frame, columns_names=['classificacao'])
 
         csv_treatments.generate_new_csv(
@@ -405,6 +450,6 @@ if __name__ == '__main__':
             x=x, y=y, models=classifiers, models_results=models_results)
 
         reports.models_results(
-            models_results=models_results, path_save_fig='./plots')
+            models_results=models_results, path_save_fig=path_save_plots)
 
     # run_log_file.close()
