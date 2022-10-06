@@ -1,13 +1,19 @@
 import random
 import utils
-import pattern_extraction
 import pre_processing
+
 from sys import displayhook
+
 import pandas as pd
 import numpy as np
+
 import seaborn as sns
 import dataframe_image as dfi
 import matplotlib.pyplot as plt
+
+from sklearn.linear_model import SGDClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import LinearSVC
 
 
 def informations(data_frame: pd.DataFrame) -> None:
@@ -186,10 +192,7 @@ def models_results(models_results: dict, path_save_fig: str = None, display_resu
     print('\n*****INICIO IMPRIMIR RESULTADOS MODELOS******')
     accuracy_graphic = pd.DataFrame()
 
-    if path_save_fig is None:
-        path_save_fig = ''
-    else:
-        path_save_fig = path_save_fig + '/'
+    path_save_fig = __define_path_save_fig(path_save_fig=path_save_fig)
 
     for key, value in models_results.items():
 
@@ -208,7 +211,7 @@ def models_results(models_results: dict, path_save_fig: str = None, display_resu
         dfi.export(
             value_styled,
             path_save_fig +
-            'evaluation-measures-{}-{}'.format(
+            'evaluation-measures-{}-{}.png'.format(
                 key,
                 utils.get_current_datetime()
             ),
@@ -318,13 +321,16 @@ def percentage_unique_values_for_each_column(data_frame: pd.DataFrame, threshold
     print('*****FIM IMPRIMIR PERCENTAGE UNIQUE VALUES FOR EACH COLUMN******')
 
 
-def simulate_delete_columns_with_low_variance(data_frame: pd.DataFrame, thresholds: np.arange, separate_numeric_columns: bool = False) -> None:
+def simulate_delete_columns_with_low_variance(data_frame: pd.DataFrame, thresholds: np.arange, separate_numeric_columns: bool = False, path_save_fig: str = None, display_figure: bool = False) -> None:
     """Plot and print the simulation of delete columns with low variance. This function works only numeric columns.
 
     Args:
         data_frame (pd.DataFrame): Data frame to be treated.
         thresholds (np.arange): Thresholds to remove the columns.
         separate_numeric_columns (bool, optional): Separate the numeric columns. Defaults to False.
+        path_save_fig (str, optional): Path to save the figures. If None, save the figures in root path of project. Defaults to None.
+        display_figure (bool, optional): Flag to display the results, for example in jupyter notebook. Defaults to False.
+
     """
     print('\n*****INICIO IMPRIMIR SIMULATE DELETE COLUMNS WITH LOW VARIANCE******')
     x, _ = utils.create_x_y_dataframe_data(data_frame=data_frame)
@@ -344,9 +350,149 @@ def simulate_delete_columns_with_low_variance(data_frame: pd.DataFrame, threshol
 
     print('\nShape do X depois: {}.'.format(x.shape))
 
+    path_save_fig = __define_path_save_fig(path_save_fig=path_save_fig)
+
     plt.plot(thresholds, results)
-    plt.show()
+    name_figure = 'plot-simulate-delete-columns-with-low-variance-{}.png'.format(
+        utils.get_current_datetime())
+    plt.savefig(''.join([path_save_fig, name_figure]))
+    print('Figure {} saved in {} directory.'.format(name_figure, path_save_fig))
+
+    if display_figure:
+        plt.show()
+
+    plt.close()
+
     print('\n*****FIM IMPRIMIR SIMULATE DELETE COLUMNS WITH LOW VARIANCE******')
+
+
+def feature_importance_using_coefficients_of_linear_models(data_frame: pd.DataFrame, models: list, path_save_fig: str = None, display_figure: bool = False) -> None:
+    """Print the feature importance using coefficients of linear models.
+    The models supported are: LogisticRegression (logistic_regression), LinearSVC (linear_svc), SGDClassifier (sgd_classifier).
+
+    Args:
+        data_frame (pd.DataFrame): Data frame to be treated.
+        models (list): Models to be used.
+        path_save_fig (str, optional): Path to save the figures. If None, save the figures in root path of project. Defaults to None.
+        display_figure (bool, optional): Flag to display the results, for example in jupyter notebook. Defaults to False.
+    """
+    print('\n*****INICIO IMPRIMIR FEATURE IMPORTANCE USING COEFFICIENTS OF LINEAR MODELS******')
+    if models:
+        path_save_fig = __define_path_save_fig(path_save_fig=path_save_fig)
+
+        x, y = utils.create_x_y_dataframe_data(data_frame=data_frame)
+
+        for model in models:
+            if model == 'logistic_regression':
+                model = LogisticRegression()
+            elif model == 'linear_svc':
+                model = LinearSVC()
+            elif model == 'sgd_classifier':
+                model = SGDClassifier()
+            else:
+                raise Exception('Model not supported.')
+
+            model.fit(x, y)
+            print('\n\nModel: {}'.format(model))
+            print('\nFeature importance using coefficients of linear models:')
+            importance = model.coef_[0]
+            displayhook(pd.DataFrame(
+                {
+                    'Feature': x.columns,
+                    'Importance': importance
+                }
+            ).sort_values(by=['Importance'], ascending=[False]))
+
+            plt.bar([x for x in range(len(importance))], importance)
+            plt.title('Model: {}'.format(model))
+            name_figure = 'bar-feature_importance_using_coefficients_of_linear_models-{}-{}.png'.format(
+                model,
+                utils.get_current_datetime()
+            )
+            plt.savefig(''.join([path_save_fig, name_figure]))
+            print('Figure {} saved in {} directory.'.format(
+                name_figure, path_save_fig))
+
+            if display_figure:
+                plt.show()
+
+            plt.close()
+    else:
+        raise Exception('Models not informed.')
+
+    print('*****FIM IMPRIMIR FEATURE IMPORTANCE USING COEFFICIENTS OF LINEAR MODELS******')
+
+
+# def feature_importance_using_tree_based_models(data_frame: pd.DataFrame, target: str, model: str = 'random_forest', display_results: bool = False) -> None:
+#     """Print the feature importance using tree based models.
+
+#     Args:
+#         data_frame (pd.DataFrame): Data frame to be treated.
+#         target (str): Target of the data frame.
+#         model (str, optional): Model to be used. Defaults to 'random_forest'.
+#         display_results (bool, optional): Display the results. Defaults to False.
+#     """
+#     print('\n*****INICIO IMPRIMIR FEATURE IMPORTANCE USING TREE BASED MODELS******')
+#     x, y = utils.create_x_y_dataframe_data(
+#         data_frame=data_frame, target=target)
+
+#     if model == 'random_forest':
+#         model = RandomForestRegressor()
+#     elif model == 'extratrees':
+#         model = ExtraTreesRegressor()
+#     elif model == 'gradient_boosting':
+#         model = GradientBoostingRegressor()
+#     else:
+#         raise Exception('Modelo não encontrado.')
+
+#     model.fit(x, y)
+#     coef = pd.Series(model.feature_importances_, index=x.columns)
+#     coef.sort_values().plot.barh()
+#     plt.show()
+
+#     if display_results:
+#         displayhook(coef.sort_values())
+#     print('*****FIM IMPRIMIR FEATURE IMPORTANCE USING TREE BASED MODELS******')
+
+
+# def feature_importance_using_permutation_importance(data_frame: pd.DataFrame, target: str, model: str = 'random_forest', display_results: bool = False) -> None:
+#     """Print the feature importance using permutation importance.
+
+#     Args:
+#         data_frame (pd.DataFrame): Data frame to be treated.
+#         target (str): Target of the data frame.
+#         model (str, optional): Model to be used. Defaults to 'random_forest'.
+#         display_results (bool, optional): Display the results. Defaults to False.
+#     """
+#     print('\n*****INICIO IMPRIMIR FEATURE IMPORTANCE USING PERMUTATION IMPORTANCE******')
+#     x, y = utils.create_x_y_dataframe_data(
+#         data_frame=data_frame, target=target)
+
+#     if model == 'random_forest':
+#         model = RandomForestRegressor()
+#     elif model == 'extratrees':
+#         model = ExtraTreesRegressor()
+#     elif model == 'gradient_boosting':
+#         model = GradientBoostingRegressor()
+#     else:
+#         raise Exception('Modelo não encontrado.')
+
+#     model.fit(x, y)
+#     result = permutation_importance(model, x, y, n_repeats=10,
+#                                     random_state=42, n_jobs=2)
+#     sorted_idx = result.importances_mean.argsort()
+
+#     fig, ax = plt.subplots()
+#     ax.boxplot(result.importances[sorted_idx].T,
+#                vert=False, labels=x.columns[sorted_idx])
+#     ax.set_title("Permutation Importances (test set)")
+#     fig.tight_layout()
+#     plt.show()
+
+#     if display_results:
+#         displayhook(result.importances_mean)
+#     print('*****FIM IMPRIMIR FEATURE IMPORTANCE USING PERMUTATION IMPORTANCE******')
+
 
 ################################################## PRIVATE METHODS ##################################################
 
@@ -390,3 +536,19 @@ def __execute_delete_columns_with_low_variance(x: pd.DataFrame, thresholds: np.a
             x=x, threshold=threshold, separate_numeric_columns=False)
         results.append(x.shape[1])
     return x, results
+
+
+def __define_path_save_fig(path_save_fig: str) -> str:
+    """Define the path to save the figures.
+
+    Args:
+        path_save_fig (str): Path to save the figures.
+
+    Returns:
+        str: Path to save the figures.
+    """
+    if path_save_fig is None:
+        path_save_fig = ''
+    else:
+        path_save_fig = path_save_fig + '/'
+    return path_save_fig
