@@ -15,6 +15,10 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import LinearSVC
 
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
+
 
 def informations(data_frame: pd.DataFrame) -> None:
     """Print some informations of the DataFrame.
@@ -404,9 +408,9 @@ def feature_importance_using_coefficients_of_linear_models(data_frame: pd.DataFr
             ).sort_values(by=['Importance'], ascending=[False]))
 
             plt.bar([x for x in range(len(importance))], importance)
-            plt.title('Model: {}'.format(model))
+            plt.title('Model: {}'.format(model.__class__.__name__))
             name_figure = 'bar-feature_importance_using_coefficients_of_linear_models-{}-{}.png'.format(
-                model,
+                model.__class__.__name__,
                 utils.get_current_datetime()
             )
             plt.savefig(''.join([path_save_fig, name_figure]))
@@ -423,36 +427,60 @@ def feature_importance_using_coefficients_of_linear_models(data_frame: pd.DataFr
     print('*****FIM IMPRIMIR FEATURE IMPORTANCE USING COEFFICIENTS OF LINEAR MODELS******')
 
 
-# def feature_importance_using_tree_based_models(data_frame: pd.DataFrame, target: str, model: str = 'random_forest', display_results: bool = False) -> None:
-#     """Print the feature importance using tree based models.
+def feature_importance_using_tree_based_models(data_frame: pd.DataFrame, models: list, path_save_fig: str = None, display_figure: bool = False) -> None:
+    """Print the feature importance using tree based models.
+    The models supported are: DecisionTreeClassifier (decision_tree_classifier), RandomForestClassifier (random_forest_classifier), XGBClassifier (xgb_classifier).
+    Args:
+        data_frame (pd.DataFrame): Data frame to be treated.
+        models (list): Models to be used.
+        path_save_fig (str, optional): Path to save the figures. If None, save the figures in root path of project. Defaults to None.
+        display_figure (bool, optional): Flag to display the results, for example in jupyter notebook. Defaults to False.
+    """
+    print('\n*****INICIO IMPRIMIR FEATURE IMPORTANCE USING TREE BASED MODELS******')
+    if models:
+        path_save_fig = __define_path_save_fig(path_save_fig=path_save_fig)
 
-#     Args:
-#         data_frame (pd.DataFrame): Data frame to be treated.
-#         target (str): Target of the data frame.
-#         model (str, optional): Model to be used. Defaults to 'random_forest'.
-#         display_results (bool, optional): Display the results. Defaults to False.
-#     """
-#     print('\n*****INICIO IMPRIMIR FEATURE IMPORTANCE USING TREE BASED MODELS******')
-#     x, y = utils.create_x_y_dataframe_data(
-#         data_frame=data_frame, target=target)
+        x, y = utils.create_x_y_dataframe_data(data_frame=data_frame)
 
-#     if model == 'random_forest':
-#         model = RandomForestRegressor()
-#     elif model == 'extratrees':
-#         model = ExtraTreesRegressor()
-#     elif model == 'gradient_boosting':
-#         model = GradientBoostingRegressor()
-#     else:
-#         raise Exception('Modelo não encontrado.')
+        for model in models:
+            if model == 'decision_tree_classifier':
+                model = DecisionTreeClassifier()
+            elif model == 'random_forest_classifier':
+                model = RandomForestClassifier()
+            elif model == 'xgb_classifier':
+                model = XGBClassifier()
+            else:
+                raise Exception('Model not supported.')
 
-#     model.fit(x, y)
-#     coef = pd.Series(model.feature_importances_, index=x.columns)
-#     coef.sort_values().plot.barh()
-#     plt.show()
+            model.fit(x, y)
+            print('\n\nModel: {}'.format(model))
+            print('\nFeature importance using tree based models:')
+            importance = model.feature_importances_
+            displayhook(pd.DataFrame(
+                {
+                    'Feature': x.columns,
+                    'Importance': importance
+                }
+            ).sort_values(by=['Importance'], ascending=[False]))
 
-#     if display_results:
-#         displayhook(coef.sort_values())
-#     print('*****FIM IMPRIMIR FEATURE IMPORTANCE USING TREE BASED MODELS******')
+            plt.bar([x for x in range(len(importance))], importance)
+            plt.title('Model: {}'.format(model.__class__.__name__))
+            name_figure = 'bar-feature_importance_using_tree_based_models-{}-{}.png'.format(
+                model.__class__.__name__,
+                utils.get_current_datetime()
+            )
+            plt.savefig(''.join([path_save_fig, name_figure]))
+            print('Figure {} saved in {} directory.'.format(
+                name_figure, path_save_fig))
+
+            if display_figure:
+                plt.show()
+
+            plt.close()
+    else:
+        raise Exception('Models not informed.')
+
+    print('*****FIM IMPRIMIR FEATURE IMPORTANCE USING TREE BASED MODELS******')
 
 
 # def feature_importance_using_permutation_importance(data_frame: pd.DataFrame, target: str, model: str = 'random_forest', display_results: bool = False) -> None:
