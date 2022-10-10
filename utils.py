@@ -151,3 +151,23 @@ def move_cloumns_last_positions(data_frame: pd.DataFrame, columns_names: list) -
     # data_frame = data_frame.reindex(
     #     columns=data_frame.columns.tolist() + columns_names)
     return data_frame
+
+
+def convert_pandas_dtype_to_numpy_dtype(data_frame: pd.DataFrame, pandas_dtypes: list) -> pd.DataFrame:
+    """Convert pandas dtype to numpy dtype.
+
+    Args:
+        data_frame (pd.DataFrame): DataFrame to be treated.
+        pandas_dtypes (list): List of pandas dtypes to be converted to numpy dtypes.
+
+    Returns:
+        pd.DataFrame: A DataFrame with the columns converted to numpy dtype.
+    """
+    if pandas_dtypes:
+        for column in data_frame.columns:
+            if data_frame[column].dtype in pandas_dtypes:
+                data_frame[column] = data_frame[column].astype(
+                    data_frame[column].dtype.type)
+    else:
+        raise Exception('pandas_dtypes not informed.')
+    return data_frame
