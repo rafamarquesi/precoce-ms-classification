@@ -19,6 +19,11 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
+
+from sklearn.inspection import permutation_importance
+
 
 def informations(data_frame: pd.DataFrame) -> None:
     """Print some informations of the DataFrame.
@@ -483,43 +488,70 @@ def feature_importance_using_tree_based_models(data_frame: pd.DataFrame, models:
     print('*****FIM IMPRIMIR FEATURE IMPORTANCE USING TREE BASED MODELS******')
 
 
-# def feature_importance_using_permutation_importance(data_frame: pd.DataFrame, target: str, model: str = 'random_forest', display_results: bool = False) -> None:
-#     """Print the feature importance using permutation importance.
+def feature_importance_using_permutation_importance(data_frame: pd.DataFrame, models: list, path_save_fig: str = None, display_figure: bool = False) -> None:
+    """Print the feature importance using permutation importance.
+    The models supported are: KNeighborsClassifier (knneighbors_classifier), GaussianNB (gaussian_nb).
 
-#     Args:
-#         data_frame (pd.DataFrame): Data frame to be treated.
-#         target (str): Target of the data frame.
-#         model (str, optional): Model to be used. Defaults to 'random_forest'.
-#         display_results (bool, optional): Display the results. Defaults to False.
-#     """
-#     print('\n*****INICIO IMPRIMIR FEATURE IMPORTANCE USING PERMUTATION IMPORTANCE******')
-#     x, y = utils.create_x_y_dataframe_data(
-#         data_frame=data_frame, target=target)
+    Args:
+        data_frame (pd.DataFrame): Data frame to be treated.
+        models (list): Models to be used.
+        path_save_fig (str, optional): Path to save the figures. If None, save the figures in root path of project. Defaults to None.
+        display_figure (bool, optional): Flag to display the results, for example in jupyter notebook. Defaults to False.
+    """
+    print('\n*****INICIO IMPRIMIR FEATURE IMPORTANCE USING PERMUTATION IMPORTANCE******')
+    if models:
+        path_save_fig = __define_path_save_fig(path_save_fig=path_save_fig)
 
-#     if model == 'random_forest':
-#         model = RandomForestRegressor()
-#     elif model == 'extratrees':
-#         model = ExtraTreesRegressor()
-#     elif model == 'gradient_boosting':
-#         model = GradientBoostingRegressor()
-#     else:
-#         raise Exception('Modelo não encontrado.')
+        x, y = utils.create_x_y_dataframe_data(data_frame=data_frame)
 
-#     model.fit(x, y)
-#     result = permutation_importance(model, x, y, n_repeats=10,
-#                                     random_state=42, n_jobs=2)
-#     sorted_idx = result.importances_mean.argsort()
+        for model in models:
+            if model == 'knneighbors_classifier':
+                model = KNeighborsClassifier()
+            elif model == 'gaussian_nb':
+                model = GaussianNB()
+            else:
+                raise Exception('Model not supported.')
 
-#     fig, ax = plt.subplots()
-#     ax.boxplot(result.importances[sorted_idx].T,
-#                vert=False, labels=x.columns[sorted_idx])
-#     ax.set_title("Permutation Importances (test set)")
-#     fig.tight_layout()
-#     plt.show()
+            model.fit(x, y)
+            results = permutation_importance(
+                model, x, y, scoring='accuracy', n_jobs=-1)
+            print('\n\nModel: {}'.format(model))
+            print('\nFeature importance using tree based models:')
+            importance = results.importances_mean
+            displayhook(pd.DataFrame(
+                {
+                    'Feature': x.columns,
+                    'Importance': importance
+                }
+            ).sort_values(by=['Importance'], ascending=[False]))
 
-#     if display_results:
-#         displayhook(result.importances_mean)
-#     print('*****FIM IMPRIMIR FEATURE IMPORTANCE USING PERMUTATION IMPORTANCE******')
+            plt.bar([x for x in range(len(importance))], importance)
+            plt.title('Model: {}'.format(model.__class__.__name__))
+            name_figure = 'bar-feature_importance_using_tree_based_models-{}-{}.png'.format(
+                model.__class__.__name__,
+                utils.get_current_datetime()
+            )
+            plt.savefig(''.join([path_save_fig, name_figure]))
+            print('Figure {} saved in {} directory.'.format(
+                name_figure, path_save_fig))
+
+            if display_figure:
+                plt.show()
+
+            plt.close()
+    else:
+        raise Exception('Models not informed.')
+
+    # sorted_idx = result.importances_mean.argsort()
+
+    # fig, ax = plt.subplots()
+    # ax.boxplot(result.importances[sorted_idx].T,
+    #            vert=False, labels=x.columns[sorted_idx])
+    # ax.set_title("Permutation Importances (test set)")
+    # fig.tight_layout()
+    # plt.show()
+
+    print('*****FIM IMPRIMIR FEATURE IMPORTANCE USING PERMUTATION IMPORTANCE******')
 
 
 ################################################## PRIVATE METHODS ##################################################
