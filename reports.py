@@ -514,7 +514,7 @@ def feature_importance_using_permutation_importance(data_frame: pd.DataFrame, mo
 
             model.fit(x, y)
             results = permutation_importance(
-                model, x, y, scoring='accuracy', n_jobs=-1)
+                model, x, y, scoring='accuracy', n_repeats=3, random_state=42, n_jobs=-1)
             print('\n\nModel: {}'.format(model))
             print('\nFeature importance using tree based models:')
             importance = results.importances_mean
