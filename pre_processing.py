@@ -5,6 +5,15 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler, OneHotEncoder, OrdinalEncoder
 from sklearn.feature_selection import VarianceThreshold
+from sklearn.feature_selection import SelectFromModel
+
+from sklearn.linear_model import SGDClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import LinearSVC
+
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
 
 
 def delete_duplicate_rows_by_attribute(data_frame: pd.DataFrame, attribute_name: str, print_report: bool = False) -> pd.DataFrame:
@@ -302,3 +311,53 @@ def delete_columns_with_low_variance(x: pd.DataFrame, threshold: float = 0.0, se
         threshold, x.shape[1]))
     print('*****FIM DELETE COLUMNS WITH LOW VARIANCE*********')
     return x
+
+
+def select_features_from_model(x_train: np.ndarray, y_train: np.ndarray, x_test: np.ndarray, model: str, max_features: int = None, threshold: float = None) -> tuple:
+    """Select the features from a model.
+    SelectFromModel, from scikit-learn, is a meta-transformer that can be used alongside any estimator that assigns importance to each feature through a specific attribute (such as coef_, feature_importances_) or via an importance_getter callable after fitting.
+    The models supported for this function are: DecisionTreeClassifier (decision_tree_classifier), RandomForestClassifier (random_forest_classifier), XGBClassifier (xgb_classifier), LogisticRegression (logistic_regression), LinearSVC (linear_svc), SGDClassifier (sgd_classifier).
+
+    Args:
+        x_train (np.ndarray): X train data.
+        y_train (np.ndarray): Y train data.
+        x_test (np.ndarray): X test data.
+        model (str): Model to be used as estimator. For example: 'decision_tree_classifier'.
+        max_features (int, optional): Maximum number of features to select. Defaults to None.
+        threshold (float, optional): The threshold value to use for feature selection. Defaults to None.
+
+    Returns:
+        tuple: A tuple with the selected features for the x_train e x_test, and the select from model object adjusted for data.
+    """
+    print('\n*****INICIO SELECT FEATURES FROM MODEL******')
+    if model == 'decision_tree_classifier':
+        model = DecisionTreeClassifier()
+    elif model == 'random_forest_classifier':
+        model = RandomForestClassifier()
+    elif model == 'xgb_classifier':
+        model = XGBClassifier()
+    elif model == 'logistic_regression':
+        model = LogisticRegression()
+    elif model == 'linear_svc':
+        model = LinearSVC()
+    elif model == 'sgd_classifier':
+        model = SGDClassifier()
+    else:
+        raise Exception('Model not supported.')
+
+    print('>>> Número de colunas antes da seleção. x_train: {}. x_test: {}'.format(
+        x_train.shape[1], x_test.shape[1]))
+
+    select_from_model = SelectFromModel(
+        model, max_features=max_features, threshold=threshold)
+
+    select_from_model.fit(x_train, y_train)
+
+    x_train_fs = select_from_model.transform(x_train)
+    x_test_fs = select_from_model.transform(x_test)
+
+    print('>>> Número de colunas depois da seleção. x_train_fs: {}. x_test_fs: {}'.format(
+        x_train_fs.shape[1], x_test_fs.shape[1]))
+
+    print('*****FIM SELECT FEATURES FROM MODEL*********')
+    return x_train_fs, x_test_fs, select_from_model
