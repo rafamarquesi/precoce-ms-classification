@@ -119,12 +119,16 @@ def all_attributes(data_frame: pd.DataFrame) -> None:
         data_frame (pd.DataFrame): DataFrame to be treated.
     """
     print('\n*****INICIO RELATÓRIO ATRIBUTOS******')
+    pd.set_option('display.max_rows', 10)
     print('Número de atributos: {}'.format(len(data_frame.columns)))
     print('Nome dos atributos: {}'.format(list(data_frame.columns)))
     for column_name, column_data in data_frame.iteritems():
-        print('Nome da coluna: {}'.format(column_name))
-        print(column_data.value_counts())
+        print('-> Atributo: {}'.format(column_name))
+        print('Contagem de valor:\n{}'.format(column_data.value_counts()))
+        print('Descrição:\n{}'.format(column_data.describe()))
+        print('Número de nan: {}'.format(column_data.isna().sum()))
         print('-------------------------------')
+    pd.set_option('display.max_rows', utils.PANDAS_MAX_ROWS)
     print('*****FIM RELATÓRIO ATRIBUTOS******')
 
 
@@ -514,7 +518,7 @@ def feature_importance_using_permutation_importance(data_frame: pd.DataFrame, mo
 
             model.fit(x, y)
             results = permutation_importance(
-                model, x, y, scoring='accuracy', n_repeats=2, random_state=42, n_jobs=-1)
+                model, x, y, scoring='accuracy', n_repeats=5, random_state=42, n_jobs=-1)
             print('\n\nModel: {}'.format(model))
             print('\nFeature importance using tree based models:')
             importance = results.importances_mean

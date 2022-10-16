@@ -5,6 +5,9 @@ from datetime import datetime
 # Types of columns to be excluded from the DataFrame
 TYPES_EXCLUDE_DF = [pd.CategoricalDtype, pd.DatetimeTZDtype, np.datetime64]
 
+# Pandas max rows, None displays all rows
+PANDAS_MAX_ROWS = None
+
 
 def get_current_datetime() -> str:
     """Get the current datetime.
