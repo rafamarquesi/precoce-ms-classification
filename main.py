@@ -39,7 +39,7 @@ if __name__ == '__main__':
     csv_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1.csv'
 
     # Number of lines to be read from the dataset, where None read all lines
-    number_csv_lines = 2000000
+    number_csv_lines = 500000
 
     # Path to save plots
     path_save_plots = './plots'
@@ -215,6 +215,8 @@ if __name__ == '__main__':
     # Dictionary with the min max scaler object fitted for each column
     columns_min_max_scaled = dict()
 
+    class_column = 'classificacao'
+
     # Dictionary containing the instantiated classes of classifiers and the parameters for optimization
     classifiers = dict()
 
@@ -296,37 +298,42 @@ if __name__ == '__main__':
 
         # Move the target column to the last position in dataframe
         precoce_ms_data_frame = utils.move_cloumns_last_positions(
-            data_frame=precoce_ms_data_frame, columns_names=['classificacao'])
+            data_frame=precoce_ms_data_frame, columns_names=[class_column])
 
         # Target attribute distribution
         reports.class_distribution(
-            y=precoce_ms_data_frame['classificacao'].values)
+            y=precoce_ms_data_frame[class_column].values)
 
-        # Calculate feature importance with linear models
-        reports.feature_importance_using_coefficients_of_linear_models(
-            data_frame=precoce_ms_data_frame,
-            models=['logistic_regression', 'linear_svc', 'sgd_classifier'],
-            path_save_fig=path_save_plots,
-            display_figure=True
-        )
+        # TODO: Spearman's Correlation, Further, the two variables being considered may have a non-Gaussian distribution. (https://machinelearningmastery.com/how-to-use-correlation-to-understand-the-relationship-between-variables/)
+        reports.correlation_matrix(
+            data_frame=precoce_ms_data_frame, method='pearson', attribute=class_column,
+            display_matrix=False, export_matrix=True, path_save_matrix=path_save_plots)
 
-        # Calculate feature importance with tree based models
-        reports.feature_importance_using_tree_based_models(
-            data_frame=precoce_ms_data_frame,
-            models=['decision_tree_classifier',
-                    'random_forest_classifier', 'xgb_classifier'],
-            path_save_fig=path_save_plots,
-            display_figure=True
-        )
+        # # Calculate feature importance with linear models
+        # reports.feature_importance_using_coefficients_of_linear_models(
+        #     data_frame=precoce_ms_data_frame,
+        #     models=['logistic_regression', 'linear_svc', 'sgd_classifier'],
+        #     path_save_fig=path_save_plots,
+        #     display_figure=True
+        # )
 
-        # TODO: It didn't work, study better how permutation importance works
-        # Calculate feature importance using permutation importance
-        reports.feature_importance_using_permutation_importance(
-            data_frame=precoce_ms_data_frame,
-            models=['knneighbors_classifier', 'gaussian_nb'],
-            path_save_fig=path_save_plots,
-            display_figure=True
-        )
+        # # Calculate feature importance with tree based models
+        # reports.feature_importance_using_tree_based_models(
+        #     data_frame=precoce_ms_data_frame,
+        #     models=['decision_tree_classifier',
+        #             'random_forest_classifier', 'xgb_classifier'],
+        #     path_save_fig=path_save_plots,
+        #     display_figure=True
+        # )
+
+        # # TODO: It didn't work, study better how permutation importance works
+        # # Calculate feature importance using permutation importance
+        # reports.feature_importance_using_permutation_importance(
+        #     data_frame=precoce_ms_data_frame,
+        #     models=['knneighbors_classifier', 'gaussian_nb'],
+        #     path_save_fig=path_save_plots,
+        #     display_figure=True
+        # )
 
     ################################################## PRE PROCESSING ##################################################
 
@@ -374,14 +381,14 @@ if __name__ == '__main__':
 
         # TODO: Spearman's Correlation, Further, the two variables being considered may have a non-Gaussian distribution. (https://machinelearningmastery.com/how-to-use-correlation-to-understand-the-relationship-between-variables/)
         reports.correlation_matrix(
-            data_frame=precoce_ms_data_frame, method='pearson', attribute='classificacao',
+            data_frame=precoce_ms_data_frame, method='pearson', attribute=class_column,
             display_matrix=False, export_matrix=True, path_save_matrix=path_save_plots)
 
         precoce_ms_data_frame = pre_processing.drop_feature_by_correlation(
-            data_frame=precoce_ms_data_frame, method='pearson', columns_names=['Maturidade', 'Acabamento', 'Peso', 'classificacao'])
+            data_frame=precoce_ms_data_frame, method='pearson', columns_names=['Maturidade', 'Acabamento', 'Peso', class_column])
 
         precoce_ms_data_frame = utils.move_cloumns_last_positions(
-            data_frame=precoce_ms_data_frame, columns_names=['classificacao'])
+            data_frame=precoce_ms_data_frame, columns_names=[class_column])
 
         csv_treatments.generate_new_csv(
             data_frame=precoce_ms_data_frame, csv_path=path_save_csv_after_pre_processing)
