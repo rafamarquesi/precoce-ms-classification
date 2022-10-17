@@ -182,14 +182,20 @@ def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = N
         displayhook(styled_table)
 
     if export_matrix:
-        if path_save_matrix is None:
-            path_save_matrix = 'correlation_matrix-{}.png'.format(
-                utils.get_current_datetime())
-        else:
-            path_save_matrix = path_save_matrix + '/correlation_matrix-{}.png'.format(
-                utils.get_current_datetime())
+        path_save_matrix = __define_path_save_fig(
+            path_save_fig=path_save_matrix)
 
-        dfi.export(styled_table, path_save_matrix, max_cols=-1, max_rows=-1)
+        name_figure = 'correlation_matrix-{}.png'.format(
+            utils.get_current_datetime())
+
+        dfi.export(
+            styled_table,
+            ''.join([path_save_matrix, name_figure]),
+            max_cols=-1,
+            max_rows=-1
+        )
+        print('Figure {} saved in {} directory.'.format(
+            name_figure, path_save_matrix))
 
     print('*****FIM CORRELATION MATRIX*********')
 
