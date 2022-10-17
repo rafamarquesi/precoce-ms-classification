@@ -185,8 +185,11 @@ def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = N
         path_save_matrix = __define_path_save_fig(
             path_save_fig=path_save_matrix)
 
-        name_figure = 'correlation_matrix-{}.png'.format(
-            utils.get_current_datetime())
+        name_figure = 'correlation_matrix-{}-{}-{}.png'.format(
+            method,
+            attribute,
+            utils.get_current_datetime()
+        )
 
         dfi.export(
             styled_table,
