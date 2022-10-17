@@ -17,11 +17,12 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 
-pd.set_option('display.max_rows', 5000)
 
 # TODO: Treat imbalanced classes (Book Albon - Chapter 5.5)
 
 # TODO: Use the cross_validate function, for evaluation of multiple metrics (https://scikit-learn.org/stable/modules/cross_validation.html#multimetric-cross-validation)
+
+# TODO: IDEA: Save results for each function, in reports in a file
 
 if __name__ == '__main__':
 
@@ -31,11 +32,14 @@ if __name__ == '__main__':
     # )
     # sys.stdout = run_log_file
 
+    # Set pandas max rows
+    pd.set_option('display.max_rows', utils.PANDAS_MAX_ROWS)
+
     # Path to the dataset
     csv_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1.csv'
 
-    # Number of lines to be read from the dataset
-    number_csv_lines = 500000
+    # Number of lines to be read from the dataset, where None read all lines
+    number_csv_lines = 2000000
 
     # Path to save plots
     path_save_plots = './plots'
@@ -197,7 +201,7 @@ if __name__ == '__main__':
         'EstabelecimentoMunicipio', 'Tipificacao', 'ANO'
     ]
     # Dictionary with the one hot encoder object fitted for each column
-    columns_one_not_encoded = dict()
+    columns_one_hot_encoded = dict()
 
     # Dictionary with column names to apply the min max scaler
     min_max_scaler_columns_names = [
@@ -246,6 +250,10 @@ if __name__ == '__main__':
         precoce_ms_data_frame = pre_processing.delete_nan_rows(
             data_frame=precoce_ms_data_frame, print_report=True)
 
+        # Convert pandas dtypes to numpy dtypes, some operations doesn't work with pandas dtype, for exemple, the XGBoost models
+        precoce_ms_data_frame = utils.convert_pandas_dtype_to_numpy_dtype(
+            data_frame=precoce_ms_data_frame, pandas_dtypes=[pd.UInt8Dtype()])
+
         # Print the unique values for each column
         reports.unique_values_for_each_column(
             data_frame=precoce_ms_data_frame
@@ -279,8 +287,8 @@ if __name__ == '__main__':
             data_frame=precoce_ms_data_frame, columns_label_encoded=columns_label_encoded, columns_names=label_encoder_columns_names)
 
         # Apply one hot encoder to the columns
-        precoce_ms_data_frame, columns_one_not_encoded = pre_processing.one_hot_encoder_columns(
-            data_frame=precoce_ms_data_frame, columns_one_hot_encoded=columns_one_not_encoded, columns_names=one_hot_encoder_columns_names)
+        precoce_ms_data_frame, columns_one_hot_encoded = pre_processing.one_hot_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_one_hot_encoded=columns_one_hot_encoded, columns_names=one_hot_encoder_columns_names)
 
         # Apply min max scaler to the columns
         precoce_ms_data_frame, columns_min_max_scaled = pre_processing.min_max_scaler_columns(
@@ -290,11 +298,32 @@ if __name__ == '__main__':
         precoce_ms_data_frame = utils.move_cloumns_last_positions(
             data_frame=precoce_ms_data_frame, columns_names=['classificacao'])
 
-        # TODO: Calculate feature importance with python, after encode categorical features (https://machinelearningmastery.com/calculate-feature-importance-with-python/)
+        # Target attribute distribution
+        reports.class_distribution(
+            y=precoce_ms_data_frame['classificacao'].values)
+
         # Calculate feature importance with linear models
         reports.feature_importance_using_coefficients_of_linear_models(
             data_frame=precoce_ms_data_frame,
             models=['logistic_regression', 'linear_svc', 'sgd_classifier'],
+            path_save_fig=path_save_plots,
+            display_figure=True
+        )
+
+        # Calculate feature importance with tree based models
+        reports.feature_importance_using_tree_based_models(
+            data_frame=precoce_ms_data_frame,
+            models=['decision_tree_classifier',
+                    'random_forest_classifier', 'xgb_classifier'],
+            path_save_fig=path_save_plots,
+            display_figure=True
+        )
+
+        # TODO: It didn't work, study better how permutation importance works
+        # Calculate feature importance using permutation importance
+        reports.feature_importance_using_permutation_importance(
+            data_frame=precoce_ms_data_frame,
+            models=['knneighbors_classifier', 'gaussian_nb'],
             path_save_fig=path_save_plots,
             display_figure=True
         )
@@ -315,10 +344,16 @@ if __name__ == '__main__':
         precoce_ms_data_frame = pre_processing.delete_nan_rows(
             data_frame=precoce_ms_data_frame)
 
+        # Convert pandas dtypes to numpy dtypes, some operations doesn't work with pandas dtype, for exemple, the XGBoost models
+        precoce_ms_data_frame = utils.convert_pandas_dtype_to_numpy_dtype(
+            data_frame=precoce_ms_data_frame, pandas_dtypes=[pd.UInt8Dtype()])
+
         # Identify columns that contain a single value, and delete them
         precoce_ms_data_frame = pre_processing.delete_columns_with_single_value(
             data_frame=precoce_ms_data_frame
         )
+
+        # TODO: Use function select_features_from_model implemented in the file pre_processing.py
 
         reports.informations(precoce_ms_data_frame)
 
@@ -331,8 +366,8 @@ if __name__ == '__main__':
         precoce_ms_data_frame, columns_label_encoded = pre_processing.label_encoder_columns(
             data_frame=precoce_ms_data_frame, columns_label_encoded=columns_label_encoded, columns_names=label_encoder_columns_names)
 
-        precoce_ms_data_frame, columns_one_not_encoded = pre_processing.one_hot_encoder_columns(
-            data_frame=precoce_ms_data_frame, columns_one_hot_encoded=columns_one_not_encoded, columns_names=one_hot_encoder_columns_names)
+        precoce_ms_data_frame, columns_one_hot_encoded = pre_processing.one_hot_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_one_hot_encoded=columns_one_hot_encoded, columns_names=one_hot_encoder_columns_names)
 
         precoce_ms_data_frame, columns_min_max_scaled = pre_processing.min_max_scaler_columns(
             data_frame=precoce_ms_data_frame, columns_min_max_scaled=columns_min_max_scaled, columns_names=min_max_scaler_columns_names)
