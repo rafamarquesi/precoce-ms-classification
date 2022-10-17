@@ -6,7 +6,7 @@ from datetime import datetime
 TYPES_EXCLUDE_DF = [pd.CategoricalDtype, pd.DatetimeTZDtype, np.datetime64]
 
 # Pandas max rows, None displays all rows
-PANDAS_MAX_ROWS = None
+PANDAS_MAX_ROWS = 5000
 
 
 def get_current_datetime() -> str:
