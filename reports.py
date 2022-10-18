@@ -150,7 +150,7 @@ def class_distribution(y: np.array) -> None:
     print('*****FIM RELATÓRIO DISTRIBUIÇÃO DE CLASSES******')
 
 
-def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = None, display_matrix: bool = False, export_matrix: bool = False, path_save_matrix: str = None) -> None:
+def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = None, display_matrix: bool = False, export_matrix: bool = False, path_save_matrix: str = None, print_corr_matrix_summarized: bool = False, lower_limit: float = -0.5, upper_limit: float = 0.5) -> None:
     """Create a correlation matrix from the DataFrame.
 
     Args:
@@ -160,10 +160,17 @@ def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = N
         display_matrix (bool, optional): Flag to display the correlation matrix. Defaults to False.
         export_matrix (bool, optional): Flag to export the correlation matrix. Defaults to False.
         path_save_matrix (str, optional): Path to save the correlation matrix. Defaults to None.
+        print_corr_matrix_summarized (bool, optional): Flag to display the results of the correlation matrix in a summarized form, that is, the values that are in the range passed as a parameter. Works only when attribute is None. If false, results will not be displayed. Defaults to False.
+        lower_limit (float, optional): Lower limit of the interval in the correlation matrix summarized. Defaults to -0.5.
+        upper_limit (float, optional): Upper limit of the interval in the correlation matrix summarized. Defaults to 0.5.
     """
     print('\n*****INICIO CORRELATION MATRIX******')
     if attribute is None:
         correlation_matrix = data_frame.corr(method=method).astype('float32')
+
+        if print_corr_matrix_summarized:
+            __print_correlation_matrix_summarized(
+                correlation_matrix=correlation_matrix, lower_limit=lower_limit, upper_limit=upper_limit)
 
         cmap = sns.diverging_palette(5, 250, as_cmap=True)
 
@@ -175,6 +182,9 @@ def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = N
     else:
         correlation_matrix = data_frame.corr(
             method=method).astype('float32')[attribute]
+
+        correlation_matrix = correlation_matrix.sort_values(ascending=False)
+
         styled_table = correlation_matrix.to_frame().style.background_gradient(
             cmap=sns.light_palette((260, 75, 60), input="husl", as_cmap=True))
 
@@ -625,3 +635,37 @@ def __define_path_save_fig(path_save_fig: str) -> str:
     else:
         path_save_fig = path_save_fig + '/'
     return path_save_fig
+
+
+def __print_correlation_matrix_summarized(correlation_matrix: pd.DataFrame, lower_limit: float, upper_limit: float) -> None:
+    """Print the correlation matrix summarized.
+
+    Args:
+        correlation_matrix (pd.DataFrame): Correlation matrix.
+        lower_limit (float): Lower limit of the interval.
+        upper_limit (float): Upper limit of the interval.
+    """
+    indexes = correlation_matrix.index
+    columns = correlation_matrix.columns
+
+    correlation_summarized = pd.DataFrame(columns=['Corr_Between', 'Value'])
+
+    keyword = '-and-'
+    for column in columns:
+        for index in indexes:
+            value = correlation_matrix.loc[index, column]
+            if ((value < lower_limit) or (value > upper_limit)):
+                if ((keyword.join([index, column]) not in correlation_summarized['Corr_Between'].values) and (keyword.join([column, index]) not in correlation_summarized['Corr_Between'].values)):
+                    correlation_summarized = pd.concat([correlation_summarized, pd.DataFrame.from_records(
+                        [
+                            {
+                                'Corr_Between': keyword.join([index, column]),
+                                'Value': value
+                            }
+                        ])])
+
+    correlation_summarized = correlation_summarized.sort_values(
+        by=['Value'], ascending=False)
+
+    print('Correlation summarized:')
+    displayhook(correlation_summarized)
