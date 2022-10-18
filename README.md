@@ -19,3 +19,14 @@ The most current database of the Precoce MS program was made available by a repr
 # Machine Learning
 
 The present project aims to use Data Mining techniques, supported by the supervised machine learning area, in order to apply algorithms for classification of a target class, from different paradigms, namely, <em>k</em>-Nearest Neighbor, Naïve Bayes, Decision Trees, Artificial Neural Network, and Support Vector Machine.
+
+---
+
+# Requirements
+
+- For the development, we used the Python 3.8.10.
+- The libraries used in the project are listed in the file [requirements.txt](https://github.com/rafamarquesi/precoce-ms-classification/blob/master/requirements.txt).
+
+The libraries need some dependencies to work well. For Linux based systems, you can install them using the following command:
+
+```apt install chromium-chromedriver```
