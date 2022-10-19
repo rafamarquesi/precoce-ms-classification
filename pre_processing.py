@@ -156,6 +156,29 @@ def label_encoder_columns(data_frame: pd.DataFrame, columns_label_encoded: dict,
     return data_frame, columns_label_encoded
 
 
+def inverse_label_encoder_columns(data_frame: pd.DataFrame, columns_label_encoded: dict) -> tuple:
+    """Inverse label encode the DataFrame, given by the dictionary containing the coded columns, passed as parameters.
+
+    Args:
+        data_frame (pd.DataFrame): DataFrame to be treated.
+        columns_label_encoded (dict): Dictionary with the label encoder for each column.
+
+    Returns:
+        tuple: A DataFrame with the inverse label encoded, and the columns_label_encoded cleared.
+    """
+    print('\n*****INICIO INVERSE LABEL ENCODER******')
+    for column, encoder_column in columns_label_encoded.copy().items():
+        if column in data_frame.columns:
+            data_frame[column] = encoder_column.inverse_transform(
+                data_frame[column])
+            columns_label_encoded.pop(column)
+        else:
+            print(
+                '!!!>>> Coluna {} não encontrada no DataFrame para inverse label encoding.'.format(column))
+    print('*****FIM INVERSE LABEL ENCODER*********')
+    return data_frame, columns_label_encoded
+
+
 def one_hot_encoder_columns(data_frame: pd.DataFrame, columns_one_hot_encoded: dict, columns_names: list) -> tuple:
     """One-hot encode the DataFrame, given the columns names, passed as parameters.
 
