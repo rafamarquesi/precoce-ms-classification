@@ -105,6 +105,29 @@ def ordinal_encoder_columns(data_frame: pd.DataFrame, columns_ordinal_encoded: d
     return data_frame, columns_ordinal_encoded
 
 
+def inverse_ordinal_encoder_columns(data_frame: pd.DataFrame, columns_ordinal_encoded: dict) -> tuple:
+    """Inverse ordinal encode the DataFrame, given by the dictionary containing the coded columns, passed as parameters.
+
+    Args:
+        data_frame (pd.DataFrame): DataFrame to be treated.
+        columns_ordinal_encoded (dict): Dictionary with the ordinal encoder for each column.
+
+    Returns:
+        tuple: A DataFrame with the inverse ordinal encoded, and the columns_ordinal_encoded cleared.
+    """
+    print('\n*****INICIO INVERSE ORDINAL ENCODER******')
+    for column, encoder_column in columns_ordinal_encoded.copy().items():
+        if column in data_frame.columns:
+            data_frame[column] = encoder_column.inverse_transform(
+                data_frame[[column]])
+            columns_ordinal_encoded.pop(column)
+        else:
+            print(
+                '!!!>>> Coluna {} não encontrada no DataFrame para inverse ordinal encoding.'.format(column))
+    print('*****FIM INVERSE ORDINAL ENCODER*********')
+    return data_frame, columns_ordinal_encoded
+
+
 def label_encoder_columns(data_frame: pd.DataFrame, columns_label_encoded: dict, columns_names: list) -> tuple:
     """Label encode the DataFrame, given the columns names, passed as parameters.
 
