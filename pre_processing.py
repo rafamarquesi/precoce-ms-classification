@@ -214,6 +214,31 @@ def one_hot_encoder_columns(data_frame: pd.DataFrame, columns_one_hot_encoded: d
     return data_frame, columns_one_hot_encoded
 
 
+def inverse_one_hot_encoder_columns(data_frame: pd.DataFrame, columns_one_hot_encoded: dict) -> tuple:
+    """Inverse one-hot encode the DataFrame, given by the dictionary containing the coded columns, passed as parameters.
+
+    Args:
+        data_frame (pd.DataFrame): DataFrame to be treated.
+        columns_one_hot_encoded (dict): Dictionary with the one-hot encoded for each column.
+
+    Returns:
+        tuple: A DataFrame with the inverse one-hot encoded, and the columns_one_hot_encoded cleared.
+    """
+    print('\n*****INICIO INVERSE ONE-HOT ENCODER******')
+    for column, encoder_column in columns_one_hot_encoded.copy().items():
+        if len(set(encoder_column.get_feature_names_out()).intersection(set(data_frame.columns))) == len(encoder_column.get_feature_names_out()):
+            data_frame[column] = encoder_column.inverse_transform(
+                data_frame[encoder_column.get_feature_names_out()])
+            data_frame = utils.delete_columns(
+                data_frame=data_frame, delete_columns_names=encoder_column.get_feature_names_out())
+            columns_one_hot_encoded.pop(column)
+        else:
+            print(
+                '!!!>>> As  colunas {} não foram encontradas todas no DataFrame para inverse one-hot encoding.'.format(encoder_column.get_feature_names_out()))
+    print('*****FIM INVERSE ONE-HOT ENCODER*********')
+    return data_frame, columns_one_hot_encoded
+
+
 def drop_feature_by_correlation(data_frame: pd.DataFrame, method: str, columns_names: list, threshold: float = 0.95) -> pd.DataFrame:
     """Drop the features by correlation, given the columns names, passed as parameters.
     The threshold parameter is used to define the threshold of correlation.
