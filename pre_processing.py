@@ -161,7 +161,7 @@ def inverse_label_encoder_columns(data_frame: pd.DataFrame, columns_label_encode
 
     Args:
         data_frame (pd.DataFrame): DataFrame to be treated.
-        columns_label_encoded (dict): Dictionary with the label encoder for each column.
+        columns_label_encoded (dict): Dictionary with the label encoded for each column.
 
     Returns:
         tuple: A DataFrame with the inverse label encoded, and the columns_label_encoded cleared.
@@ -282,6 +282,29 @@ def min_max_scaler_columns(data_frame: pd.DataFrame, columns_min_max_scaled: dic
             print(
                 '!!!>>> Coluna {} não encontrada no DataFrame para min-max scaler.'.format(column))
     print('*****FIM MIN-MAX SCALER*********')
+    return data_frame, columns_min_max_scaled
+
+
+def inverse_min_max_scaler_columns(data_frame: pd.DataFrame, columns_min_max_scaled: dict) -> tuple:
+    """Inverse Min-Max scale the DataFrame, given by the dictionary containing the scaled columns, passed as parameters.
+
+    Args:
+        data_frame (pd.DataFrame): DataFrame to be treated.
+        columns_min_max_scaled (dict): Dictionary with the min-max scaled for each column.
+
+    Returns:
+        tuple: A DataFrame with the inverse min max scaled, and the columns_min_max_scaled cleared.
+    """
+    print('\n*****INICIO INVERSE MIN-MAX SCALER******')
+    for column, scaler_column in columns_min_max_scaled.copy().items():
+        if column in data_frame.columns:
+            data_frame[column] = scaler_column.inverse_transform(
+                data_frame[column].values.reshape(-1, 1))
+            columns_min_max_scaled.pop(column)
+        else:
+            print(
+                '!!!>>> Coluna {} não encontrada no DataFrame para inverse min-max scaler.'.format(column))
+    print('*****FIM INVERSE MIN-MAX SCALER*********')
     return data_frame, columns_min_max_scaled
 
 
