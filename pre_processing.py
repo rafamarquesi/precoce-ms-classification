@@ -168,7 +168,7 @@ def one_hot_encoder_columns(data_frame: pd.DataFrame, columns_one_hot_encoded: d
     return data_frame, columns_one_hot_encoded
 
 
-def drop_feature_by_correlation(data_frame: pd.DataFrame, method: str, columns_names: list, threshold: float = 0.9) -> pd.DataFrame:
+def drop_feature_by_correlation(data_frame: pd.DataFrame, method: str, columns_names: list, threshold: float = 0.95) -> pd.DataFrame:
     """Drop the features by correlation, given the columns names, passed as parameters.
     The threshold parameter is used to define the threshold of correlation.
     The default value is 0.9.
@@ -186,7 +186,8 @@ def drop_feature_by_correlation(data_frame: pd.DataFrame, method: str, columns_n
     print('\n*****INICIO DROP FEATURE BY CORRELATION******')
     for column in columns_names:
         if column in data_frame.columns:
-            correlation_matrix = data_frame.corr(method=method)
+            correlation_matrix = data_frame.corr(
+                method=method).astype('float32')
             correlation_matrix = correlation_matrix.loc[column, :]
             correlation_matrix = correlation_matrix.sort_values(
                 ascending=False)
@@ -195,12 +196,12 @@ def drop_feature_by_correlation(data_frame: pd.DataFrame, method: str, columns_n
             correlation_matrix = correlation_matrix.dropna()
             correlation_matrix = correlation_matrix.index.tolist()
             if len(correlation_matrix) > 0:
-                print('>>> Correlação entre a coluna {} e as colunas {} foi encontrada.'.format(
-                    column, correlation_matrix))
+                print('>>> Correlação, para o limite de {}, entre o atributo {} e os atributos {} foi encontrada.\n>>>>Removendo os atributos do dataframe.'.format(
+                    threshold, column, correlation_matrix))
                 data_frame.drop(columns=correlation_matrix, inplace=True)
             else:
                 print(
-                    '>>> Nenhuma correlação entre a coluna {} e as colunas encontrada.'.format(column))
+                    '>>> Nenhuma correlação, para o limite de {}, encontrada para o atributo {}.'.format(threshold, column))
         else:
             print(
                 '!!!>>> Coluna {} não encontrada no DataFrame para drop feature by correlation.'.format(column))
