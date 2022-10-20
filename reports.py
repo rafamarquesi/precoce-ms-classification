@@ -605,6 +605,7 @@ def histogram(data_frame: pd.DataFrame, save_fig: bool = False, path_save_fig: s
             plt.show()
 
         plt.close()
+        print('\n')
     print('*****FIM IMPRIMIR HISTOGRAM******')
 
 
