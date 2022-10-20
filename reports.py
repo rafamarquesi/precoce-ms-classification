@@ -577,6 +577,37 @@ def feature_importance_using_permutation_importance(data_frame: pd.DataFrame, mo
     print('*****FIM IMPRIMIR FEATURE IMPORTANCE USING PERMUTATION IMPORTANCE******')
 
 
+def histogram(data_frame: pd.DataFrame, save_fig: bool = False, path_save_fig: str = None, display_figure: bool = True) -> None:
+    """Print the histogram for each attribute of the data frame.
+    Args:
+        data_frame (pd.DataFrame): Data frame to be treated.
+        save_fig (bool, optional): Flag to save the figures. Defaults to False.
+        path_save_fig (str, optional): Path to save the figures. If None, save the figures in root path of project. Defaults to None.
+        display_figure (bool, optional): Flag to display the results, for example in jupyter notebook. Defaults to True.
+    """
+    print('\n*****INICIO IMPRIMIR HISTOGRAM******')
+    for column in data_frame.columns:
+        plt.hist(data_frame[column])
+        plt.xticks(rotation='vertical')
+        plt.tight_layout()
+        plt.title('Histogram of {}'.format(column))
+        if save_fig:
+            path_save_fig = __define_path_save_fig(path_save_fig=path_save_fig)
+
+            name_figure = 'histogram-{}-{}.png'.format(
+                column, utils.get_current_datetime())
+            plt.savefig(
+                ''.join([path_save_fig, name_figure]), bbox_inches='tight')
+            print('Figure {} saved in {} directory.'.format(
+                name_figure, path_save_fig))
+
+        if display_figure:
+            plt.show()
+
+        plt.close()
+    print('*****FIM IMPRIMIR HISTOGRAM******')
+
+
 ################################################## PRIVATE METHODS ##################################################
 
 
