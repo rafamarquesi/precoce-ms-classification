@@ -267,7 +267,7 @@ def drop_feature_by_correlation(data_frame: pd.DataFrame, method: str, columns_n
             correlation_matrix = correlation_matrix.dropna()
             correlation_matrix = correlation_matrix.index.tolist()
             if len(correlation_matrix) > 0:
-                print('>>> Correlação, para o limite de {}, entre o atributo {} e os atributos {} foi encontrada.\n>>>>Removendo os atributos do dataframe.'.format(
+                print('>>> Correlação, para o limite de {}, entre o atributo {} e o(s) atributo(s) {} foi encontrada.\n>>>>Removendo o(s) atributo(s) do dataframe.'.format(
                     threshold, column, correlation_matrix))
                 data_frame.drop(columns=correlation_matrix, inplace=True)
             else:
