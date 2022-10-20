@@ -39,7 +39,7 @@ if __name__ == '__main__':
     csv_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1.csv'
 
     # Number of lines to be read from the dataset, where None read all lines
-    number_csv_lines = 500000
+    number_csv_lines = 5000
 
     # Path to save plots
     path_save_plots = './plots'
@@ -188,7 +188,7 @@ if __name__ == '__main__':
     # Dictionary with the ordinal encode object fitted for each column
     columns_ordinal_encoded = dict()
 
-    # Dictionary with column names to apply the label encoder
+    # List with column names to apply the label encoder
     label_encoder_columns_names = [
         'DataAbate', 'classificacao'
     ]
@@ -196,14 +196,14 @@ if __name__ == '__main__':
     columns_label_encoded = dict()
 
     # TODO: Check with the professor how to encode 'DataAbate', I tried with one hot, but, does not work very well
-    # Dictionary with column names to apply the ordinal encoder
+    # List with column names to apply the ordinal encoder
     one_hot_encoder_columns_names = [
         'EstabelecimentoMunicipio', 'Tipificacao', 'ANO'
     ]
     # Dictionary with the one hot encoder object fitted for each column
     columns_one_hot_encoded = dict()
 
-    # Dictionary with column names to apply the min max scaler
+    # List with column names to apply the min max scaler
     min_max_scaler_columns_names = [
         'Peso',
         'med7d_formITUinst', 'med7d_preR_soja', 'med7d_preR_milho', 'med7d_preR_boi',
@@ -215,6 +215,19 @@ if __name__ == '__main__':
     # Dictionary with the min max scaler object fitted for each column
     columns_min_max_scaled = dict()
 
+    # List with column names to drop feature by correlation
+    # I choise the features greater than or equal to threshold 0.95, because the spearman correlation
+    # matrix showed that there are some features that are highly correlated
+    columns_names_drop_feature_by_correlation = [
+        'med7d_preR_soja', 'med1m_preR_soja', 'med3m_preR_soja', 'med6m_preR_soja', 'med12m_preR_soja',
+        'med7d_preR_milho',
+        'med7d_preR_boi', 'med1m_preR_boi', 'med3m_preR_boi', 'med6m_preR_boi',
+        'med3m_formITUinst',
+        'cnt3m_CL_ITUinst',
+        'Maturidade', 'Acabamento', 'Peso', 'classificacao'
+    ]
+
+    # Class column name
     class_column = 'classificacao'
 
     # Dictionary containing the instantiated classes of classifiers and the parameters for optimization
@@ -304,27 +317,56 @@ if __name__ == '__main__':
         reports.class_distribution(
             y=precoce_ms_data_frame[class_column].values)
 
-        # TODO: Spearman's Correlation, Further, the two variables being considered may have a non-Gaussian distribution. (https://machinelearningmastery.com/how-to-use-correlation-to-understand-the-relationship-between-variables/)
+        # Spearman's Correlation, Further, the two variables being considered may have a non-Gaussian distribution.
+        # The coefficient returns a value between -1 and 1 that represents the limits of correlation
+        # from a full negative correlation to a full positive correlation. A value of 0 means no correlation.
+        # The value must be interpreted, where often a value below -0.5 or above 0.5 indicates a notable correlation,
+        # and values below those values suggests a less notable correlation.
+
+        export_matrix = False
+
+        # Correlation matrix using pearson method, between all attributes
+        reports.correlation_matrix(
+            data_frame=precoce_ms_data_frame, method='pearson',
+            display_matrix=True, export_matrix=export_matrix, path_save_matrix=path_save_plots,
+            print_corr_matrix_summarized=True)
+
+        # Correlation matrix using pearson method, between all attributes and the class attribute
         reports.correlation_matrix(
             data_frame=precoce_ms_data_frame, method='pearson', attribute=class_column,
-            display_matrix=False, export_matrix=True, path_save_matrix=path_save_plots)
+            display_matrix=True, export_matrix=export_matrix, path_save_matrix=path_save_plots)
 
-        # # Calculate feature importance with linear models
-        # reports.feature_importance_using_coefficients_of_linear_models(
-        #     data_frame=precoce_ms_data_frame,
-        #     models=['logistic_regression', 'linear_svc', 'sgd_classifier'],
-        #     path_save_fig=path_save_plots,
-        #     display_figure=True
-        # )
+        # Correlation matrix using spearman method, between all attributes
+        reports.correlation_matrix(
+            data_frame=precoce_ms_data_frame, method='spearman',
+            display_matrix=True, export_matrix=export_matrix, path_save_matrix=path_save_plots,
+            print_corr_matrix_summarized=True)
 
-        # # Calculate feature importance with tree based models
-        # reports.feature_importance_using_tree_based_models(
-        #     data_frame=precoce_ms_data_frame,
-        #     models=['decision_tree_classifier',
-        #             'random_forest_classifier', 'xgb_classifier'],
-        #     path_save_fig=path_save_plots,
-        #     display_figure=True
-        # )
+        # Correlation matrix using spearman method, between all attributes and the class attribute
+        reports.correlation_matrix(
+            data_frame=precoce_ms_data_frame, method='spearman', attribute=class_column,
+            display_matrix=True, export_matrix=export_matrix, path_save_matrix=path_save_plots)
+
+        # Delete features by correlation
+        precoce_ms_data_frame = pre_processing.drop_feature_by_correlation(
+            data_frame=precoce_ms_data_frame, method='spearman', columns_names=columns_names_drop_feature_by_correlation)
+
+        # Calculate feature importance with linear models
+        reports.feature_importance_using_coefficients_of_linear_models(
+            data_frame=precoce_ms_data_frame,
+            models=['logistic_regression', 'linear_svc', 'sgd_classifier'],
+            path_save_fig=path_save_plots,
+            display_figure=True
+        )
+
+        # Calculate feature importance with tree based models
+        reports.feature_importance_using_tree_based_models(
+            data_frame=precoce_ms_data_frame,
+            models=['decision_tree_classifier',
+                    'random_forest_classifier', 'xgb_classifier'],
+            path_save_fig=path_save_plots,
+            display_figure=True
+        )
 
         # # TODO: It didn't work, study better how permutation importance works
         # # Calculate feature importance using permutation importance
@@ -334,6 +376,26 @@ if __name__ == '__main__':
         #     path_save_fig=path_save_plots,
         #     display_figure=True
         # )
+
+        # # Apply inverse ordinal encoder to the columns
+        # precoce_ms_data_frame, columns_ordinal_encoded = pre_processing.inverse_ordinal_encoder_columns(
+        #     data_frame=precoce_ms_data_frame, columns_ordinal_encoded=columns_ordinal_encoded)
+
+        # # Apply inverse label encoder to the columns
+        # precoce_ms_data_frame, columns_label_encoded = pre_processing.inverse_label_encoder_columns(
+        #     data_frame=precoce_ms_data_frame, columns_label_encoded=columns_label_encoded)
+
+        # # Apply inverse one hot encoder to the columns
+        # precoce_ms_data_frame, columns_one_hot_encoded = pre_processing.inverse_one_hot_encoder_columns(
+        #     data_frame=precoce_ms_data_frame, columns_one_hot_encoded=columns_one_hot_encoded)
+
+        # # Apply inverse min max scaler to the columns
+        # precoce_ms_data_frame, columns_min_max_scaled = pre_processing.inverse_min_max_scaler_columns(
+        #     data_frame=precoce_ms_data_frame, columns_min_max_scaled=columns_min_max_scaled)
+
+        # # Move the target column to the last position in dataframe
+        # precoce_ms_data_frame = utils.move_cloumns_last_positions(
+        #     data_frame=precoce_ms_data_frame, columns_names=[class_column])
 
     ################################################## PRE PROCESSING ##################################################
 
@@ -360,35 +422,61 @@ if __name__ == '__main__':
             data_frame=precoce_ms_data_frame
         )
 
-        # TODO: Use function select_features_from_model implemented in the file pre_processing.py
+        # Apply ordinal encoder to the columns
+        precoce_ms_data_frame, columns_ordinal_encoded = pre_processing.ordinal_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_ordinal_encoded=columns_ordinal_encoded, columns_names=ordinal_encoder_columns_names)
 
+        # Apply label encoder to the columns
+        precoce_ms_data_frame, columns_label_encoded = pre_processing.label_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_label_encoded=columns_label_encoded, columns_names=label_encoder_columns_names)
+
+        # Apply one hot encoder to the columns
+        precoce_ms_data_frame, columns_one_hot_encoded = pre_processing.one_hot_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_one_hot_encoded=columns_one_hot_encoded, columns_names=one_hot_encoder_columns_names)
+
+        # Apply min max scaler to the columns
+        precoce_ms_data_frame, columns_min_max_scaled = pre_processing.min_max_scaler_columns(
+            data_frame=precoce_ms_data_frame, columns_min_max_scaled=columns_min_max_scaled, columns_names=min_max_scaler_columns_names)
+
+        # Move the target column to the last position in dataframe
+        precoce_ms_data_frame = utils.move_cloumns_last_positions(
+            data_frame=precoce_ms_data_frame, columns_names=[class_column])
+
+        # Delete features by correlation
+        precoce_ms_data_frame = pre_processing.drop_feature_by_correlation(
+            data_frame=precoce_ms_data_frame, method='spearman', columns_names=columns_names_drop_feature_by_correlation)
+
+        # Target attribute distribution
+        reports.class_distribution(
+            y=precoce_ms_data_frame[class_column].values)
+
+        # TODO: Use function select_features_from_model implemented in the file pre_processing.py, in this location
+
+        # Apply inverse ordinal encoder to the columns
+        precoce_ms_data_frame, columns_ordinal_encoded = pre_processing.inverse_ordinal_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_ordinal_encoded=columns_ordinal_encoded)
+
+        # Apply inverse label encoder to the columns
+        precoce_ms_data_frame, columns_label_encoded = pre_processing.inverse_label_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_label_encoded=columns_label_encoded)
+
+        # Apply inverse one hot encoder to the columns
+        precoce_ms_data_frame, columns_one_hot_encoded = pre_processing.inverse_one_hot_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_one_hot_encoded=columns_one_hot_encoded)
+
+        # Apply inverse min max scaler to the columns
+        precoce_ms_data_frame, columns_min_max_scaled = pre_processing.inverse_min_max_scaler_columns(
+            data_frame=precoce_ms_data_frame, columns_min_max_scaled=columns_min_max_scaled)
+
+        # Move the target column to the last position in dataframe
+        precoce_ms_data_frame = utils.move_cloumns_last_positions(
+            data_frame=precoce_ms_data_frame, columns_names=[class_column])
+
+        ######################### NOT USED OR TESTED #########################
         reports.informations(precoce_ms_data_frame)
 
         path_save_csv_after_pre_processing = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1_after_pre_processing-{}.csv'.format(
             utils.get_current_datetime())
-
-        precoce_ms_data_frame, columns_ordinal_encoded = pre_processing.ordinal_encoder_columns(
-            data_frame=precoce_ms_data_frame, columns_ordinal_encoded=columns_ordinal_encoded, columns_names=ordinal_encoder_columns_names)
-
-        precoce_ms_data_frame, columns_label_encoded = pre_processing.label_encoder_columns(
-            data_frame=precoce_ms_data_frame, columns_label_encoded=columns_label_encoded, columns_names=label_encoder_columns_names)
-
-        precoce_ms_data_frame, columns_one_hot_encoded = pre_processing.one_hot_encoder_columns(
-            data_frame=precoce_ms_data_frame, columns_one_hot_encoded=columns_one_hot_encoded, columns_names=one_hot_encoder_columns_names)
-
-        precoce_ms_data_frame, columns_min_max_scaled = pre_processing.min_max_scaler_columns(
-            data_frame=precoce_ms_data_frame, columns_min_max_scaled=columns_min_max_scaled, columns_names=min_max_scaler_columns_names)
-
-        # TODO: Spearman's Correlation, Further, the two variables being considered may have a non-Gaussian distribution. (https://machinelearningmastery.com/how-to-use-correlation-to-understand-the-relationship-between-variables/)
-        reports.correlation_matrix(
-            data_frame=precoce_ms_data_frame, method='pearson', attribute=class_column,
-            display_matrix=False, export_matrix=True, path_save_matrix=path_save_plots)
-
-        precoce_ms_data_frame = pre_processing.drop_feature_by_correlation(
-            data_frame=precoce_ms_data_frame, method='pearson', columns_names=['Maturidade', 'Acabamento', 'Peso', class_column])
-
-        precoce_ms_data_frame = utils.move_cloumns_last_positions(
-            data_frame=precoce_ms_data_frame, columns_names=[class_column])
 
         csv_treatments.generate_new_csv(
             data_frame=precoce_ms_data_frame, csv_path=path_save_csv_after_pre_processing)
