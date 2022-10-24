@@ -609,6 +609,62 @@ def histogram(data_frame: pd.DataFrame, save_fig: bool = False, path_save_fig: s
     print('*****FIM IMPRIMIR HISTOGRAM******')
 
 
+def histogram_grouped_by_target(data_frame: pd.DataFrame, target: str, save_fig: bool = False, path_save_fig: str = None, display_figure: bool = True) -> None:
+    """Print the histogram for each attribute of the data frame grouped by target.
+    Args:
+        data_frame (pd.DataFrame): Data frame to be treated.
+        target (str): Target to be grouped.
+        save_fig (bool, optional): Flag to save the figures. Defaults to False.
+        path_save_fig (str, optional): Path to save the figures. If None, save the figures in root path of project. Defaults to None.
+        display_figure (bool, optional): Flag to display the results, for example in jupyter notebook. Defaults to True.
+    """
+    print('\n*****INICIO IMPRIMIR HISTOGRAM GROUPED BY TARGET******')
+
+    try:
+        target_attr_unique = data_frame[target].unique()
+    except:
+        raise Exception('Target ("{}") not found in DataFrame.'.format(target))
+
+    colors = [
+        'red', 'green', 'blue', 'yellow', 'black', 'orange',
+        'purple', 'pink', 'brown', 'gray', 'olive', 'cyan'
+    ]
+
+    kwargs = dict(alpha=0.5, bins=10)
+
+    for column in data_frame.columns:
+        for i in range(len(target_attr_unique)):
+            x = data_frame.loc[
+                data_frame[target] == target_attr_unique[i],
+                column
+            ]
+
+            plt.hist(x, **kwargs, color=colors[i], label=target_attr_unique[i])
+
+        plt.gca().set(title='Histogram of {} grouped by {}'.format(
+            column, target), ylabel='Frequency')
+        plt.xticks(rotation=80, fontsize=7)
+        plt.tight_layout()
+        plt.legend()
+        if save_fig:
+            path_save_fig = __define_path_save_fig(
+                path_save_fig=path_save_fig)
+
+            name_figure = 'histogram_grouped_by_target-{}-{}-{}.png'.format(
+                column, target, utils.get_current_datetime())
+            plt.savefig(
+                ''.join([path_save_fig, name_figure]), bbox_inches='tight')
+            print('Figure {} saved in {} directory.'.format(
+                name_figure, path_save_fig))
+
+        if display_figure:
+            plt.show()
+
+        plt.close()
+        print('\n')
+    print('*****FIM IMPRIMIR HISTOGRAM GROUPED BY TARGET******')
+
+
 ################################################## PRIVATE METHODS ##################################################
 
 
