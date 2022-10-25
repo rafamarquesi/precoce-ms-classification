@@ -49,7 +49,7 @@ def load_data(csv_path: str, sep: str = ';', encoding: str = 'latin1', decimal: 
     return temp_data
 
 
-def generate_new_csv(data_frame: pd.DataFrame, csv_path: str, sep: str = ';', encoding: str = 'latin1', index: bool = False) -> None:
+def generate_new_csv(data_frame: pd.DataFrame, csv_path: str, sep: str = ';', encoding: str = 'latin1', index: bool = False, date_format: str = '%d%b%Y', decimal: str = ',') -> None:
     """Generate a new CSV file, given the DataFrame and the path, passed as parameters.
 
     Args:
@@ -58,6 +58,12 @@ def generate_new_csv(data_frame: pd.DataFrame, csv_path: str, sep: str = ';', en
         sep (str, optional): Separator of the CSV file. Defaults to ';'.
         encoding (str, optional): Encoding of the CSV file. Defaults to 'latin1'.
         index (bool, optional): If True, the index will be included in the CSV file. Defaults to False.
+        date_format (str, optional): Date format of the CSV file. Defaults to '%d%b%Y'.
+        decimal (str, optional): Decimal separator of the CSV file. Defaults to ','.
     """
-    data_frame.to_csv(csv_path, sep=sep, encoding=encoding, index=index)
+    data_frame.to_csv(
+        csv_path, sep=sep, encoding=encoding,
+        index=index, date_format=date_format,
+        decimal=decimal
+    )
     print('\nCSV gerado com sucesso em: {}.'.format(csv_path))
