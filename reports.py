@@ -705,6 +705,56 @@ def boxplot(data_frame: pd.DataFrame, save_fig: bool = False, path_save_fig: str
     print('*****FIM IMPRIMIR BOXPLOT******')
 
 
+def boxplot_grouped_by_target(data_frame: pd.DataFrame, target: str, save_fig: bool = False, path_save_fig: str = None, display_figure: bool = True) -> None:
+    """Print the boxplot for each attribute of the data frame grouped by target.
+    Args:
+        data_frame (pd.DataFrame): Data frame to be treated.
+        target (str): Target to be grouped.
+        save_fig (bool, optional): Flag to save the figures. Defaults to False.
+        path_save_fig (str, optional): Path to save the figures. If None, save the figures in root path of project. Defaults to None.
+        display_figure (bool, optional): Flag to display the results, for example in jupyter notebook. Defaults to True.
+    """
+    print('\n*****INICIO IMPRIMIR BOXPLOT GROUPED BY TARGET******')
+
+    try:
+        target_attr_unique = data_frame[target].unique()
+    except:
+        raise Exception('Target ("{}") not found in DataFrame.'.format(target))
+
+    for column in data_frame.select_dtypes(exclude=utils.TYPES_EXCLUDE_DF).columns:
+        plt.figure(figsize=(5, 10))
+
+        x = list()
+        for i in range(len(target_attr_unique)):
+            x.append(data_frame.loc[
+                data_frame[target] == target_attr_unique[i],
+                column
+            ])
+
+        plt.boxplot(x, labels=target_attr_unique)
+
+        plt.xticks(rotation='horizontal')
+        plt.tight_layout()
+        plt.title('Boxplot of {} grouped by {}'.format(column, target))
+        if save_fig:
+            path_save_fig = __define_path_save_fig(
+                path_save_fig=path_save_fig)
+
+            name_figure = 'boxplot_grouped_by_target-{}-{}-{}.png'.format(
+                column, target, utils.get_current_datetime())
+            plt.savefig(
+                ''.join([path_save_fig, name_figure]), bbox_inches='tight')
+            print('Figure {} saved in {} directory.'.format(
+                name_figure, path_save_fig))
+
+        if display_figure:
+            plt.show()
+
+        plt.close()
+        print('\n')
+    print('*****FIM IMPRIMIR BOXPLOT GROUPED BY TARGET******')
+
+
 ################################################## PRIVATE METHODS ##################################################
 
 
