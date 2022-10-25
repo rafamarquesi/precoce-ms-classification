@@ -263,7 +263,7 @@ def models_results(models_results: dict, path_save_fig: str = None, display_resu
             axis=1
         )
 
-        fig = plt.figure()
+        fig = plt.figure(figsize=(10, 8))
         accuracy_graphic[key].to_frame().boxplot()
         fig.savefig(
             path_save_fig + 'boxplot-accuracy-{}-{}.png'.format(key, utils.get_current_datetime()))
@@ -271,7 +271,7 @@ def models_results(models_results: dict, path_save_fig: str = None, display_resu
         if display_results:
             plt.show()
 
-    fig = plt.figure()
+    fig = plt.figure(figsize=(10, 8))
     accuracy_graphic.boxplot()
     fig.savefig(path_save_fig +
                 'boxplot-accuracy-all-models-{}.png'.format(utils.get_current_datetime()))
@@ -384,6 +384,7 @@ def simulate_delete_columns_with_low_variance(data_frame: pd.DataFrame, threshol
 
     path_save_fig = __define_path_save_fig(path_save_fig=path_save_fig)
 
+    plt.figure(figsize=(10, 8))
     plt.plot(thresholds, results)
     name_figure = 'plot-simulate-delete-columns-with-low-variance-{}.png'.format(
         utils.get_current_datetime())
@@ -435,6 +436,7 @@ def feature_importance_using_coefficients_of_linear_models(data_frame: pd.DataFr
                 }
             ).sort_values(by=['Importance'], ascending=[False]))
 
+            plt.figure(figsize=(10, 8))
             plt.bar([x for x in range(len(importance))], importance)
             plt.title('Model: {}'.format(model.__class__.__name__))
             name_figure = 'bar-feature_importance_using_coefficients_of_linear_models-{}-{}.png'.format(
@@ -491,6 +493,7 @@ def feature_importance_using_tree_based_models(data_frame: pd.DataFrame, models:
                 }
             ).sort_values(by=['Importance'], ascending=[False]))
 
+            plt.figure(figsize=(10, 8))
             plt.bar([x for x in range(len(importance))], importance)
             plt.title('Model: {}'.format(model.__class__.__name__))
             name_figure = 'bar-feature_importance_using_tree_based_models-{}-{}.png'.format(
@@ -548,6 +551,7 @@ def feature_importance_using_permutation_importance(data_frame: pd.DataFrame, mo
                 }
             ).sort_values(by=['Importance'], ascending=[False]))
 
+            plt.figure(figsize=(10, 8))
             plt.bar([x for x in range(len(importance))], importance)
             plt.title('Model: {}'.format(model.__class__.__name__))
             name_figure = 'bar-feature_importance_using_tree_based_models-{}-{}.png'.format(
@@ -587,6 +591,7 @@ def histogram(data_frame: pd.DataFrame, save_fig: bool = False, path_save_fig: s
     """
     print('\n*****INICIO IMPRIMIR HISTOGRAM******')
     for column in data_frame.columns:
+        plt.figure(figsize=(10, 8))
         plt.hist(data_frame[column])
         plt.xticks(rotation='vertical')
         plt.tight_layout()
@@ -633,6 +638,7 @@ def histogram_grouped_by_target(data_frame: pd.DataFrame, target: str, save_fig:
     kwargs = dict(alpha=0.5, bins=10)
 
     for column in data_frame.columns:
+        plt.figure(figsize=(10, 8))
         for i in range(len(target_attr_unique)):
             x = data_frame.loc[
                 data_frame[target] == target_attr_unique[i],
@@ -663,6 +669,40 @@ def histogram_grouped_by_target(data_frame: pd.DataFrame, target: str, save_fig:
         plt.close()
         print('\n')
     print('*****FIM IMPRIMIR HISTOGRAM GROUPED BY TARGET******')
+
+
+def boxplot(data_frame: pd.DataFrame, save_fig: bool = False, path_save_fig: str = None, display_figure: bool = True) -> None:
+    """Print the boxplot for each attribute of the data frame.
+    Args:
+        data_frame (pd.DataFrame): Data frame to be treated.
+        save_fig (bool, optional): Flag to save the figures. Defaults to False.
+        path_save_fig (str, optional): Path to save the figures. If None, save the figures in root path of project. Defaults to None.
+        display_figure (bool, optional): Flag to display the results, for example in jupyter notebook. Defaults to True.
+    """
+    print('\n*****INICIO IMPRIMIR BOXPLOT******')
+    for column in data_frame.select_dtypes(exclude=utils.TYPES_EXCLUDE_DF).columns:
+        plt.figure(figsize=(5, 10))
+        plt.boxplot(data_frame[column], labels=[column])
+        plt.xticks(rotation='horizontal')
+        plt.tight_layout()
+        plt.title('Boxplot of {}'.format(column))
+        if save_fig:
+            path_save_fig = __define_path_save_fig(
+                path_save_fig=path_save_fig)
+
+            name_figure = 'boxplot-{}-{}.png'.format(
+                column, utils.get_current_datetime())
+            plt.savefig(
+                ''.join([path_save_fig, name_figure]), bbox_inches='tight')
+            print('Figure {} saved in {} directory.'.format(
+                name_figure, path_save_fig))
+
+        if display_figure:
+            plt.show()
+
+        plt.close()
+        print('\n')
+    print('*****FIM IMPRIMIR BOXPLOT******')
 
 
 ################################################## PRIVATE METHODS ##################################################
