@@ -42,7 +42,8 @@ def load_data(csv_path: str, sep: str = ';', encoding: str = 'latin1', decimal: 
             data_frame=temp_data, delete_columns_names=delete_columns_names
         )
 
-    reports.informations(temp_data)
+        reports.informations(temp_data)
+
     print('*****FIM LOAD DATA******')
 
     return temp_data

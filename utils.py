@@ -174,3 +174,29 @@ def convert_pandas_dtype_to_numpy_dtype(data_frame: pd.DataFrame, pandas_dtypes:
     else:
         raise Exception('pandas_dtypes not informed.')
     return data_frame
+
+
+def random_sampling_data(data_frame: pd.DataFrame, how_generate: str, n: int = 0, frac: float = 0.0, rate: int = 0) -> pd.DataFrame:
+    """Random sampling data.
+
+    Args:
+        data_frame (pd.DataFrame): DataFrame to be treated.
+        how_generate (str): How generate the random sampling data. Options: 'exact_number', 'percentage', and 'constant_rate'.
+        n (int, optional): Number of samples to be generated, in option exact number. Defaults to 0.
+        frac (float, optional): Fraction of samples to be generated, in option percentage. Defaults to 0.0.
+        rate (int, optional): Constant rate of samples to be generated, in option constant rate. Defaults to 0.
+
+    Returns:
+        pd.DataFrame: A DataFrame with the data sampled.
+    """
+    if how_generate == 'exact_number' and n > 0:
+        print('Random sampling data with exact number.')
+        return data_frame.sample(n=n)
+    elif how_generate == 'percentage' and (frac > 0.0 and frac <= 1.0):
+        print('Random sampling data with percentage.')
+        return data_frame.sample(frac=frac)
+    elif how_generate == 'constant_rate' and rate > 0:
+        print('Random sampling data with constante rate.')
+        return data_frame[::rate]
+    else:
+        raise Exception('Invalid option for generate samples.')
