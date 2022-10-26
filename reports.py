@@ -777,7 +777,7 @@ def detect_outiliers_from_attribute(data_frame: pd.DataFrame, attribute_name: st
         ][attribute_name].sort_values(ascending=False)
     )
 
-    print('*****FIM DETECT OUTILIERS FROM ATTRIBUTE******')
+    print('\n*****FIM DETECT OUTILIERS FROM ATTRIBUTE******')
 
 
 ################################################## PRIVATE METHODS ##################################################

@@ -18,6 +18,40 @@ from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 
 
+def __choose_csv_path(percentage_sampling: float = 100) -> str:
+    """Choose the path of the CSV file to be loaded.
+    The percentage of sampling available is 0.2%, 0.5%, 2%, 5%, 10%, 20%, 30%, 40%, 50%, 60%, and 100%.
+
+    Args:
+        percentage_sampling (float, optional): Percentage of the CSV file to be loaded. Defaults to 100.
+
+    Returns:
+        str: Path of the CSV file to be loaded.
+    """
+
+    folder_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/'
+
+    percentages = {
+        0.2: '{}TAB_MODELAGEM_RAFAEL_2020_1-0.2-percentage-sampling.csv'.format(folder_path),
+        0.5: '{}TAB_MODELAGEM_RAFAEL_2020_1-0.5-percentage-sampling.csv'.format(folder_path),
+        2: '{}TAB_MODELAGEM_RAFAEL_2020_1-2.0-percentage-sampling.csv'.format(folder_path),
+        5: '{}TAB_MODELAGEM_RAFAEL_2020_1-5.0-percentage-sampling.csv'.format(folder_path),
+        10: '{}TAB_MODELAGEM_RAFAEL_2020_1-10.0-percentage-sampling.csv'.format(folder_path),
+        20: '{}TAB_MODELAGEM_RAFAEL_2020_1-20.0-percentage-sampling.csv'.format(folder_path),
+        30: '{}TAB_MODELAGEM_RAFAEL_2020_1-30.0-percentage-sampling.csv'.format(folder_path),
+        40: '{}TAB_MODELAGEM_RAFAEL_2020_1-40.0-percentage-sampling.csv'.format(folder_path),
+        50: '{}TAB_MODELAGEM_RAFAEL_2020_1-50.0-percentage-sampling.csv'.format(folder_path),
+        60: '{}TAB_MODELAGEM_RAFAEL_2020_1-60.0-percentage-sampling.csv'.format(folder_path),
+        100: '{}TAB_MODELAGEM_RAFAEL_2020_1.csv'.format(folder_path)
+    }
+
+    if percentage_sampling not in percentages.keys():
+        raise ValueError(
+            'The percentage_sampling parameter must be between 0.2 and 100.')
+
+    return percentages.get(percentage_sampling)
+
+
 # TODO: Treat imbalanced classes (Book Albon - Chapter 5.5)
 
 # TODO: Use the cross_validate function, for evaluation of multiple metrics (https://scikit-learn.org/stable/modules/cross_validation.html#multimetric-cross-validation)
@@ -36,10 +70,10 @@ if __name__ == '__main__':
     pd.set_option('display.max_rows', utils.PANDAS_MAX_ROWS)
 
     # Path to the dataset
-    csv_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1.csv'
+    csv_path = __choose_csv_path(percentage_sampling=0.2)
 
     # Number of lines to be read from the dataset, where None read all lines
-    number_csv_lines = 5000
+    number_csv_lines = None
 
     # Path to save plots
     path_save_plots = './plots'
@@ -242,11 +276,28 @@ if __name__ == '__main__':
 
     ################################################## CSV TREATMENTS ##################################################
 
+    # Generate sample of dataset
+    # precoce_ms_data_frame = csv_treatments.load_data(
+    #     csv_path=csv_path, number_csv_lines=number_csv_lines, dtype_dict=dtype_dict, parse_dates=parse_dates
+    # )
+
+    # percentages = [0.002, 0.005, 0.02, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
+    # for percentage in percentages:
+    #     csv_treatments.generate_new_csv(
+    #         data_frame=utils.random_sampling_data(
+    #             data_frame=precoce_ms_data_frame, how_generate='percentage', frac=percentage
+    #         ),
+    #         csv_path='/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1-{}-percentage-sampling.csv'.format(
+    #             percentage*100)
+    #     )
+
     # Load the dataset
     precoce_ms_data_frame = csv_treatments.load_data(
         csv_path=csv_path, delete_columns_names=delete_columns_names_on_load_data,
         number_csv_lines=number_csv_lines, dtype_dict=dtype_dict, parse_dates=parse_dates
     )
+
+    ################################################## REPORTS ##################################################
 
     if print_informations_dataset:
         # reports.print_list_columns(data_frame=precoce_ms_data_frame)
@@ -268,6 +319,27 @@ if __name__ == '__main__':
         # Convert pandas dtypes to numpy dtypes, some operations doesn't work with pandas dtype, for exemple, the XGBoost models
         precoce_ms_data_frame = utils.convert_pandas_dtype_to_numpy_dtype(
             data_frame=precoce_ms_data_frame, pandas_dtypes=[pd.UInt8Dtype()])
+
+        # Print histogram for each attribute
+        # reports.histogram(
+        #     data_frame=precoce_ms_data_frame
+        # )
+
+        # Print histogram for each attribute grouped by target class
+        # reports.histogram_grouped_by_target(
+        #     data_frame=precoce_ms_data_frame, target=class_column
+        # )
+
+        # Print boxplot for each attribute
+        # reports.boxplot(data_frame=precoce_ms_data_frame)
+
+        # Print boxplot for each attribute by target class
+        # reports.boxplot_grouped_by_target(
+        #     data_frame=precoce_ms_data_frame, target=class_column)
+
+        # Print an attribute's outiliers
+        reports.detect_outiliers_from_attribute(
+            data_frame=precoce_ms_data_frame, attribute_name='Peso')
 
         # Print the unique values for each column
         reports.unique_values_for_each_column(
@@ -351,22 +423,22 @@ if __name__ == '__main__':
         precoce_ms_data_frame = pre_processing.drop_feature_by_correlation(
             data_frame=precoce_ms_data_frame, method='spearman', columns_names=columns_names_drop_feature_by_correlation)
 
-        # Calculate feature importance with linear models
-        reports.feature_importance_using_coefficients_of_linear_models(
-            data_frame=precoce_ms_data_frame,
-            models=['logistic_regression', 'linear_svc', 'sgd_classifier'],
-            path_save_fig=path_save_plots,
-            display_figure=True
-        )
+        # # Calculate feature importance with linear models
+        # reports.feature_importance_using_coefficients_of_linear_models(
+        #     data_frame=precoce_ms_data_frame,
+        #     models=['logistic_regression', 'linear_svc', 'sgd_classifier'],
+        #     path_save_fig=path_save_plots,
+        #     display_figure=True
+        # )
 
-        # Calculate feature importance with tree based models
-        reports.feature_importance_using_tree_based_models(
-            data_frame=precoce_ms_data_frame,
-            models=['decision_tree_classifier',
-                    'random_forest_classifier', 'xgb_classifier'],
-            path_save_fig=path_save_plots,
-            display_figure=True
-        )
+        # # Calculate feature importance with tree based models
+        # reports.feature_importance_using_tree_based_models(
+        #     data_frame=precoce_ms_data_frame,
+        #     models=['decision_tree_classifier',
+        #             'random_forest_classifier', 'xgb_classifier'],
+        #     path_save_fig=path_save_plots,
+        #     display_figure=True
+        # )
 
         # # TODO: It didn't work, study better how permutation importance works
         # # Calculate feature importance using permutation importance
@@ -416,6 +488,8 @@ if __name__ == '__main__':
         # Convert pandas dtypes to numpy dtypes, some operations doesn't work with pandas dtype, for exemple, the XGBoost models
         precoce_ms_data_frame = utils.convert_pandas_dtype_to_numpy_dtype(
             data_frame=precoce_ms_data_frame, pandas_dtypes=[pd.UInt8Dtype()])
+
+        # TODO: Maybe implement remove outliers. To detect outliers, use pre_processing.detect_outliers
 
         # Identify columns that contain a single value, and delete them
         precoce_ms_data_frame = pre_processing.delete_columns_with_single_value(
