@@ -755,6 +755,31 @@ def boxplot_grouped_by_target(data_frame: pd.DataFrame, target: str, save_fig: b
     print('*****FIM IMPRIMIR BOXPLOT GROUPED BY TARGET******')
 
 
+def detect_outiliers_from_attribute(data_frame: pd.DataFrame, attribute_name: str) -> None:
+    """Detect outiliers from attribute, and print the outiliers.
+    Args:
+        data_frame (pd.DataFrame): Data frame to be treated.
+        attribute_name (str): Attribute to be treated.
+    """
+    print('\n*****INICIO DETECT OUTILIERS FROM ATTRIBUTE******')
+
+    if not attribute_name in data_frame.columns:
+        raise Exception(
+            'Attribute ("{}") not found in DataFrame.'.format(attribute_name))
+
+    print('Outiliers for attribute "{}":'.format(attribute_name))
+
+    displayhook(
+        data_frame[
+            pre_processing.detect_outliers(
+                series=data_frame[attribute_name]
+            )
+        ][attribute_name].sort_values(ascending=False)
+    )
+
+    print('*****FIM DETECT OUTILIERS FROM ATTRIBUTE******')
+
+
 ################################################## PRIVATE METHODS ##################################################
 
 
