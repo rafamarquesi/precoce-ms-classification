@@ -1,4 +1,6 @@
 import random
+from typing import Union
+
 import utils
 import pre_processing
 
@@ -23,6 +25,8 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 
 from sklearn.inspection import permutation_importance
+from mlxtend.feature_selection import SequentialFeatureSelector
+from mlxtend.plotting import plot_sequential_feature_selection as plot_sfs
 
 
 def informations(data_frame: pd.DataFrame) -> None:
@@ -33,7 +37,6 @@ def informations(data_frame: pd.DataFrame) -> None:
     """
 
     print('\n*****INICIO PRINT INFOS******')
-    # self.relatorio_atributos_base_dados(dados=dados_temp)
     print('Número total de linhas do DataFrame: {}'.format(len(data_frame.index)))
     print('Número de colunas: {}'.format(data_frame.columns.size))
     print('Informações do DataFrame:')
@@ -778,6 +781,83 @@ def detect_outiliers_from_attribute(data_frame: pd.DataFrame, attribute_name: st
     )
 
     print('\n*****FIM DETECT OUTILIERS FROM ATTRIBUTE******')
+
+
+def simulate_sequential_feature_selector(data_frame: pd.DataFrame, estimator: object, k_features: Union[int, tuple, str], forward: bool = True, floating: bool = False, verbose: int = 0, scoring: str = 'accuracy', cv: int = 0, n_jobs: int = -1, pre_dispatch: str = '2*n_jobs', clone_estimator: bool = True, display_figure: bool = True, save_fig: bool = False, path_save_fig: str = None) -> None:
+    """Simulate the sequential feature selector, using the mlxtend library.
+    Sequential Feature Selector, from mlxtend, is a wrapper class that allows you to perform forward, backward, or floating sequential selection of features.
+    The feature selections available are: Sequential Forward Selection (SFS), Sequential Backward Selection (SBS), Sequential Forward Floating Selection (SFFS), Sequential Backward Floating Selection (SBFS).
+    For more information, see: http://rasbt.github.io/mlxtend/user_guide/feature_selection/SequentialFeatureSelector/.
+
+    Args:
+        data_frame (pd.DataFrame): Data frame to be treated.
+        estimator (object): A scikit-learn classifier or regressor.
+        k_features (Union[int, tuple, str]): The number of features to select, where k_features < the full feature set. New in version 0.4.2: A tuple containing a min and max value can be provided as well, e.g., (1, 4) to select between 1 and 4 features inclusive. A string argument in {'best', 'parsimonious'} is accepted as well (new in v0.8.0).
+        forward (bool, optional): Perform forward selection. Defaults to True.
+        floating (bool, optional): Adds a conditional exclusion/inclusion if True. Defaults to False.
+        verbose (int, optional): Controls the verbosity of the output. Defaults to 0.
+        scoring (str, optional): Scoring metric. Defaults to 'accuracy'.
+        cv (int, optional): Number of folds. Defaults to 0.
+        n_jobs (int, optional): Number of jobs to run in parallel. Defaults to -1.
+        pre_dispatch (str, optional): Controls the number of jobs that get dispatched during parallel execution. Defaults to '2*n_jobs'.
+        clone_estimator (bool, optional): If True, the estimator will be cloned before fitting. Defaults to True.
+        display_figure (bool, optional): Flag to display the results, for example in jupyter notebook. Defaults to True.
+        save_fig (bool, optional): Flag to save the figures. Defaults to False.
+        path_save_fig (str, optional): Path to save the figures. If None, save the figures in root path of project. Defaults to None.
+    """
+    print('\n*****INICIO SIMULATE SEQUENTIAL FEATURE SELECTOR******')
+
+    x, y = utils.create_x_y_dataframe_data(data_frame=data_frame)
+
+    sfs = SequentialFeatureSelector(
+        estimator=estimator,
+        k_features=k_features,
+        forward=forward,
+        floating=floating,
+        verbose=verbose,
+        scoring=scoring,
+        cv=cv,
+        n_jobs=n_jobs,
+        pre_dispatch=pre_dispatch,
+        clone_estimator=clone_estimator
+    )
+
+    sfs = sfs.fit(x, y)
+
+    # print('Selected feature indices at each step:\n{}'.format(sfs.subsets_))
+
+    print('The indices of the best features: {}'.format(sfs.k_feature_idx_))
+
+    print('The feature names of the best features: {}'.format(sfs.k_feature_names_))
+
+    print('The cross-validation score of the best subset: {}'.format(sfs.k_score_))
+
+    print('Output from the feature selection in Data Frame:')
+    displayhook(pd.DataFrame.from_dict(sfs.get_metric_dict()).T)
+
+    fig = plot_sfs(sfs.get_metric_dict(), kind='std_dev')
+    plt.figure(figsize=(10, 8))
+    plt.title('Sequential Forward Selection (w. StdDev)')
+    plt.grid()
+
+    if save_fig:
+        path_save_fig = __define_path_save_fig(
+            path_save_fig=path_save_fig)
+
+        name_figure = 'sequential_feature_selector-forward_{}-floating_{}-{}.png'.format(
+            forward, floating,
+            utils.get_current_datetime())
+        plt.savefig(
+            ''.join([path_save_fig, name_figure]), bbox_inches='tight')
+        print('Figure {} saved in {} directory.'.format(
+            name_figure, path_save_fig))
+
+    if display_figure:
+        plt.show()
+
+    plt.close()
+
+    print('*****FIM SIMULATE SEQUENTIAL FEATURE SELECTOR******')
 
 
 ################################################## PRIVATE METHODS ##################################################
