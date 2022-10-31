@@ -835,8 +835,7 @@ def simulate_sequential_feature_selector(data_frame: pd.DataFrame, estimator: ob
     print('Output from the feature selection in Data Frame:')
     displayhook(pd.DataFrame.from_dict(sfs.get_metric_dict()).T)
 
-    fig = plot_sfs(sfs.get_metric_dict(), kind='std_dev')
-    plt.figure(figsize=(10, 8))
+    fig = plot_sfs(sfs.get_metric_dict(), kind='std_dev', figsize=(10, 8))
     plt.title('Sequential Forward Selection (w. StdDev)')
     plt.grid()
 
