@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # Types of columns to be excluded from the DataFrame
 TYPES_EXCLUDE_DF = [pd.CategoricalDtype, pd.DatetimeTZDtype, np.datetime64]
@@ -200,3 +200,15 @@ def random_sampling_data(data_frame: pd.DataFrame, how_generate: str, n: int = 0
         return data_frame[::rate]
     else:
         raise Exception('Invalid option for generate samples.')
+
+
+def convert_seconds_to_time(seconds: float) -> str:
+    """Convert seconds to time.
+
+    Args:
+        seconds (float): Number of seconds.
+
+    Returns:
+        str: Time in format HH:MM:SS.
+    """
+    return str(timedelta(seconds=seconds))
