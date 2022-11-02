@@ -1,6 +1,5 @@
 import random
 from typing import Union
-from time import time
 
 import utils
 import pre_processing
@@ -885,7 +884,6 @@ def simulate_recursive_feature_elimination_with_cv(data_frame: pd.DataFrame, est
 
     x, y = utils.create_x_y_dataframe_data(data_frame=data_frame)
 
-    tic = time()
     rfecv = RFECV(
         estimator=estimator,
         step=step,
@@ -897,12 +895,7 @@ def simulate_recursive_feature_elimination_with_cv(data_frame: pd.DataFrame, est
     )
 
     rfecv.fit(x, y)
-    toc = time()
 
-    print('Time to execute: {}'.format(
-        utils.convert_seconds_to_time(toc - tic)))
-
-    # for i in range(x.shape[1]):
     for i, column in enumerate(x.columns):
         print('Column: {}, Selected {}, Rank: {:.3f}'.format(
             column, rfecv.support_[i], rfecv.ranking_[i]))
