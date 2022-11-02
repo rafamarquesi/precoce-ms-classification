@@ -1,10 +1,12 @@
-import pandas as pd
 import reports
 import utils
+
+import pandas as pd
 
 pd.set_option('float_format', '{:f}'.format)
 
 
+@utils.timeit
 def load_data(csv_path: str, sep: str = ';', encoding: str = 'latin1', decimal: str = ',', delete_columns_names: list = None, number_csv_lines: int = None, dtype_dict: dict = None, parse_dates: list = None) -> pd.DataFrame:
     """Load the CSV file, given the path, column names, and number of rows to load, passed as parameters.
 
@@ -49,6 +51,7 @@ def load_data(csv_path: str, sep: str = ';', encoding: str = 'latin1', decimal: 
     return temp_data
 
 
+@utils.timeit
 def generate_new_csv(data_frame: pd.DataFrame, csv_path: str, sep: str = ';', encoding: str = 'latin1', index: bool = False, date_format: str = '%d%b%Y', decimal: str = ',') -> None:
     """Generate a new CSV file, given the DataFrame and the path, passed as parameters.
 

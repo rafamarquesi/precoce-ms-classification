@@ -1,11 +1,16 @@
+import utils
+
 from copy import deepcopy
+
 import pandas as pd
 import numpy as np
+
 from sklearn.utils.multiclass import type_of_target
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 from sklearn.model_selection import GridSearchCV, StratifiedKFold, train_test_split
 
 
+@utils.timeit
 def run_models(x: np.array, y: np.array, models: dict, models_results: dict, n_splits: int = 10, shuffle: bool = True, random_state: int = 0) -> dict:
     """
     Run models and return the results of each model.

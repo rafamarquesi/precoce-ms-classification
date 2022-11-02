@@ -16,6 +16,7 @@ from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 
 
+@utils.timeit
 def delete_duplicate_rows_by_attribute(data_frame: pd.DataFrame, attribute_name: str, print_report: bool = False) -> pd.DataFrame:
     """Delete duplicate rows from the DataFrame, given the attribute name, passed as parameter.
 
@@ -51,6 +52,7 @@ def delete_duplicate_rows_by_attribute(data_frame: pd.DataFrame, attribute_name:
     return data_frame
 
 
+@utils.timeit
 def delete_nan_rows(data_frame: pd.DataFrame, print_report: bool = False) -> pd.DataFrame:
     """Delete nan rows from the DataFrame.
 
@@ -74,6 +76,7 @@ def delete_nan_rows(data_frame: pd.DataFrame, print_report: bool = False) -> pd.
     return data_frame
 
 
+@utils.timeit
 def ordinal_encoder_columns(data_frame: pd.DataFrame, columns_ordinal_encoded: dict, columns_names: dict) -> tuple:
     """Ordinal encode the DataFrame, given the columns names, passed as parameters.
 
@@ -105,6 +108,7 @@ def ordinal_encoder_columns(data_frame: pd.DataFrame, columns_ordinal_encoded: d
     return data_frame, columns_ordinal_encoded
 
 
+@utils.timeit
 def inverse_ordinal_encoder_columns(data_frame: pd.DataFrame, columns_ordinal_encoded: dict) -> tuple:
     """Inverse ordinal encode the DataFrame, given by the dictionary containing the coded columns, passed as parameters.
 
@@ -128,6 +132,7 @@ def inverse_ordinal_encoder_columns(data_frame: pd.DataFrame, columns_ordinal_en
     return data_frame, columns_ordinal_encoded
 
 
+@utils.timeit
 def label_encoder_columns(data_frame: pd.DataFrame, columns_label_encoded: dict, columns_names: list) -> tuple:
     """Label encode the DataFrame, given the columns names, passed as parameters.
 
@@ -156,6 +161,7 @@ def label_encoder_columns(data_frame: pd.DataFrame, columns_label_encoded: dict,
     return data_frame, columns_label_encoded
 
 
+@utils.timeit
 def inverse_label_encoder_columns(data_frame: pd.DataFrame, columns_label_encoded: dict) -> tuple:
     """Inverse label encode the DataFrame, given by the dictionary containing the coded columns, passed as parameters.
 
@@ -179,6 +185,7 @@ def inverse_label_encoder_columns(data_frame: pd.DataFrame, columns_label_encode
     return data_frame, columns_label_encoded
 
 
+@utils.timeit
 def one_hot_encoder_columns(data_frame: pd.DataFrame, columns_one_hot_encoded: dict, columns_names: list) -> tuple:
     """One-hot encode the DataFrame, given the columns names, passed as parameters.
 
@@ -214,6 +221,7 @@ def one_hot_encoder_columns(data_frame: pd.DataFrame, columns_one_hot_encoded: d
     return data_frame, columns_one_hot_encoded
 
 
+@utils.timeit
 def inverse_one_hot_encoder_columns(data_frame: pd.DataFrame, columns_one_hot_encoded: dict) -> tuple:
     """Inverse one-hot encode the DataFrame, given by the dictionary containing the coded columns, passed as parameters.
 
@@ -239,6 +247,7 @@ def inverse_one_hot_encoder_columns(data_frame: pd.DataFrame, columns_one_hot_en
     return data_frame, columns_one_hot_encoded
 
 
+@utils.timeit
 def drop_feature_by_correlation(data_frame: pd.DataFrame, method: str, columns_names: list, threshold: float = 0.95) -> pd.DataFrame:
     """Drop the features by correlation, given the columns names, passed as parameters.
     The threshold parameter is used to define the threshold of correlation.
@@ -280,6 +289,7 @@ def drop_feature_by_correlation(data_frame: pd.DataFrame, method: str, columns_n
     return data_frame
 
 
+@utils.timeit
 def min_max_scaler_columns(data_frame: pd.DataFrame, columns_min_max_scaled: dict, columns_names: list) -> tuple:
     """Min-Max scale the DataFrame, given the columns names, passed as parameters.
 
@@ -310,6 +320,7 @@ def min_max_scaler_columns(data_frame: pd.DataFrame, columns_min_max_scaled: dic
     return data_frame, columns_min_max_scaled
 
 
+@utils.timeit
 def inverse_min_max_scaler_columns(data_frame: pd.DataFrame, columns_min_max_scaled: dict) -> tuple:
     """Inverse Min-Max scale the DataFrame, given by the dictionary containing the scaled columns, passed as parameters.
 
@@ -333,6 +344,7 @@ def inverse_min_max_scaler_columns(data_frame: pd.DataFrame, columns_min_max_sca
     return data_frame, columns_min_max_scaled
 
 
+@utils.timeit
 def detect_outliers(series: pd.Series, whis: float = 1.5) -> pd.Series:
     """Detect outliers in a series.
 
@@ -349,6 +361,7 @@ def detect_outliers(series: pd.Series, whis: float = 1.5) -> pd.Series:
     return ~((series - series.median()).abs() <= (whis * iqr))
 
 
+@utils.timeit
 def delete_columns_with_single_value(data_frame: pd.DataFrame) -> pd.DataFrame:
     """Delete the columns with single value.
 
@@ -373,6 +386,7 @@ def delete_columns_with_single_value(data_frame: pd.DataFrame) -> pd.DataFrame:
     return data_frame
 
 
+@utils.timeit
 def delete_columns_with_low_variance(x: pd.DataFrame, threshold: float = 0.0, separate_numeric_columns: bool = False) -> pd.DataFrame:
     """Delete the columns with low variance.
 
@@ -408,6 +422,7 @@ def delete_columns_with_low_variance(x: pd.DataFrame, threshold: float = 0.0, se
     return x
 
 
+@utils.timeit
 def select_features_from_model(x_train: np.ndarray, y_train: np.ndarray, x_test: np.ndarray, model: str, max_features: int = None, threshold: float = None) -> tuple:
     """Select the features from a model.
     SelectFromModel, from scikit-learn, is a meta-transformer that can be used alongside any estimator that assigns importance to each feature through a specific attribute (such as coef_, feature_importances_) or via an importance_getter callable after fitting.

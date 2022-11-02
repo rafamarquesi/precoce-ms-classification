@@ -31,6 +31,7 @@ from mlxtend.feature_selection import SequentialFeatureSelector
 from mlxtend.plotting import plot_sequential_feature_selection as plot_sfs
 
 
+@utils.timeit
 def informations(data_frame: pd.DataFrame) -> None:
     """Print some informations of the DataFrame.
 
@@ -46,6 +47,7 @@ def informations(data_frame: pd.DataFrame) -> None:
     print('*****FIM PRINT INFOS*********')
 
 
+@utils.timeit
 def print_list_columns(data_frame: pd.DataFrame) -> None:
     """Show the columns of the DataFrame.
 
@@ -57,6 +59,7 @@ def print_list_columns(data_frame: pd.DataFrame) -> None:
     print('*****FIM SHOW COLUNAS*********')
 
 
+@utils.timeit
 def nan_attributes(data_frame: pd.DataFrame, total_nan: int) -> None:
     """Report of attributes with nan values.
 
@@ -88,6 +91,7 @@ def nan_attributes(data_frame: pd.DataFrame, total_nan: int) -> None:
     print('*****FIM RELATÓRIO ATRIBUTOS NAN******')
 
 
+@utils.timeit
 def duplicate_rows_by_attribute(data_frame: pd.DataFrame, rows_duplicated: pd.DataFrame, attribute: str) -> None:
     """Report of duplicate rows by attribute.
 
@@ -117,6 +121,7 @@ def duplicate_rows_by_attribute(data_frame: pd.DataFrame, rows_duplicated: pd.Da
     print('*****FIM RELATÓRIO LINHAS DUPLICADAS******')
 
 
+@utils.timeit
 def all_attributes(data_frame: pd.DataFrame) -> None:
     """Report of all attributes.
 
@@ -137,6 +142,7 @@ def all_attributes(data_frame: pd.DataFrame) -> None:
     print('*****FIM RELATÓRIO ATRIBUTOS******')
 
 
+@utils.timeit
 def class_distribution(y: np.array) -> None:
     """Report of class distribution.
 
@@ -155,6 +161,7 @@ def class_distribution(y: np.array) -> None:
     print('*****FIM RELATÓRIO DISTRIBUIÇÃO DE CLASSES******')
 
 
+@utils.timeit
 def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = None, display_matrix: bool = False, export_matrix: bool = False, path_save_matrix: str = None, print_corr_matrix_summarized: bool = False, lower_limit: float = -0.5, upper_limit: float = 0.5) -> None:
     """Create a correlation matrix from the DataFrame.
 
@@ -218,6 +225,7 @@ def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = N
     print('*****FIM CORRELATION MATRIX*********')
 
 
+@utils.timeit
 def models_results(models_results: dict, path_save_fig: str = None, display_results: bool = False) -> None:
     """Print the models results.
 
@@ -307,6 +315,7 @@ def models_results(models_results: dict, path_save_fig: str = None, display_resu
     print('*****FIM IMPRIMIR RESULTADOS MODELOS******')
 
 
+@utils.timeit
 def min_max_column(data_frame: pd.DataFrame) -> None:
     """Print the min and max of the column in the data frame.
 
@@ -320,6 +329,7 @@ def min_max_column(data_frame: pd.DataFrame) -> None:
     print('*****FIM IMPRIMIR MIN MAX COLUMN******')
 
 
+@utils.timeit
 def unique_values_for_each_column(data_frame: pd.DataFrame) -> None:
     """Print the unique values for each column in the data frame.
 
@@ -331,6 +341,7 @@ def unique_values_for_each_column(data_frame: pd.DataFrame) -> None:
     print('*****FIM IMPRIMIR UNIQUE VALUES FOR EACH COLUMN******')
 
 
+@utils.timeit
 def percentage_unique_values_for_each_column(data_frame: pd.DataFrame, threshold: float = 100) -> None:
     """To help highlight columns of near-zero variance, can calculate the number of unique values for each variable as a percentage of the total number of rows in the dataset.
 
@@ -358,6 +369,7 @@ def percentage_unique_values_for_each_column(data_frame: pd.DataFrame, threshold
     print('*****FIM IMPRIMIR PERCENTAGE UNIQUE VALUES FOR EACH COLUMN******')
 
 
+@utils.timeit
 def simulate_delete_columns_with_low_variance(data_frame: pd.DataFrame, thresholds: np.arange, separate_numeric_columns: bool = False, path_save_fig: str = None, display_figure: bool = False) -> None:
     """Plot and print the simulation of delete columns with low variance. This function works only numeric columns.
 
@@ -404,6 +416,7 @@ def simulate_delete_columns_with_low_variance(data_frame: pd.DataFrame, threshol
     print('\n*****FIM IMPRIMIR SIMULATE DELETE COLUMNS WITH LOW VARIANCE******')
 
 
+@utils.timeit
 def feature_importance_using_coefficients_of_linear_models(data_frame: pd.DataFrame, models: list, path_save_fig: str = None, display_figure: bool = False) -> None:
     """Print the feature importance using coefficients of linear models.
     The models supported are: LogisticRegression (logistic_regression), LinearSVC (linear_svc), SGDClassifier (sgd_classifier).
@@ -462,6 +475,7 @@ def feature_importance_using_coefficients_of_linear_models(data_frame: pd.DataFr
     print('*****FIM IMPRIMIR FEATURE IMPORTANCE USING COEFFICIENTS OF LINEAR MODELS******')
 
 
+@utils.timeit
 def feature_importance_using_tree_based_models(data_frame: pd.DataFrame, models: list, path_save_fig: str = None, display_figure: bool = False) -> None:
     """Print the feature importance using tree based models.
     The models supported are: DecisionTreeClassifier (decision_tree_classifier), RandomForestClassifier (random_forest_classifier), XGBClassifier (xgb_classifier).
@@ -519,6 +533,7 @@ def feature_importance_using_tree_based_models(data_frame: pd.DataFrame, models:
     print('*****FIM IMPRIMIR FEATURE IMPORTANCE USING TREE BASED MODELS******')
 
 
+@utils.timeit
 def feature_importance_using_permutation_importance(data_frame: pd.DataFrame, models: list, path_save_fig: str = None, display_figure: bool = False) -> None:
     """Print the feature importance using permutation importance.
     The models supported are: KNeighborsClassifier (knneighbors_classifier), GaussianNB (gaussian_nb).
@@ -586,6 +601,7 @@ def feature_importance_using_permutation_importance(data_frame: pd.DataFrame, mo
     print('*****FIM IMPRIMIR FEATURE IMPORTANCE USING PERMUTATION IMPORTANCE******')
 
 
+@utils.timeit
 def histogram(data_frame: pd.DataFrame, save_fig: bool = False, path_save_fig: str = None, display_figure: bool = True) -> None:
     """Print the histogram for each attribute of the data frame.
     Args:
@@ -619,6 +635,7 @@ def histogram(data_frame: pd.DataFrame, save_fig: bool = False, path_save_fig: s
     print('*****FIM IMPRIMIR HISTOGRAM******')
 
 
+@utils.timeit
 def histogram_grouped_by_target(data_frame: pd.DataFrame, target: str, save_fig: bool = False, path_save_fig: str = None, display_figure: bool = True) -> None:
     """Print the histogram for each attribute of the data frame grouped by target.
     Args:
@@ -676,6 +693,7 @@ def histogram_grouped_by_target(data_frame: pd.DataFrame, target: str, save_fig:
     print('*****FIM IMPRIMIR HISTOGRAM GROUPED BY TARGET******')
 
 
+@utils.timeit
 def boxplot(data_frame: pd.DataFrame, save_fig: bool = False, path_save_fig: str = None, display_figure: bool = True) -> None:
     """Print the boxplot for each attribute of the data frame.
     Args:
@@ -710,6 +728,7 @@ def boxplot(data_frame: pd.DataFrame, save_fig: bool = False, path_save_fig: str
     print('*****FIM IMPRIMIR BOXPLOT******')
 
 
+@utils.timeit
 def boxplot_grouped_by_target(data_frame: pd.DataFrame, target: str, save_fig: bool = False, path_save_fig: str = None, display_figure: bool = True) -> None:
     """Print the boxplot for each attribute of the data frame grouped by target.
     Args:
@@ -760,6 +779,7 @@ def boxplot_grouped_by_target(data_frame: pd.DataFrame, target: str, save_fig: b
     print('*****FIM IMPRIMIR BOXPLOT GROUPED BY TARGET******')
 
 
+@utils.timeit
 def detect_outiliers_from_attribute(data_frame: pd.DataFrame, attribute_name: str) -> None:
     """Detect outiliers from attribute, and print the outiliers.
     Args:
@@ -785,6 +805,7 @@ def detect_outiliers_from_attribute(data_frame: pd.DataFrame, attribute_name: st
     print('\n*****FIM DETECT OUTILIERS FROM ATTRIBUTE******')
 
 
+@utils.timeit
 def simulate_sequential_feature_selector(data_frame: pd.DataFrame, estimator: object, k_features: Union[int, tuple, str], forward: bool = True, floating: bool = False, verbose: int = 0, scoring: str = 'accuracy', cv: int = 0, n_jobs: int = -1, pre_dispatch: str = '2*n_jobs', clone_estimator: bool = True, display_figure: bool = True, save_fig: bool = False, path_save_fig: str = None) -> None:
     """Simulate the sequential feature selector, using the mlxtend library.
     Sequential Feature Selector, from mlxtend, is a wrapper class that allows you to perform forward, backward, or floating sequential selection of features.
@@ -861,6 +882,7 @@ def simulate_sequential_feature_selector(data_frame: pd.DataFrame, estimator: ob
     print('*****FIM SIMULATE SEQUENTIAL FEATURE SELECTOR******')
 
 
+@utils.timeit
 def simulate_recursive_feature_elimination_with_cv(data_frame: pd.DataFrame, estimator: object, step: int = 1, min_features_to_select: int = 1, cv: object = None, scoring: str = None, n_jobs: int = None, verbose: int = 0, display_figure: bool = True, save_fig: bool = False, path_save_fig: str = None) -> None:
     """Simulate the recursive feature elimination with cross-validation, using the sklearn library.
     The Recursive Feature Elimination with cross-validation (RFECV) is a feature selection algorithm that fits a model and removes the weakest feature (or features) until the specified number of features is reached.

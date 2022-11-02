@@ -1,6 +1,10 @@
+from functools import wraps
+import time
+from typing import Callable
+from datetime import datetime, timedelta
+
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
 
 # Types of columns to be excluded from the DataFrame
 TYPES_EXCLUDE_DF = [pd.CategoricalDtype, pd.DatetimeTZDtype, np.datetime64]
@@ -212,3 +216,35 @@ def convert_seconds_to_time(seconds: float) -> str:
         str: Time in format HH:MM:SS.
     """
     return str(timedelta(seconds=seconds))
+
+
+#################### DECORATORS ####################
+def timeit(func: Callable) -> Callable:
+    """Decorator to measure the time of execution of a function.
+
+    Args:
+        func (Callable): Function to be measured.
+
+    Returns:
+        Callable: Function with the time of execution.
+    """
+    @wraps(func)
+    def timeit_wrapper(*args, **kwargs) -> Callable:
+        """Measure the time of execution of a function.
+
+        Returns:
+            Callable: The function with their time of execution.
+        """
+        start_time = time.perf_counter()
+        result = func(*args, **kwargs)
+        end_time = time.perf_counter()
+        total_time = end_time - start_time
+
+        print(
+            'Function {} Took {}\n'.format(
+                func.__name__,
+                convert_seconds_to_time(seconds=total_time)
+            )
+        )
+        return result
+    return timeit_wrapper
