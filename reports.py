@@ -1,5 +1,6 @@
 import random
 from typing import Union
+from time import time
 
 import utils
 import pre_processing
@@ -25,6 +26,8 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 
 from sklearn.inspection import permutation_importance
+from sklearn.feature_selection import RFECV
+
 from mlxtend.feature_selection import SequentialFeatureSelector
 from mlxtend.plotting import plot_sequential_feature_selection as plot_sfs
 
@@ -859,6 +862,84 @@ def simulate_sequential_feature_selector(data_frame: pd.DataFrame, estimator: ob
     print('*****FIM SIMULATE SEQUENTIAL FEATURE SELECTOR******')
 
 
+def simulate_recursive_feature_elimination_with_cv(data_frame: pd.DataFrame, estimator: object, step: int = 1, min_features_to_select: int = 1, cv: object = None, scoring: str = None, n_jobs: int = None, verbose: int = 0, display_figure: bool = True, save_fig: bool = False, path_save_fig: str = None) -> None:
+    """Simulate the recursive feature elimination with cross-validation, using the sklearn library.
+    The Recursive Feature Elimination with cross-validation (RFECV) is a feature selection algorithm that fits a model and removes the weakest feature (or features) until the specified number of features is reached.
+    For more information, see: https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFECV.html#sklearn.feature_selection.RFECV.
+
+    Args:
+        data_frame (pd.DataFrame): Data frame to be treated.
+        estimator (object): A scikit-learn classifier or regressor.
+        step (int, optional): The number of features to remove at each iteration. Defaults to 1.
+        min_features_to_select (int, optional): The minimum number of features to be selected. Defaults to 1.
+        cv (object, optional): Determines the cross-validation splitting strategy. Defaults to None.
+        scoring (str, optional): A string (see model evaluation documentation) or a scorer callable object / function with signature scorer(estimator, X, y) which should return only a single value. Defaults to None.
+        n_jobs (int, optional): The number of CPUs to use for cross validation. Defaults to None.
+        verbose (int, optional): Controls the verbosity of the output. Defaults to 0.
+        display_figure (bool, optional): Flag to display the results, for example in jupyter notebook. Defaults to True.
+        save_fig (bool, optional): Flag to save the figures. Defaults to False.
+        path_save_fig (str, optional): Path to save the figures. If None, save the figures in root path of project. Defaults to None.
+    """
+
+    print('*****INICIO SIMULATE RECURSIVE FEATURE ELIMINATION CV******')
+
+    x, y = utils.create_x_y_dataframe_data(data_frame=data_frame)
+
+    tic = time()
+    rfecv = RFECV(
+        estimator=estimator,
+        step=step,
+        min_features_to_select=min_features_to_select,
+        cv=cv,
+        scoring=scoring,
+        n_jobs=n_jobs,
+        verbose=verbose
+    )
+
+    rfecv.fit(x, y)
+    toc = time()
+
+    print('Time to execute: {}'.format(
+        utils.convert_seconds_to_time(toc - tic)))
+
+    # for i in range(x.shape[1]):
+    for i, column in enumerate(x.columns):
+        print('Column: {}, Selected {}, Rank: {:.3f}'.format(
+            column, rfecv.support_[i], rfecv.ranking_[i]))
+
+    print('Optimal number of features : {}'.format(rfecv.n_features_))
+
+    plt.figure(figsize=(10, 8))
+    plt.xlabel("Number of features selected")
+    plt.ylabel("Cross validation score (accuracy)")
+    plt.plot(
+        range(
+            min_features_to_select,
+            len(rfecv.cv_results_['mean_test_score']) + min_features_to_select
+        ),
+        rfecv.cv_results_['mean_test_score'],
+    )
+    plt.grid()
+
+    if save_fig:
+        path_save_fig = __define_path_save_fig(
+            path_save_fig=path_save_fig)
+
+        name_figure = 'recursive_feature_elimination_cv-{}.png'.format(
+            utils.get_current_datetime())
+        plt.savefig(
+            ''.join([path_save_fig, name_figure]), bbox_inches='tight')
+        print('Figure {} saved in {} directory.'.format(
+            name_figure, path_save_fig))
+
+    if display_figure:
+        plt.show()
+
+    plt.close()
+
+    print('*****FIM SIMULATE RECURSIVE FEATURE ELIMINATION CV******\n')
+
+
 ################################################## PRIVATE METHODS ##################################################
 
 
@@ -889,8 +970,8 @@ def __execute_delete_columns_with_low_variance(x: pd.DataFrame, thresholds: np.a
     """Execute the delete columns with low variance.
 
     Args:
-        x (pd.DataFrame): Pandas DataFrame with numeric data to be treated.
-        thresholds (np.arange): Thresholds to remove the columns.
+        x(pd.DataFrame): Pandas DataFrame with numeric data to be treated.
+        thresholds(np.arange): Thresholds to remove the columns.
 
     Returns:
         tuple: Tuple with the x, with features removed, and the results of execution.
@@ -907,7 +988,7 @@ def __define_path_save_fig(path_save_fig: str) -> str:
     """Define the path to save the figures.
 
     Args:
-        path_save_fig (str): Path to save the figures.
+        path_save_fig(str): Path to save the figures.
 
     Returns:
         str: Path to save the figures.
@@ -923,9 +1004,9 @@ def __print_correlation_matrix_summarized(correlation_matrix: pd.DataFrame, lowe
     """Print the correlation matrix summarized.
 
     Args:
-        correlation_matrix (pd.DataFrame): Correlation matrix.
-        lower_limit (float): Lower limit of the interval.
-        upper_limit (float): Upper limit of the interval.
+        correlation_matrix(pd.DataFrame): Correlation matrix.
+        lower_limit(float): Lower limit of the interval.
+        upper_limit(float): Upper limit of the interval.
     """
     indexes = correlation_matrix.index
     columns = correlation_matrix.columns
