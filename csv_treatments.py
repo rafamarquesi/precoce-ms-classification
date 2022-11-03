@@ -70,3 +70,36 @@ def generate_new_csv(data_frame: pd.DataFrame, csv_path: str, sep: str = ';', en
         decimal=decimal
     )
     print('\nCSV gerado com sucesso em: {}.'.format(csv_path))
+
+
+def choose_csv_path(sampling: str = None, folder_path: str = None) -> str:
+    """Choose the path of the CSV file to be loaded.
+
+    Args:
+        sampling (str, optional): Key name of the CSV file to be loaded. The sampling keys availables to load are '0.2', '0.5', '2', '5', '10', '20', '30', '40', '50', '60', '100', and 'after_correlation-02-11-2022_18:29:05'. Defaults to None.
+        folder_path (str, optional): Path of the folder where the CSV file is located. Defaults to None.
+
+    Returns:
+        str: Path of the CSV file to be loaded.
+    """
+
+    csv_files = {
+        '0.2': '{}TAB_MODELAGEM_RAFAEL_2020_1-0.2-percentage-sampling.csv'.format(folder_path),
+        '0.5': '{}TAB_MODELAGEM_RAFAEL_2020_1-0.5-percentage-sampling.csv'.format(folder_path),
+        '2': '{}TAB_MODELAGEM_RAFAEL_2020_1-2.0-percentage-sampling.csv'.format(folder_path),
+        '5': '{}TAB_MODELAGEM_RAFAEL_2020_1-5.0-percentage-sampling.csv'.format(folder_path),
+        '10': '{}TAB_MODELAGEM_RAFAEL_2020_1-10.0-percentage-sampling.csv'.format(folder_path),
+        '20': '{}TAB_MODELAGEM_RAFAEL_2020_1-20.0-percentage-sampling.csv'.format(folder_path),
+        '30': '{}TAB_MODELAGEM_RAFAEL_2020_1-30.0-percentage-sampling.csv'.format(folder_path),
+        '40': '{}TAB_MODELAGEM_RAFAEL_2020_1-40.0-percentage-sampling.csv'.format(folder_path),
+        '50': '{}TAB_MODELAGEM_RAFAEL_2020_1-50.0-percentage-sampling.csv'.format(folder_path),
+        '60': '{}TAB_MODELAGEM_RAFAEL_2020_1-60.0-percentage-sampling.csv'.format(folder_path),
+        '100': '{}TAB_MODELAGEM_RAFAEL_2020_1.csv'.format(folder_path),
+        'after_correlation-02-11-2022_18:29:05': '{}TAB_MODELAGEM_RAFAEL_2020_1-after_drop_feature_by_correlation-02-11-2022_18:29:05.csv'.format(folder_path)
+    }
+
+    if sampling not in csv_files.keys():
+        raise ValueError(
+            'The sampling parameter must be one of values: {}.'.format(csv_files.keys()))
+
+    return csv_files.get(sampling)
