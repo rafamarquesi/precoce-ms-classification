@@ -534,13 +534,17 @@ def feature_importance_using_tree_based_models(data_frame: pd.DataFrame, models:
 
 
 @utils.timeit
-def feature_importance_using_permutation_importance(data_frame: pd.DataFrame, models: list, path_save_fig: str = None, display_figure: bool = False) -> None:
+def feature_importance_using_permutation_importance(data_frame: pd.DataFrame, models: list, scoring: str = 'accuracy', n_repeats: int = 5, random_state: int = 42, n_jobs: int = -1, path_save_fig: str = None, display_figure: bool = False) -> None:
     """Print the feature importance using permutation importance.
     The models supported are: KNeighborsClassifier (knneighbors_classifier), GaussianNB (gaussian_nb).
 
     Args:
         data_frame (pd.DataFrame): Data frame to be treated.
-        models (list): Models to be used.
+        models (list): Models to be used. The models supported are: KNeighborsClassifier (knneighbors_classifier), GaussianNB (gaussian_nb).
+        scoring (str, optional): Scoring to be used. Defaults to 'accuracy'.
+        n_repeats (int, optional): Number of times to permute a feature. Defaults to 5.
+        random_state (int, optional): Random state. Defaults to 42.
+        n_jobs (int, optional): Number of jobs to run in parallel. Defaults to -1.
         path_save_fig (str, optional): Path to save the figures. If None, save the figures in root path of project. Defaults to None.
         display_figure (bool, optional): Flag to display the results, for example in jupyter notebook. Defaults to False.
     """
@@ -560,9 +564,9 @@ def feature_importance_using_permutation_importance(data_frame: pd.DataFrame, mo
 
             model.fit(x, y)
             results = permutation_importance(
-                model, x, y, scoring='accuracy', n_repeats=5, random_state=42, n_jobs=-1)
+                model, x, y, scoring=scoring, n_repeats=n_repeats, random_state=random_state, n_jobs=n_jobs)
             print('\n\nModel: {}'.format(model))
-            print('\nFeature importance using tree based models:')
+            print('\nPermutation importance:')
             importance = results.importances_mean
             displayhook(pd.DataFrame(
                 {
@@ -574,7 +578,7 @@ def feature_importance_using_permutation_importance(data_frame: pd.DataFrame, mo
             plt.figure(figsize=(10, 8))
             plt.bar([x for x in range(len(importance))], importance)
             plt.title('Model: {}'.format(model.__class__.__name__))
-            name_figure = 'bar-feature_importance_using_tree_based_models-{}-{}.png'.format(
+            name_figure = 'bar-feature_importance_using_permutation_importance-{}-{}.png'.format(
                 model.__class__.__name__,
                 utils.get_current_datetime()
             )
