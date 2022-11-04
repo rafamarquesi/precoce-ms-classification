@@ -563,9 +563,11 @@ def feature_importance_using_permutation_importance(data_frame: pd.DataFrame, mo
                 raise Exception('Model not supported.')
 
             model.fit(x, y)
+            print('\n\nModel {} fited.'.format(model.__class__.__name__))
+            print('Appling permutation importance...')
             results = permutation_importance(
                 model, x, y, scoring=scoring, n_repeats=n_repeats, random_state=random_state, n_jobs=n_jobs)
-            print('\n\nModel: {}'.format(model))
+            print('Model: {}'.format(model))
             print('\nPermutation importance:')
             importance = results.importances_mean
             displayhook(pd.DataFrame(

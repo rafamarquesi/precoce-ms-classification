@@ -1,4 +1,3 @@
-import csv_treatments
 import utils
 
 import pandas as pd

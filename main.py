@@ -6,6 +6,8 @@ import pre_processing
 import reports
 import pattern_extraction
 import utils
+import settings
+
 import numpy as np
 import pandas as pd
 
@@ -17,42 +19,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 
-
-def __choose_csv_path(percentage_sampling: float = 100) -> str:
-    """Choose the path of the CSV file to be loaded.
-    The percentage of sampling available is 0.2%, 0.5%, 2%, 5%, 10%, 20%, 30%, 40%, 50%, 60%, and 100%.
-
-    Args:
-        percentage_sampling (float, optional): Percentage of the CSV file to be loaded. Defaults to 100.
-
-    Returns:
-        str: Path of the CSV file to be loaded.
-    """
-
-    folder_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/'
-
-    percentages = {
-        0.2: '{}TAB_MODELAGEM_RAFAEL_2020_1-0.2-percentage-sampling.csv'.format(folder_path),
-        0.5: '{}TAB_MODELAGEM_RAFAEL_2020_1-0.5-percentage-sampling.csv'.format(folder_path),
-        2: '{}TAB_MODELAGEM_RAFAEL_2020_1-2.0-percentage-sampling.csv'.format(folder_path),
-        5: '{}TAB_MODELAGEM_RAFAEL_2020_1-5.0-percentage-sampling.csv'.format(folder_path),
-        10: '{}TAB_MODELAGEM_RAFAEL_2020_1-10.0-percentage-sampling.csv'.format(folder_path),
-        20: '{}TAB_MODELAGEM_RAFAEL_2020_1-20.0-percentage-sampling.csv'.format(folder_path),
-        30: '{}TAB_MODELAGEM_RAFAEL_2020_1-30.0-percentage-sampling.csv'.format(folder_path),
-        40: '{}TAB_MODELAGEM_RAFAEL_2020_1-40.0-percentage-sampling.csv'.format(folder_path),
-        50: '{}TAB_MODELAGEM_RAFAEL_2020_1-50.0-percentage-sampling.csv'.format(folder_path),
-        60: '{}TAB_MODELAGEM_RAFAEL_2020_1-60.0-percentage-sampling.csv'.format(folder_path),
-        100: '{}TAB_MODELAGEM_RAFAEL_2020_1.csv'.format(folder_path)
-    }
-
-    if percentage_sampling not in percentages.keys():
-        raise ValueError(
-            'The percentage_sampling parameter must be between 0.2 and 100.')
-
-    return percentages.get(percentage_sampling)
-
-
-# TODO: Treat imbalanced classes (Book Albon - Chapter 5.5)
+# TODO: Treat imbalanced classes (Book Albon - Chapter 5.5) (https://github.com/alod83/data-science/blob/master/Preprocessing/Balancing/Balancing.ipynb)
 
 # TODO: Use the cross_validate function, for evaluation of multiple metrics (https://scikit-learn.org/stable/modules/cross_validation.html#multimetric-cross-validation)
 
@@ -66,135 +33,18 @@ if __name__ == '__main__':
     # )
     # sys.stdout = run_log_file
 
-    # Set pandas max rows
-    pd.set_option('display.max_rows', utils.PANDAS_MAX_ROWS)
+    # Folder path where the CSV file is located
+    settings.dataset_folder_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/'
 
     # Path to the dataset
-    csv_path = __choose_csv_path(percentage_sampling=0.2)
+    settings.csv_path = csv_treatments.choose_csv_path(
+        sampling='0.2', folder_path=settings.dataset_folder_path)
 
     # Number of lines to be read from the dataset, where None read all lines
-    number_csv_lines = None
-
-    # Path to save plots
-    path_save_plots = './plots'
-
-    # Dictionay with type of data for each column
-    dtype_dict = {
-        'ID_ANIMAL': 'uint32',
-        'EstabelecimentoMunicipio': 'category',
-        'Frigorifico_ID': 'uint8',
-        'Frigorifico_CNPJ': 'uint64',
-        'Frigorifico_RazaoSocial': 'category',
-        'Municipio_Frigorifico': 'category',
-        'Tipificacao': 'category',
-        'Maturidade': 'category',
-        'Acabamento': 'category',
-        'Peso': 'float32',
-        'EstabelecimentoIdentificador': 'uint16',
-        'Questionario_ID': 'uint16',
-        'QuestionarioClassificacaoEstabel': 'uint8',
-        'FERTIIRRIGACAO': 'uint8',
-        'ILP': 'uint8',
-        'IFP': 'uint8',
-        'ILPF': 'uint8',
-        'CONCEN_VOLUM': 'UInt8',
-        'CREEPFEEDING': 'UInt8',
-        'FORN_ESTRAT_SILAGEM': 'UInt8',
-        'PROTEICO': 'UInt8',
-        'PROTEICO_ENERGETICO': 'UInt8',
-        'RACAO_BAL_CONS_INFERIOR': 'UInt8',
-        'SAL_MINERAL': 'UInt8',
-        'SALMINERAL_UREIA': 'UInt8',
-        'RACAOO_BAL_CONSUMO_IG': 'UInt8',
-        'GRAO_INTEIRO': 'UInt8',
-        'ALTO_CONCENTR_VOLUM': 'UInt8',
-        'ALTO_CONCENTRADO': 'UInt8',
-        'QuestionarioPossuiOutrosIncentiv': 'uint8',
-        'QuestionarioFabricaRacao': 'uint8',
-        'area so confinamento': 'UInt8',
-        'regua de manejo': 'UInt8',
-        'boa cobertura vegetal, com baixa': 'UInt8',
-        'erosaoo laminar ou em sulco igua': 'UInt8',
-        'identificacao individual': 'UInt8',
-        'rastreamento SISBOV': 'UInt8',
-        'Lista Trace': 'UInt8',
-        'BPA': 'UInt8',
-        'participa de aliancas mercadolog': 'UInt8',
-        'QuestionarioPraticaRecuperacaoPa': 'uint8',
-        'Confinamento': 'UInt8',
-        'Suplementacao_a_campo': 'UInt8',
-        'SemiConfinamento': 'UInt8',
-        'dif_datas': 'uint16',
-        'tot7d_Chuva': 'float32',
-        'med7d_TempInst': 'float32',
-        'med7d_TempMin': 'float32',
-        'med7d_UmidInst': 'float32',
-        'med7d_formITUinst': 'float32',
-        'med7d_formITUmax': 'float32',
-        'med7d_NDVI': 'float32',
-        'med7d_EVI': 'float32',
-        'med7d_preR_soja': 'float32',
-        'med7d_preR_milho': 'float32',
-        'med7d_preR_boi': 'float32',
-        'tot1m_Chuva': 'float32',
-        'med1m_TempInst': 'float32',
-        'med1m_UmidInst': 'float32',
-        'med1m_formITUinst': 'float32',
-        'med1m_NDVI': 'float32',
-        'med1m_EVI': 'float32',
-        'med1m_preR_soja': 'float32',
-        'med1m_preR_milho': 'float32',
-        'med1m_preR_boi': 'float32',
-        'tot3m_Chuva': 'float32',
-        'med3m_TempInst': 'float32',
-        'med3m_UmidInst': 'float32',
-        'med3m_formITUinst': 'float32',
-        'med3m_formITUmax': 'float32',
-        'med3m_NDVI': 'float32',
-        'med3m_EVI': 'float32',
-        'med3m_preR_soja': 'float32',
-        'med3m_preR_milho': 'float32',
-        'med3m_preR_boi': 'float32',
-        'tot6m_Chuva': 'float32',
-        'med6m_TempInst': 'float32',
-        'med6m_UmidInst': 'float32',
-        'med6m_formITUinst': 'float32',
-        'med6m_NDVI': 'float32',
-        'med6m_EVI': 'float32',
-        'med6m_preR_soja': 'float32',
-        'med6m_preR_milho': 'float32',
-        'med6m_preR_boi': 'float32',
-        'tot12m_Chuva': 'float32',
-        'med12m_TempInst': 'float32',
-        'med12m_TempMin': 'float32',
-        'med12m_UmidInst': 'float32',
-        'med12m_formITUinst': 'float32',
-        'med12m_NDVI': 'float32',
-        'med12m_EVI': 'float32',
-        'med12m_preR_soja': 'float32',
-        'med12m_preR_milho': 'float32',
-        'med12m_preR_boi': 'float32',
-        'cnt7d_CL_ITUinst': 'float32',
-        'cnt1m_CL_ITUinst': 'float32',
-        'cnt3m_CL_ITUinst': 'float32',
-        'cnt6m_CL_ITUinst': 'float32',
-        'cnt12m_CL_ITUinst': 'float32',
-        'ANO': 'uint16',
-        'CATEGORIA': 'category',
-        'classificacao': 'category',
-        'Motivo': 'category'
-    }
-
-    # List with dates to parse
-    parse_dates = [
-        'DataAbate', 'Data_homol', 'DataAbate_6m_ANT',
-        'data_homol_select', 'data12m', 'data6m',
-        'data3m', 'data1m', 'data7d'
-    ]
+    settings.number_csv_lines = 1000
 
     # List with columns to delete when loading dataset
-    # delete_columns_names_on_load_data = None
-    delete_columns_names_on_load_data = [
+    settings.delete_columns_names_on_load_data = [
         'Frigorifico_ID', 'Frigorifico_CNPJ', 'Frigorifico_RazaoSocial', 'Municipio_Frigorifico',
         'EstabelecimentoIdentificador', 'Data_homol', 'Questionario_ID',
         'area so confinamento', 'Lista Trace', 'Motivo', 'data_homol_select', 'dif_datas',
@@ -206,39 +56,19 @@ if __name__ == '__main__':
         'tot12m_Chuva', 'med12m_TempInst', 'med12m_TempMin', 'med12m_UmidInst', 'med12m_NDVI', 'med12m_EVI',
     ]
 
-    # Dictionary with column names to apply the ordinal encoder
-    ordinal_encoder_columns_names = {
-        'Maturidade': ['d', '2', '4', '6', '8'],
-        'Acabamento': [
-            'Magra - Gordura Ausente',
-            'Gordura Escassa - 1 A 3 Mm De Espessura',
-            'Gordura Mediana - Acima De 3 A Até 6 Mm De Espessura',
-            'Gordura Uniforme - Acima De 6 E Até 10 Mm De Espessura',
-            'Gordura Excessiva - Acima De 10 Mm De Espessura'
-        ],
-        'QuestionarioClassificacaoEstabel': ['0', '21', '26', '30'],
-        'CATEGORIA': ['D', 'C', 'BB', 'BBB', 'AA', 'AAA']
-    }
-    # Dictionary with the ordinal encode object fitted for each column
-    columns_ordinal_encoded = dict()
-
     # List with column names to apply the label encoder
-    label_encoder_columns_names = [
+    settings.label_encoder_columns_names = [
         'DataAbate', 'classificacao'
     ]
-    # Dictionary with the label encoder object fitted for each column
-    columns_label_encoded = dict()
 
     # TODO: Check with the professor how to encode 'DataAbate', I tried with one hot, but, does not work very well
     # List with column names to apply the ordinal encoder
-    one_hot_encoder_columns_names = [
+    settings.one_hot_encoder_columns_names = [
         'EstabelecimentoMunicipio', 'Tipificacao', 'ANO'
     ]
-    # Dictionary with the one hot encoder object fitted for each column
-    columns_one_hot_encoded = dict()
 
     # List with column names to apply the min max scaler
-    min_max_scaler_columns_names = [
+    settings.min_max_scaler_columns_names = [
         'Peso',
         'med7d_formITUinst', 'med7d_preR_soja', 'med7d_preR_milho', 'med7d_preR_boi',
         'med1m_formITUinst', 'med1m_preR_soja', 'med1m_preR_milho', 'med1m_preR_boi',
@@ -246,13 +76,11 @@ if __name__ == '__main__':
         'med6m_formITUinst', 'med6m_preR_soja', 'med6m_preR_milho', 'med6m_preR_boi',
         'med12m_formITUinst', 'med12m_preR_soja', 'med12m_preR_milho', 'med12m_preR_boi'
     ]
-    # Dictionary with the min max scaler object fitted for each column
-    columns_min_max_scaled = dict()
 
     # List with column names to drop feature by correlation
     # I choise the features greater than or equal to threshold 0.95, because the spearman correlation
     # matrix showed that there are some features that are highly correlated
-    columns_names_drop_feature_by_correlation = [
+    settings.columns_names_drop_feature_by_correlation = [
         'med7d_preR_soja', 'med1m_preR_soja', 'med3m_preR_soja', 'med6m_preR_soja', 'med12m_preR_soja',
         'med7d_preR_milho',
         'med7d_preR_boi', 'med1m_preR_boi', 'med3m_preR_boi', 'med6m_preR_boi',
@@ -262,15 +90,9 @@ if __name__ == '__main__':
     ]
 
     # Class column name
-    class_column = 'classificacao'
+    settings.class_column = 'classificacao'
 
-    # Dictionary containing the instantiated classes of classifiers and the parameters for optimization
-    classifiers = dict()
-
-    # Dictionary containing the execution results of the models
-    models_results = dict()
-
-    print_informations_dataset = True
+    dataset_reports = True
     execute_pre_processing = False
     execute_classifiers = False
 
@@ -278,7 +100,8 @@ if __name__ == '__main__':
 
     # Generate sample of dataset
     # precoce_ms_data_frame = csv_treatments.load_data(
-    #     csv_path=csv_path, number_csv_lines=number_csv_lines, dtype_dict=dtype_dict, parse_dates=parse_dates
+    #     csv_path=settings.csv_path, number_csv_lines=settings.number_csv_lines,
+    #     dtype_dict=settings.dtype_dict, parse_dates=settings.parse_dates
     # )
 
     # percentages = [0.002, 0.005, 0.02, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
@@ -293,13 +116,13 @@ if __name__ == '__main__':
 
     # Load the dataset
     precoce_ms_data_frame = csv_treatments.load_data(
-        csv_path=csv_path, delete_columns_names=delete_columns_names_on_load_data,
-        number_csv_lines=number_csv_lines, dtype_dict=dtype_dict, parse_dates=parse_dates
+        csv_path=settings.csv_path, delete_columns_names=settings.delete_columns_names_on_load_data,
+        number_csv_lines=settings.number_csv_lines, dtype_dict=settings.dtype_dict, parse_dates=settings.parse_dates
     )
 
     ################################################## REPORTS ##################################################
 
-    if print_informations_dataset:
+    if dataset_reports:
         # reports.print_list_columns(data_frame=precoce_ms_data_frame)
 
         # Print a report of all attributes
@@ -327,7 +150,7 @@ if __name__ == '__main__':
 
         # Print histogram for each attribute grouped by target class
         # reports.histogram_grouped_by_target(
-        #     data_frame=precoce_ms_data_frame, target=class_column
+        #     data_frame=precoce_ms_data_frame, target=settings.class_column
         # )
 
         # Print boxplot for each attribute
@@ -335,7 +158,7 @@ if __name__ == '__main__':
 
         # Print boxplot for each attribute by target class
         # reports.boxplot_grouped_by_target(
-        #     data_frame=precoce_ms_data_frame, target=class_column)
+        #     data_frame=precoce_ms_data_frame, target=settings.class_column)
 
         # Print an attribute's outiliers
         reports.detect_outiliers_from_attribute(
@@ -361,33 +184,41 @@ if __name__ == '__main__':
         #     data_frame=precoce_ms_data_frame,
         #     thresholds=np.arange(0.0, 0.10, 0.05),
         #     separate_numeric_columns=True,
-        #     path_save_fig=path_save_plots,
+        #     path_save_fig=settings.path_save_plots,
         #     display_figure=True
         # )
 
         # Apply ordinal encoder to the columns
-        precoce_ms_data_frame, columns_ordinal_encoded = pre_processing.ordinal_encoder_columns(
-            data_frame=precoce_ms_data_frame, columns_ordinal_encoded=columns_ordinal_encoded, columns_names=ordinal_encoder_columns_names)
+        precoce_ms_data_frame, settings.columns_ordinal_encoded = pre_processing.ordinal_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_ordinal_encoded=settings.columns_ordinal_encoded,
+            columns_names=settings.ordinal_encoder_columns_names
+        )
 
         # Apply label encoder to the columns
-        precoce_ms_data_frame, columns_label_encoded = pre_processing.label_encoder_columns(
-            data_frame=precoce_ms_data_frame, columns_label_encoded=columns_label_encoded, columns_names=label_encoder_columns_names)
+        precoce_ms_data_frame, settings.columns_label_encoded = pre_processing.label_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_label_encoded=settings.columns_label_encoded,
+            columns_names=settings.label_encoder_columns_names
+        )
 
         # Apply one hot encoder to the columns
-        precoce_ms_data_frame, columns_one_hot_encoded = pre_processing.one_hot_encoder_columns(
-            data_frame=precoce_ms_data_frame, columns_one_hot_encoded=columns_one_hot_encoded, columns_names=one_hot_encoder_columns_names)
+        precoce_ms_data_frame, settings.columns_one_hot_encoded = pre_processing.one_hot_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_one_hot_encoded=settings.columns_one_hot_encoded,
+            columns_names=settings.one_hot_encoder_columns_names
+        )
 
         # Apply min max scaler to the columns
-        precoce_ms_data_frame, columns_min_max_scaled = pre_processing.min_max_scaler_columns(
-            data_frame=precoce_ms_data_frame, columns_min_max_scaled=columns_min_max_scaled, columns_names=min_max_scaler_columns_names)
+        precoce_ms_data_frame, settings.columns_min_max_scaled = pre_processing.min_max_scaler_columns(
+            data_frame=precoce_ms_data_frame, columns_min_max_scaled=settings.columns_min_max_scaled,
+            columns_names=settings.min_max_scaler_columns_names
+        )
 
         # Move the target column to the last position in dataframe
         precoce_ms_data_frame = utils.move_cloumns_last_positions(
-            data_frame=precoce_ms_data_frame, columns_names=[class_column])
+            data_frame=precoce_ms_data_frame, columns_names=[settings.class_column])
 
         # Target attribute distribution
         reports.class_distribution(
-            y=precoce_ms_data_frame[class_column].values)
+            y=precoce_ms_data_frame[settings.class_column].values)
 
         # Spearman's Correlation, Further, the two variables being considered may have a non-Gaussian distribution.
         # The coefficient returns a value between -1 and 1 that represents the limits of correlation
@@ -400,34 +231,34 @@ if __name__ == '__main__':
         # Correlation matrix using pearson method, between all attributes
         reports.correlation_matrix(
             data_frame=precoce_ms_data_frame, method='pearson',
-            display_matrix=True, export_matrix=export_matrix, path_save_matrix=path_save_plots,
+            display_matrix=True, export_matrix=export_matrix, path_save_matrix=settings.path_save_plots,
             print_corr_matrix_summarized=True)
 
         # Correlation matrix using pearson method, between all attributes and the class attribute
         reports.correlation_matrix(
-            data_frame=precoce_ms_data_frame, method='pearson', attribute=class_column,
-            display_matrix=True, export_matrix=export_matrix, path_save_matrix=path_save_plots)
+            data_frame=precoce_ms_data_frame, method='pearson', attribute=settings.class_column,
+            display_matrix=True, export_matrix=export_matrix, path_save_matrix=settings.path_save_plots)
 
         # Correlation matrix using spearman method, between all attributes
         reports.correlation_matrix(
             data_frame=precoce_ms_data_frame, method='spearman',
-            display_matrix=True, export_matrix=export_matrix, path_save_matrix=path_save_plots,
+            display_matrix=True, export_matrix=export_matrix, path_save_matrix=settings.path_save_plots,
             print_corr_matrix_summarized=True)
 
         # Correlation matrix using spearman method, between all attributes and the class attribute
         reports.correlation_matrix(
-            data_frame=precoce_ms_data_frame, method='spearman', attribute=class_column,
-            display_matrix=True, export_matrix=export_matrix, path_save_matrix=path_save_plots)
+            data_frame=precoce_ms_data_frame, method='spearman', attribute=settings.class_column,
+            display_matrix=True, export_matrix=export_matrix, path_save_matrix=settings.path_save_plots)
 
         # Delete features by correlation
         precoce_ms_data_frame = pre_processing.drop_feature_by_correlation(
-            data_frame=precoce_ms_data_frame, method='spearman', columns_names=columns_names_drop_feature_by_correlation)
+            data_frame=precoce_ms_data_frame, method='spearman', columns_names=settings.columns_names_drop_feature_by_correlation)
 
         # # Calculate feature importance with linear models
         # reports.feature_importance_using_coefficients_of_linear_models(
         #     data_frame=precoce_ms_data_frame,
         #     models=['logistic_regression', 'linear_svc', 'sgd_classifier'],
-        #     path_save_fig=path_save_plots,
+        #     path_save_fig=settings.path_save_plots,
         #     display_figure=True
         # )
 
@@ -436,7 +267,7 @@ if __name__ == '__main__':
         #     data_frame=precoce_ms_data_frame,
         #     models=['decision_tree_classifier',
         #             'random_forest_classifier', 'xgb_classifier'],
-        #     path_save_fig=path_save_plots,
+        #     path_save_fig=settings.path_save_plots,
         #     display_figure=True
         # )
 
@@ -445,29 +276,54 @@ if __name__ == '__main__':
         # reports.feature_importance_using_permutation_importance(
         #     data_frame=precoce_ms_data_frame,
         #     models=['knneighbors_classifier', 'gaussian_nb'],
-        #     path_save_fig=path_save_plots,
+        #     n_jobs=settings.n_jobs,
+        #     path_save_fig=settings.path_save_plots,
         #     display_figure=True
         # )
 
+        # Simulate sequential feature selector
+        # reports.simulate_sequential_feature_selector(
+        #     data_frame=precoce_ms_data_frame,
+        #     estimator=KNeighborsClassifier(),
+        #     k_features=(3, (precoce_ms_data_frame.shape[1] - 1)),
+        #     forward=True,
+        #     floating=False,
+        #     scoring='accuracy',
+        #     cv=3,
+        #     n_jobs=settings.n_jobs,
+        #     save_fig=False,
+        #     path_save_fig=settings.path_save_plots
+        # )
+
+        # Simulate recursive feature elimination wiht cross validation
+        reports.simulate_recursive_feature_elimination_with_cv(
+            data_frame=precoce_ms_data_frame,
+            estimator=DecisionTreeClassifier(),
+            scoring='accuracy',
+            n_jobs=settings.n_jobs,
+            save_fig=False,
+            path_save_fig=settings.path_save_plots
+        )
+
         # # Apply inverse ordinal encoder to the columns
-        # precoce_ms_data_frame, columns_ordinal_encoded = pre_processing.inverse_ordinal_encoder_columns(
-        #     data_frame=precoce_ms_data_frame, columns_ordinal_encoded=columns_ordinal_encoded)
+        # precoce_ms_data_frame, settings.columns_ordinal_encoded = pre_processing.inverse_ordinal_encoder_columns(
+        #     data_frame=precoce_ms_data_frame, columns_ordinal_encoded=settings.columns_ordinal_encoded)
 
         # # Apply inverse label encoder to the columns
-        # precoce_ms_data_frame, columns_label_encoded = pre_processing.inverse_label_encoder_columns(
-        #     data_frame=precoce_ms_data_frame, columns_label_encoded=columns_label_encoded)
+        # precoce_ms_data_frame, settings.columns_label_encoded = pre_processing.inverse_label_encoder_columns(
+        #     data_frame=precoce_ms_data_frame, columns_label_encoded=settings.columns_label_encoded)
 
         # # Apply inverse one hot encoder to the columns
-        # precoce_ms_data_frame, columns_one_hot_encoded = pre_processing.inverse_one_hot_encoder_columns(
-        #     data_frame=precoce_ms_data_frame, columns_one_hot_encoded=columns_one_hot_encoded)
+        # precoce_ms_data_frame, settings.columns_one_hot_encoded = pre_processing.inverse_one_hot_encoder_columns(
+        #     data_frame=precoce_ms_data_frame, columns_one_hot_encoded=settings.columns_one_hot_encoded)
 
         # # Apply inverse min max scaler to the columns
-        # precoce_ms_data_frame, columns_min_max_scaled = pre_processing.inverse_min_max_scaler_columns(
-        #     data_frame=precoce_ms_data_frame, columns_min_max_scaled=columns_min_max_scaled)
+        # precoce_ms_data_frame, settings.columns_min_max_scaled = pre_processing.inverse_min_max_scaler_columns(
+        #     data_frame=precoce_ms_data_frame, columns_min_max_scaled=settings.columns_min_max_scaled)
 
         # # Move the target column to the last position in dataframe
         # precoce_ms_data_frame = utils.move_cloumns_last_positions(
-        #     data_frame=precoce_ms_data_frame, columns_names=[class_column])
+        #     data_frame=precoce_ms_data_frame, columns_names=[settings.class_column])
 
     ################################################## PRE PROCESSING ##################################################
 
@@ -497,54 +353,64 @@ if __name__ == '__main__':
         )
 
         # Apply ordinal encoder to the columns
-        precoce_ms_data_frame, columns_ordinal_encoded = pre_processing.ordinal_encoder_columns(
-            data_frame=precoce_ms_data_frame, columns_ordinal_encoded=columns_ordinal_encoded, columns_names=ordinal_encoder_columns_names)
+        precoce_ms_data_frame, settings.columns_ordinal_encoded = pre_processing.ordinal_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_ordinal_encoded=settings.columns_ordinal_encoded,
+            columns_names=settings.ordinal_encoder_columns_names
+        )
 
         # Apply label encoder to the columns
-        precoce_ms_data_frame, columns_label_encoded = pre_processing.label_encoder_columns(
-            data_frame=precoce_ms_data_frame, columns_label_encoded=columns_label_encoded, columns_names=label_encoder_columns_names)
+        precoce_ms_data_frame, settings.columns_label_encoded = pre_processing.label_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_label_encoded=settings.columns_label_encoded,
+            columns_names=settings.label_encoder_columns_names
+        )
 
         # Apply one hot encoder to the columns
-        precoce_ms_data_frame, columns_one_hot_encoded = pre_processing.one_hot_encoder_columns(
-            data_frame=precoce_ms_data_frame, columns_one_hot_encoded=columns_one_hot_encoded, columns_names=one_hot_encoder_columns_names)
+        precoce_ms_data_frame, settings.columns_one_hot_encoded = pre_processing.one_hot_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_one_hot_encoded=settings.columns_one_hot_encoded,
+            columns_names=settings.one_hot_encoder_columns_names
+        )
 
         # Apply min max scaler to the columns
-        precoce_ms_data_frame, columns_min_max_scaled = pre_processing.min_max_scaler_columns(
-            data_frame=precoce_ms_data_frame, columns_min_max_scaled=columns_min_max_scaled, columns_names=min_max_scaler_columns_names)
+        precoce_ms_data_frame, settings.columns_min_max_scaled = pre_processing.min_max_scaler_columns(
+            data_frame=precoce_ms_data_frame, columns_min_max_scaled=settings.columns_min_max_scaled,
+            columns_names=settings.min_max_scaler_columns_names
+        )
 
         # Move the target column to the last position in dataframe
         precoce_ms_data_frame = utils.move_cloumns_last_positions(
-            data_frame=precoce_ms_data_frame, columns_names=[class_column])
+            data_frame=precoce_ms_data_frame, columns_names=[settings.class_column])
 
         # Delete features by correlation
         precoce_ms_data_frame = pre_processing.drop_feature_by_correlation(
-            data_frame=precoce_ms_data_frame, method='spearman', columns_names=columns_names_drop_feature_by_correlation)
+            data_frame=precoce_ms_data_frame, method='spearman', columns_names=settings.columns_names_drop_feature_by_correlation)
 
         # Target attribute distribution
         reports.class_distribution(
-            y=precoce_ms_data_frame[class_column].values)
+            y=precoce_ms_data_frame[settings.class_column].values)
 
         # TODO: Use function select_features_from_model implemented in the file pre_processing.py, in this location
 
+        # TODO: Verify how to use sequential feature selector, and implement it
+
         # Apply inverse ordinal encoder to the columns
-        precoce_ms_data_frame, columns_ordinal_encoded = pre_processing.inverse_ordinal_encoder_columns(
-            data_frame=precoce_ms_data_frame, columns_ordinal_encoded=columns_ordinal_encoded)
+        precoce_ms_data_frame, settings.columns_ordinal_encoded = pre_processing.inverse_ordinal_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_ordinal_encoded=settings.columns_ordinal_encoded)
 
         # Apply inverse label encoder to the columns
-        precoce_ms_data_frame, columns_label_encoded = pre_processing.inverse_label_encoder_columns(
-            data_frame=precoce_ms_data_frame, columns_label_encoded=columns_label_encoded)
+        precoce_ms_data_frame, settings.columns_label_encoded = pre_processing.inverse_label_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_label_encoded=settings.columns_label_encoded)
 
         # Apply inverse one hot encoder to the columns
-        precoce_ms_data_frame, columns_one_hot_encoded = pre_processing.inverse_one_hot_encoder_columns(
-            data_frame=precoce_ms_data_frame, columns_one_hot_encoded=columns_one_hot_encoded)
+        precoce_ms_data_frame, settings.columns_one_hot_encoded = pre_processing.inverse_one_hot_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_one_hot_encoded=settings.columns_one_hot_encoded)
 
         # Apply inverse min max scaler to the columns
-        precoce_ms_data_frame, columns_min_max_scaled = pre_processing.inverse_min_max_scaler_columns(
-            data_frame=precoce_ms_data_frame, columns_min_max_scaled=columns_min_max_scaled)
+        precoce_ms_data_frame, settings.columns_min_max_scaled = pre_processing.inverse_min_max_scaler_columns(
+            data_frame=precoce_ms_data_frame, columns_min_max_scaled=settings.columns_min_max_scaled)
 
         # Move the target column to the last position in dataframe
         precoce_ms_data_frame = utils.move_cloumns_last_positions(
-            data_frame=precoce_ms_data_frame, columns_names=[class_column])
+            data_frame=precoce_ms_data_frame, columns_names=[settings.class_column])
 
         ######################### NOT USED OR TESTED #########################
         reports.informations(precoce_ms_data_frame)
@@ -579,7 +445,7 @@ if __name__ == '__main__':
             'metric': ['euclidean'],
             'weights': ['uniform', 'distance']
         }
-        classifiers[KNeighborsClassifier().__class__.__name__] = [
+        settings.classifiers[KNeighborsClassifier().__class__.__name__] = [
             KNeighborsClassifier(), param_dist]
 
         # Naive bayes
@@ -587,7 +453,7 @@ if __name__ == '__main__':
         # It's generating low values. Is it because the attributes are not discrete (words)?
         # For non-discrete attributes, should I use another algorithm?
         param_dist = {}
-        classifiers[GaussianNB().__class__.__name__] = [
+        settings.classifiers[GaussianNB().__class__.__name__] = [
             GaussianNB(), param_dist]
 
         # # Decision Trees (c4.5)
@@ -650,10 +516,10 @@ if __name__ == '__main__':
         #     RandomForestClassifier(), param_dist]
 
         # Running the classifiers
-        models_results = pattern_extraction.run_models(
-            x=x, y=y, models=classifiers, models_results=models_results)
+        settings.models_results = pattern_extraction.run_models(
+            x=x, y=y, models=settings.classifiers, models_results=settings.models_results)
 
         reports.models_results(
-            models_results=models_results, path_save_fig=path_save_plots)
+            models_results=settings.models_results, path_save_fig=settings.path_save_plots)
 
     # run_log_file.close()
