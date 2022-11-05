@@ -417,7 +417,7 @@ def simulate_delete_columns_with_low_variance(data_frame: pd.DataFrame, threshol
 
 
 @utils.timeit
-def feature_importance_using_coefficients_of_linear_models(data_frame: pd.DataFrame, models: list, path_save_fig: str = None, display_figure: bool = False) -> None:
+def feature_importance_using_coefficients_of_linear_models(data_frame: pd.DataFrame, models: list, path_save_fig: str = None, display_figure: bool = False, class_weight: Union[dict, str, None] = None, n_jobs: int = -1) -> None:
     """Print the feature importance using coefficients of linear models.
     The models supported are: LogisticRegression (logistic_regression), LinearSVC (linear_svc), SGDClassifier (sgd_classifier).
 
@@ -426,6 +426,8 @@ def feature_importance_using_coefficients_of_linear_models(data_frame: pd.DataFr
         models (list): Models to be used.
         path_save_fig (str, optional): Path to save the figures. If None, save the figures in root path of project. Defaults to None.
         display_figure (bool, optional): Flag to display the results, for example in jupyter notebook. Defaults to False.
+        class_weight (Union[dict, str, None], optional): Weights associated with classes in the form {class_label: weight}. If not given, all classes are supposed to have weight one. For multi-output problems, a list of dicts can be provided in the same order as the columns of y. Defaults to None.
+        n_jobs (int, optional): Number of jobs to run in parallel. Defaults to -1.
     """
     print('\n*****INICIO IMPRIMIR FEATURE IMPORTANCE USING COEFFICIENTS OF LINEAR MODELS******')
     if models:
@@ -435,11 +437,12 @@ def feature_importance_using_coefficients_of_linear_models(data_frame: pd.DataFr
 
         for model in models:
             if model == 'logistic_regression':
-                model = LogisticRegression()
+                model = LogisticRegression(
+                    class_weight=class_weight, n_jobs=n_jobs)
             elif model == 'linear_svc':
-                model = LinearSVC()
+                model = LinearSVC(class_weight=class_weight)
             elif model == 'sgd_classifier':
-                model = SGDClassifier()
+                model = SGDClassifier(n_jobs=n_jobs, class_weight=class_weight)
             else:
                 raise Exception('Model not supported.')
 
@@ -476,7 +479,7 @@ def feature_importance_using_coefficients_of_linear_models(data_frame: pd.DataFr
 
 
 @utils.timeit
-def feature_importance_using_tree_based_models(data_frame: pd.DataFrame, models: list, path_save_fig: str = None, display_figure: bool = False) -> None:
+def feature_importance_using_tree_based_models(data_frame: pd.DataFrame, models: list, path_save_fig: str = None, display_figure: bool = False, class_weight: Union[dict, str, None] = None, n_jobs: int = -1) -> None:
     """Print the feature importance using tree based models.
     The models supported are: DecisionTreeClassifier (decision_tree_classifier), RandomForestClassifier (random_forest_classifier), XGBClassifier (xgb_classifier).
     Args:
@@ -484,6 +487,8 @@ def feature_importance_using_tree_based_models(data_frame: pd.DataFrame, models:
         models (list): Models to be used.
         path_save_fig (str, optional): Path to save the figures. If None, save the figures in root path of project. Defaults to None.
         display_figure (bool, optional): Flag to display the results, for example in jupyter notebook. Defaults to False.
+        class_weight (Union[dict, str, None], optional): Weights associated with classes in the form {class_label: weight}. If not given, all classes are supposed to have weight one. For multi-output problems, a list of dicts can be provided in the same order as the columns of y. Defaults to None.
+        n_jobs (int, optional): Number of jobs to run in parallel. Defaults to -1.
     """
     print('\n*****INICIO IMPRIMIR FEATURE IMPORTANCE USING TREE BASED MODELS******')
     if models:
@@ -493,11 +498,12 @@ def feature_importance_using_tree_based_models(data_frame: pd.DataFrame, models:
 
         for model in models:
             if model == 'decision_tree_classifier':
-                model = DecisionTreeClassifier()
+                model = DecisionTreeClassifier(class_weight=class_weight)
             elif model == 'random_forest_classifier':
-                model = RandomForestClassifier()
+                model = RandomForestClassifier(
+                    n_jobs=n_jobs, class_weight=class_weight)
             elif model == 'xgb_classifier':
-                model = XGBClassifier()
+                model = XGBClassifier(n_jobs=n_jobs)
             else:
                 raise Exception('Model not supported.')
 
@@ -556,7 +562,7 @@ def feature_importance_using_permutation_importance(data_frame: pd.DataFrame, mo
 
         for model in models:
             if model == 'knneighbors_classifier':
-                model = KNeighborsClassifier()
+                model = KNeighborsClassifier(n_jobs=n_jobs)
             elif model == 'gaussian_nb':
                 model = GaussianNB()
             else:

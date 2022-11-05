@@ -2,11 +2,14 @@ import utils
 
 import pandas as pd
 
+# Some settings are configured by default. If you want to change any settings,
+# just follow the instruction for the specific setting.
+
 # Set pandas max rows
 pd.set_option('display.max_rows', utils.PANDAS_MAX_ROWS)
 
 # Set number of jobs to run in parallel
-n_jobs = 1
+n_jobs = -1
 
 ############################################ CSV SETTINGS ############################################
 
