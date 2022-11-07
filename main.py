@@ -1,6 +1,5 @@
 # import sys
 
-# utilities
 import csv_treatments
 import pre_processing
 import reports
@@ -11,7 +10,6 @@ import settings
 import numpy as np
 import pandas as pd
 
-# classification models
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.tree import DecisionTreeClassifier
@@ -32,6 +30,12 @@ if __name__ == '__main__':
     #     'logs/run_log-{}.txt'.format(utils.get_current_datetime()), 'w'
     # )
     # sys.stdout = run_log_file
+
+    # Some settings are configured by default. If you want to change any settings,
+    # just follow the instruction for the specific setting.
+
+    # Number of jobs to run in parallel
+    settings.n_jobs = 1
 
     # Folder path where the CSV file is located
     settings.dataset_folder_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/'
@@ -254,28 +258,33 @@ if __name__ == '__main__':
         precoce_ms_data_frame = pre_processing.drop_feature_by_correlation(
             data_frame=precoce_ms_data_frame, method='spearman', columns_names=settings.columns_names_drop_feature_by_correlation)
 
-        # # Calculate feature importance with linear models
+        # Calculate feature importance with linear models
         # reports.feature_importance_using_coefficients_of_linear_models(
         #     data_frame=precoce_ms_data_frame,
         #     models=['logistic_regression', 'linear_svc', 'sgd_classifier'],
         #     path_save_fig=settings.path_save_plots,
-        #     display_figure=True
+        #     display_figure=True,
+        #     class_weight='balanced',
+        #     n_jobs=settings.n_jobs
         # )
 
-        # # Calculate feature importance with tree based models
+        # Calculate feature importance with tree based models
         # reports.feature_importance_using_tree_based_models(
         #     data_frame=precoce_ms_data_frame,
         #     models=['decision_tree_classifier',
         #             'random_forest_classifier', 'xgb_classifier'],
         #     path_save_fig=settings.path_save_plots,
-        #     display_figure=True
+        #     display_figure=True,
+        #     class_weight='balanced',
+        #     n_jobs=settings.n_jobs
         # )
 
-        # # TODO: It didn't work, study better how permutation importance works
-        # # Calculate feature importance using permutation importance
+        # TODO: It didn't work, study better how permutation importance works
+        # Calculate feature importance using permutation importance
         # reports.feature_importance_using_permutation_importance(
         #     data_frame=precoce_ms_data_frame,
         #     models=['knneighbors_classifier', 'gaussian_nb'],
+        #     n_repeats=3,
         #     n_jobs=settings.n_jobs,
         #     path_save_fig=settings.path_save_plots,
         #     display_figure=True
