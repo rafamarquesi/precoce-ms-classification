@@ -535,3 +535,33 @@ def create_ordinal_encoder_transformer(ordinal_encoder_columns_names: dict, data
                 '!!!> No columns without categories informed for ordinal encoder transformer.')
 
     return ordinal_encoder_transformer
+
+
+def create_one_hot_encoder_transformer(columns: list, data_frame_columns: list, sparse: bool = False, handle_unknown: str = 'infrequent_if_exist', drop: str = 'if_binary', dtype: type = np.uint8) -> tuple:
+    """Create a one hot encoder transformer, for ColumnTransformer used in pipeline.
+    More in: https://scikit-learn.org/stable/modules/compose.html
+
+    Args:
+        columns (list): Columns to be encoded.
+        data_frame_columns (list): Columns of the data frame.
+        sparse (bool, optional): If True, a sparse matrix will be returned. Defaults to False.
+        handle_unknown (str, optional): Whether to raise an error or ignore if an unknown categorical feature is present during transform (default is to raise). Defaults to 'infrequent_if_exist'.
+        drop (str, optional): Specifies a methodology to use to drop one of the categories per feature. Defaults to 'if_binary'.
+        dtype (type, optional): Data type of the encoded columns. Defaults to np.uint8.
+
+    Returns:
+        tuple: A tuple with name for transformer, OneHotEncoder parametrized, and columns to be encoded.
+    """
+    if not columns:
+        raise Exception(
+            'Columns must be informed, for create one hot encoder transformer.')
+
+    for column in columns:
+        if column not in data_frame_columns:
+            print(
+                '!!!> Column {} not in dataframe. The column will not be considered in the one hot encoder.'.format(column))
+            columns.remove(column)
+
+    one_hot_encoder = OneHotEncoder(
+        sparse=sparse, handle_unknown=handle_unknown, drop=drop, dtype=dtype)
+    return ('one_hot_encoder', one_hot_encoder, columns)
