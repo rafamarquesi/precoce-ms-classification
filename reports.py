@@ -13,6 +13,8 @@ import seaborn as sns
 import dataframe_image as dfi
 import matplotlib.pyplot as plt
 
+from sklearn.model_selection import train_test_split
+
 from sklearn.linear_model import SGDClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import LinearSVC
@@ -556,9 +558,13 @@ def feature_importance_using_permutation_importance(data_frame: pd.DataFrame, mo
     """
     print('\n*****INICIO IMPRIMIR FEATURE IMPORTANCE USING PERMUTATION IMPORTANCE******')
     if models:
+        print('!!>>Scoring: {}'.format(scoring))
+
         path_save_fig = __define_path_save_fig(path_save_fig=path_save_fig)
 
         x, y = utils.create_x_y_dataframe_data(data_frame=data_frame)
+        x_train, x_test, y_train, y_test = train_test_split(
+            x, y, random_state=random_state)
 
         for model in models:
             if model == 'knneighbors_classifier':
@@ -568,11 +574,20 @@ def feature_importance_using_permutation_importance(data_frame: pd.DataFrame, mo
             else:
                 raise Exception('Model not supported.')
 
-            model.fit(x, y)
+            model.fit(x_train, y_train)
             print('\n\nModel {} fited.'.format(model.__class__.__name__))
+            print('Model {} score: {}'.format(
+                model.__class__.__name__, model.score(x_test, y_test)))
             print('Appling permutation importance...')
+
             results = permutation_importance(
-                model, x, y, scoring=scoring, n_repeats=n_repeats, random_state=random_state, n_jobs=n_jobs)
+                model, x_test, y_test, scoring=scoring, n_repeats=n_repeats, random_state=random_state, n_jobs=n_jobs)
+
+            for i in results.importances_mean.argsort()[::-1]:
+                if results.importances_mean[i] - 2 * results.importances_std[i] > 0:
+                    print('Feature: {} - Mean: {:.3f} - Std: +/- {:.3f}'.format(
+                        x.columns[i], results.importances_mean[i], results.importances_std[i]))
+
             print('Model: {}'.format(model))
             print('\nPermutation importance:')
             importance = results.importances_mean
