@@ -95,7 +95,7 @@ def choose_csv_path(sampling: str = None, folder_path: str = None) -> str:
         '50': '{}TAB_MODELAGEM_RAFAEL_2020_1-50.0-percentage-sampling.csv'.format(folder_path),
         '60': '{}TAB_MODELAGEM_RAFAEL_2020_1-60.0-percentage-sampling.csv'.format(folder_path),
         '100': '{}TAB_MODELAGEM_RAFAEL_2020_1.csv'.format(folder_path),
-        'after_correlation-02-11-2022_18:29:05': '{}TAB_MODELAGEM_RAFAEL_2020_1-after_drop_feature_by_correlation-02-11-2022_18:29:05.csv'.format(folder_path)
+        'after_correlation-05-11-2022_18:16:37': '{}TAB_MODELAGEM_RAFAEL_2020_1-after_drop_feature_by_correlation-05-11-2022_18:16:37.csv'.format(folder_path)
     }
 
     if sampling not in csv_files.keys():
