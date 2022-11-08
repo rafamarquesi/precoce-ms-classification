@@ -471,3 +471,67 @@ def select_features_from_model(x_train: np.ndarray, y_train: np.ndarray, x_test:
 
     print('*****FIM SELECT FEATURES FROM MODEL*********')
     return x_train_fs, x_test_fs, select_from_model
+
+
+def create_ordinal_encoder_transformer(ordinal_encoder_columns_names: dict, data_frame_columns: list, dtype: type = np.uint8, with_categories: bool = True) -> tuple:
+    """Create an ordinal encoder transformer, for ColumnTransformer used in pipeline.
+    More in: https://scikit-learn.org/stable/modules/compose.html
+
+    Args:
+        ordinal_encoder_columns_names (dict): Dictionary with the columns names to be encoded and the categories.
+        data_frame_columns (list): Columns of the data frame.
+        dtype (type, optional): Data type of the encoded columns. Defaults to np.uint8.
+        with_categories (bool, optional): If True, the object OrdinalEncoder, with categories instancied, will be returned. Defaults to True.
+
+    Returns:
+        tuple: A tuple with name for transformer, OrdinalEncoder parametrized, and columns to be encoded.
+    """
+    if not ordinal_encoder_columns_names:
+        raise Exception(
+            'ordinal_encoder_columns_names must be informed, for create ordinal encoder transformer.')
+
+    columns_with_categories = dict()
+    columns_without_categories = list()
+
+    for column, categories in ordinal_encoder_columns_names.items():
+        if column not in data_frame_columns:
+            print(
+                '!!!> Column {} not in dataframe columns. The column will not be considered in the ordinal encoder.'.format(column))
+            continue
+
+        if categories is None:
+            columns_without_categories.append(column)
+        else:
+            columns_with_categories.update({column: categories})
+
+    ordinal_encoder_transformer = tuple()
+
+    if with_categories:
+        if columns_with_categories:
+            ordinal_encoder_transformer = tuple(
+                (
+                    'ordinal_encoder_with_categories',
+                    OrdinalEncoder(
+                        categories=list(columns_with_categories.values()),
+                        dtype=dtype
+                    ),
+                    list(columns_with_categories.keys())
+                )
+            )
+        else:
+            raise Exception(
+                '!!!> No columns with categories informed for ordinal encoder transformer.')
+    else:
+        if columns_without_categories:
+            ordinal_encoder_transformer = tuple(
+                (
+                    'ordinal_encoder_without_categories',
+                    OrdinalEncoder(dtype=dtype),
+                    columns_without_categories
+                )
+            )
+        else:
+            raise Exception(
+                '!!!> No columns without categories informed for ordinal encoder transformer.')
+
+    return ordinal_encoder_transformer
