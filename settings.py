@@ -8,6 +8,9 @@ import pandas as pd
 # Set pandas max rows
 pd.set_option('display.max_rows', utils.PANDAS_MAX_ROWS)
 
+# Set random seed
+random_seed = 42
+
 # Set number of jobs to run in parallel
 n_jobs = -1
 
