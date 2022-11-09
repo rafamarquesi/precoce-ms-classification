@@ -3,6 +3,7 @@ import utils
 
 import pandas as pd
 import numpy as np
+
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler, OneHotEncoder, OrdinalEncoder
 from sklearn.feature_selection import VarianceThreshold
 from sklearn.feature_selection import SelectFromModel
@@ -473,7 +474,7 @@ def select_features_from_model(x_train: np.ndarray, y_train: np.ndarray, x_test:
     return x_train_fs, x_test_fs, select_from_model
 
 
-def create_ordinal_encoder_transformer(ordinal_encoder_columns_names: dict, data_frame_columns: list, dtype: type = np.uint8, with_categories: bool = True) -> tuple:
+def create_ordinal_encoder_transformer(ordinal_encoder_columns_names: dict, data_frame_columns: list, dtype: type = np.uint8, with_categories: bool = True, handle_unknown: str = 'error', unknown_value=None) -> tuple:
     """Create an ordinal encoder transformer, for ColumnTransformer used in pipeline.
     More in: https://scikit-learn.org/stable/modules/compose.html
 
@@ -482,6 +483,8 @@ def create_ordinal_encoder_transformer(ordinal_encoder_columns_names: dict, data
         data_frame_columns (list): Columns of the data frame.
         dtype (type, optional): Data type of the encoded columns. Defaults to np.uint8.
         with_categories (bool, optional): If True, the object OrdinalEncoder, with categories instancied, will be returned. Defaults to True.
+        handle_unknown (str, optional): When set to 'error' an error will be raised in case an unknown categorical feature is present during transform. When set to 'use_encoded_value', the encoded value of unknown categories will be set to the value given for the parameter unknown_value. Defaults to 'error'.
+        unknown_value (optional): Value to use for unknown categories. If handle_unknown is 'use_encoded_value', the value should be int or np.nan. See documentation for OrdinalEncoder for more: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OrdinalEncoder.html. Defaults to None.
 
     Returns:
         tuple: A tuple with name for transformer, OrdinalEncoder parametrized, and columns to be encoded.
@@ -513,7 +516,9 @@ def create_ordinal_encoder_transformer(ordinal_encoder_columns_names: dict, data
                     'ordinal_encoder_with_categories',
                     OrdinalEncoder(
                         categories=list(columns_with_categories.values()),
-                        dtype=dtype
+                        dtype=dtype,
+                        handle_unknown=handle_unknown,
+                        unknown_value=unknown_value
                     ),
                     list(columns_with_categories.keys())
                 )
@@ -526,7 +531,11 @@ def create_ordinal_encoder_transformer(ordinal_encoder_columns_names: dict, data
             ordinal_encoder_transformer = tuple(
                 (
                     'ordinal_encoder_without_categories',
-                    OrdinalEncoder(dtype=dtype),
+                    OrdinalEncoder(
+                        dtype=dtype,
+                        handle_unknown=handle_unknown,
+                        unknown_value=unknown_value
+                    ),
                     columns_without_categories
                 )
             )
