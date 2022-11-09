@@ -206,8 +206,8 @@ def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = N
         displayhook(styled_table)
 
     if export_matrix:
-        path_save_matrix = __define_path_save_fig(
-            path_save_fig=path_save_matrix)
+        path_save_matrix = utils.define_path_save_file(
+            path_save_file=path_save_matrix)
 
         name_figure = 'correlation_matrix-{}-{}-{}.png'.format(
             method,
@@ -239,7 +239,7 @@ def models_results(models_results: dict, path_save_fig: str = None, display_resu
     print('\n*****INICIO IMPRIMIR RESULTADOS MODELOS******')
     accuracy_graphic = pd.DataFrame()
 
-    path_save_fig = __define_path_save_fig(path_save_fig=path_save_fig)
+    path_save_fig = utils.define_path_save_file(path_save_file=path_save_fig)
 
     for key, value in models_results.items():
 
@@ -401,7 +401,7 @@ def simulate_delete_columns_with_low_variance(data_frame: pd.DataFrame, threshol
 
     print('\nShape do X depois: {}.'.format(x.shape))
 
-    path_save_fig = __define_path_save_fig(path_save_fig=path_save_fig)
+    path_save_fig = utils.define_path_save_file(path_save_file=path_save_fig)
 
     plt.figure(figsize=(10, 8))
     plt.plot(thresholds, results)
@@ -433,7 +433,8 @@ def feature_importance_using_coefficients_of_linear_models(data_frame: pd.DataFr
     """
     print('\n*****INICIO IMPRIMIR FEATURE IMPORTANCE USING COEFFICIENTS OF LINEAR MODELS******')
     if models:
-        path_save_fig = __define_path_save_fig(path_save_fig=path_save_fig)
+        path_save_fig = utils.define_path_save_file(
+            path_save_file=path_save_fig)
 
         x, y = utils.create_x_y_dataframe_data(data_frame=data_frame)
 
@@ -494,7 +495,8 @@ def feature_importance_using_tree_based_models(data_frame: pd.DataFrame, models:
     """
     print('\n*****INICIO IMPRIMIR FEATURE IMPORTANCE USING TREE BASED MODELS******')
     if models:
-        path_save_fig = __define_path_save_fig(path_save_fig=path_save_fig)
+        path_save_fig = utils.define_path_save_file(
+            path_save_file=path_save_fig)
 
         x, y = utils.create_x_y_dataframe_data(data_frame=data_frame)
 
@@ -560,7 +562,8 @@ def feature_importance_using_permutation_importance(data_frame: pd.DataFrame, mo
     if models:
         print('!!>>Scoring: {}'.format(scoring))
 
-        path_save_fig = __define_path_save_fig(path_save_fig=path_save_fig)
+        path_save_fig = utils.define_path_save_file(
+            path_save_file=path_save_fig)
 
         x, y = utils.create_x_y_dataframe_data(data_frame=data_frame)
         x_train, x_test, y_train, y_test = train_test_split(
@@ -645,7 +648,8 @@ def histogram(data_frame: pd.DataFrame, save_fig: bool = False, path_save_fig: s
         plt.tight_layout()
         plt.title('Histogram of {}'.format(column))
         if save_fig:
-            path_save_fig = __define_path_save_fig(path_save_fig=path_save_fig)
+            path_save_fig = utils.define_path_save_file(
+                path_save_file=path_save_fig)
 
             name_figure = 'histogram-{}-{}.png'.format(
                 column, utils.get_current_datetime())
@@ -702,8 +706,8 @@ def histogram_grouped_by_target(data_frame: pd.DataFrame, target: str, save_fig:
         plt.tight_layout()
         plt.legend()
         if save_fig:
-            path_save_fig = __define_path_save_fig(
-                path_save_fig=path_save_fig)
+            path_save_fig = utils.define_path_save_file(
+                path_save_file=path_save_fig)
 
             name_figure = 'histogram_grouped_by_target-{}-{}-{}.png'.format(
                 column, target, utils.get_current_datetime())
@@ -737,8 +741,8 @@ def boxplot(data_frame: pd.DataFrame, save_fig: bool = False, path_save_fig: str
         plt.tight_layout()
         plt.title('Boxplot of {}'.format(column))
         if save_fig:
-            path_save_fig = __define_path_save_fig(
-                path_save_fig=path_save_fig)
+            path_save_fig = utils.define_path_save_file(
+                path_save_file=path_save_fig)
 
             name_figure = 'boxplot-{}-{}.png'.format(
                 column, utils.get_current_datetime())
@@ -788,8 +792,8 @@ def boxplot_grouped_by_target(data_frame: pd.DataFrame, target: str, save_fig: b
         plt.tight_layout()
         plt.title('Boxplot of {} grouped by {}'.format(column, target))
         if save_fig:
-            path_save_fig = __define_path_save_fig(
-                path_save_fig=path_save_fig)
+            path_save_fig = utils.define_path_save_file(
+                path_save_file=path_save_fig)
 
             name_figure = 'boxplot_grouped_by_target-{}-{}-{}.png'.format(
                 column, target, utils.get_current_datetime())
@@ -890,8 +894,8 @@ def simulate_sequential_feature_selector(data_frame: pd.DataFrame, estimator: ob
     plt.grid()
 
     if save_fig:
-        path_save_fig = __define_path_save_fig(
-            path_save_fig=path_save_fig)
+        path_save_fig = utils.define_path_save_file(
+            path_save_file=path_save_fig)
 
         name_figure = 'sequential_feature_selector-forward_{}-floating_{}-{}.png'.format(
             forward, floating,
@@ -964,8 +968,8 @@ def simulate_recursive_feature_elimination_with_cv(data_frame: pd.DataFrame, est
     plt.grid()
 
     if save_fig:
-        path_save_fig = __define_path_save_fig(
-            path_save_fig=path_save_fig)
+        path_save_fig = utils.define_path_save_file(
+            path_save_file=path_save_fig)
 
         name_figure = 'recursive_feature_elimination_cv-{}.png'.format(
             utils.get_current_datetime())
@@ -1024,22 +1028,6 @@ def __execute_delete_columns_with_low_variance(x: pd.DataFrame, thresholds: np.a
             x=x, threshold=threshold, separate_numeric_columns=False)
         results.append(x.shape[1])
     return x, results
-
-
-def __define_path_save_fig(path_save_fig: str) -> str:
-    """Define the path to save the figures.
-
-    Args:
-        path_save_fig(str): Path to save the figures.
-
-    Returns:
-        str: Path to save the figures.
-    """
-    if path_save_fig is None:
-        path_save_fig = ''
-    else:
-        path_save_fig = path_save_fig + '/'
-    return path_save_fig
 
 
 def __print_correlation_matrix_summarized(correlation_matrix: pd.DataFrame, lower_limit: float, upper_limit: float) -> None:

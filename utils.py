@@ -1,10 +1,13 @@
-from functools import wraps
 import time
+
+from functools import wraps
 from typing import Callable
 from datetime import datetime, timedelta
 
 import numpy as np
 import pandas as pd
+
+from sklearn.utils import estimator_html_repr
 
 # Types of columns to be excluded from the DataFrame
 TYPES_EXCLUDE_DF = [pd.CategoricalDtype, pd.DatetimeTZDtype, np.datetime64]
@@ -218,7 +221,39 @@ def convert_seconds_to_time(seconds: float) -> str:
     return str(timedelta(seconds=seconds))
 
 
+def save_composite_estimator(composite_estimator: object, file_name: str, path_save_file: str = None) -> None:
+    """Save composite estimator, from sklearn.
+    More information: https://scikit-learn.org/stable/modules/compose.html#visualizing-composite-estimators
+
+    Args:
+        composite_estimator (object): Composite estimator to be saved.
+        file_name (str): File name to be saved.
+        path_save_file (str, optional): Path to save the file. Defaults to None.
+    """
+    path_save_file = define_path_save_file(path_save_file=path_save_file)
+
+    with open('{}{}-{}.html'.format(path_save_file, file_name, get_current_datetime()), 'w') as file:
+        file.write(estimator_html_repr(composite_estimator))
+
+
+def define_path_save_file(path_save_file: str) -> str:
+    """Define the path to save the file.
+
+    Args:
+        path_save_file(str): Path to save the file.
+
+    Returns:
+        str: Path to save the file.
+    """
+    if path_save_file is None:
+        path_save_file = ''
+    else:
+        path_save_file = path_save_file + '/'
+    return path_save_file
+
 #################### DECORATORS ####################
+
+
 def timeit(func: Callable) -> Callable:
     """Decorator to measure the time of execution of a function.
 
