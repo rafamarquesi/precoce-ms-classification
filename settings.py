@@ -139,10 +139,13 @@ parse_dates = [
 # List with columns to delete when loading dataset
 delete_columns_names_on_load_data = None
 
-############################################ PLOTS SETTINGS ############################################
+############################################ PATH SETTINGS ############################################
 
 # Path to save plots
 path_save_plots = './plots'
+
+# Path to save composite estimators
+path_save_estimators_repr = './estimators_repr'
 
 ############################################ ENCODERS SETTINGS ############################################
 
