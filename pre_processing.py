@@ -565,3 +565,28 @@ def create_one_hot_encoder_transformer(columns: list, data_frame_columns: list, 
     one_hot_encoder = OneHotEncoder(
         sparse=sparse, handle_unknown=handle_unknown, drop=drop, dtype=dtype)
     return ('one_hot_encoder', one_hot_encoder, columns)
+
+
+def create_min_max_scaler_transformer(columns: list, data_frame_columns: list) -> tuple:
+    """Create a min max scaler transformer, for ColumnTransformer used in pipeline.
+    More in: https://scikit-learn.org/stable/modules/compose.html
+
+    Args:
+        columns (list): Columns to be scaled.
+        data_frame_columns (list): Columns of the data frame.
+
+    Returns:
+        tuple: A tuple with name for transformer, MinMaxScaler parametrized, and columns to be scaled.
+    """
+    if not columns:
+        raise Exception(
+            'Columns must be informed, for create min max scaler transformer.')
+
+    for column in columns:
+        if column not in data_frame_columns:
+            print(
+                '!!!> Column {} not in dataframe. The column will not be considered in the min max scaler.'.format(column))
+            columns.remove(column)
+
+    min_max_scaler = MinMaxScaler()
+    return ('min_max_scaler', min_max_scaler, columns)
