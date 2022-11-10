@@ -17,7 +17,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 
-# TODO: Treat imbalanced classes (Book Albon - Chapter 5.5) (https://github.com/alod83/data-science/blob/master/Preprocessing/Balancing/Balancing.ipynb)
+# TODO: Treat imbalanced classes (Book Albon - Chapter 5.5) (https://github.com/alod83/data-science/blob/master/Preprocessing/Balancing/Balancing.ipynb) (https://machinelearningmastery.com/imbalanced-classification-with-the-adult-income-dataset/) (https://machinelearningmastery.com/imbalanced-classification-of-good-and-bad-credit/)
 
 # TODO: Use the cross_validate function, for evaluation of multiple metrics (https://scikit-learn.org/stable/modules/cross_validation.html#multimetric-cross-validation)
 
@@ -60,9 +60,16 @@ if __name__ == '__main__':
         'tot12m_Chuva', 'med12m_TempInst', 'med12m_TempMin', 'med12m_UmidInst', 'med12m_NDVI', 'med12m_EVI',
     ]
 
+    # Dict update for ordinal encoding
+    settings.ordinal_encoder_columns_names.update(
+        {
+            'DataAbate': None
+        }
+    )
+
     # List with column names to apply the label encoder
     settings.label_encoder_columns_names = [
-        'DataAbate', 'classificacao'
+        'classificacao'
     ]
 
     # TODO: Check with the professor how to encode 'DataAbate', I tried with one hot, but, does not work very well
@@ -96,9 +103,10 @@ if __name__ == '__main__':
     # Class column name
     settings.class_column = 'classificacao'
 
-    dataset_reports = True
+    dataset_reports = False
     execute_pre_processing = False
     execute_classifiers = False
+    execute_classifiers_pipeline = True
 
     ################################################## CSV TREATMENTS ##################################################
 
@@ -333,6 +341,169 @@ if __name__ == '__main__':
         # # Move the target column to the last position in dataframe
         # precoce_ms_data_frame = utils.move_cloumns_last_positions(
         #     data_frame=precoce_ms_data_frame, columns_names=[settings.class_column])
+
+    ################################################## PIPELINE FOR CLASSIFICATION #####################################
+
+    if execute_classifiers_pipeline:
+
+        # Delete duplicated rows by attribute
+        precoce_ms_data_frame = pre_processing.delete_duplicate_rows_by_attribute(
+            data_frame=precoce_ms_data_frame, attribute_name='ID_ANIMAL')
+
+        # Delete column by names
+        precoce_ms_data_frame = utils.delete_columns(
+            data_frame=precoce_ms_data_frame, delete_columns_names=['ID_ANIMAL'])
+
+        # Delete NaN rows
+        precoce_ms_data_frame = pre_processing.delete_nan_rows(
+            data_frame=precoce_ms_data_frame)
+
+        # Convert pandas dtypes to numpy dtypes, some operations doesn't work with pandas dtype, for exemple, the XGBoost models
+        precoce_ms_data_frame = utils.convert_pandas_dtype_to_numpy_dtype(
+            data_frame=precoce_ms_data_frame, pandas_dtypes=[pd.UInt8Dtype()])
+
+        # TODO: Maybe implement remove outliers. To detect outliers, use pre_processing.detect_outliers
+
+        # Identify columns that contain a single value, and delete them
+        precoce_ms_data_frame = pre_processing.delete_columns_with_single_value(
+            data_frame=precoce_ms_data_frame
+        )
+
+        # Apply label encoder to the columns
+        precoce_ms_data_frame, settings.columns_label_encoded = pre_processing.label_encoder_columns(
+            data_frame=precoce_ms_data_frame, columns_label_encoded=settings.columns_label_encoded,
+            columns_names=settings.label_encoder_columns_names
+        )
+
+        # Move the target column to the last position in dataframe
+        precoce_ms_data_frame = utils.move_cloumns_last_positions(
+            data_frame=precoce_ms_data_frame, columns_names=[settings.class_column])
+
+        # Create x, the features, and y, the target
+        x, y = utils.create_x_y_dataframe_data(
+            data_frame=precoce_ms_data_frame
+        )
+
+        from sklearn.model_selection import train_test_split
+
+        # Split the data into test and train
+        x_train, x_test, y_train, y_test = train_test_split(
+            x, y, test_size=0.2, random_state=settings.random_seed
+        )
+
+        print(x_train.shape)
+        print(x_test.shape)
+
+        from sklearn.pipeline import Pipeline
+        from sklearn.compose import ColumnTransformer
+        from sklearn.model_selection import GridSearchCV
+        from clf_switcher import ClfSwitcher
+
+        # Create the fransformers for ColumnTransformer
+        transformers = [
+            pre_processing.create_ordinal_encoder_transformer(
+                ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
+                data_frame_columns=precoce_ms_data_frame.columns,
+            ),
+            pre_processing.create_ordinal_encoder_transformer(
+                ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
+                data_frame_columns=precoce_ms_data_frame.columns,
+                handle_unknown='use_encoded_value',
+                unknown_value=-1,
+                with_categories=False
+            ),
+            pre_processing.create_one_hot_encoder_transformer(
+                columns=settings.one_hot_encoder_columns_names,
+                data_frame_columns=precoce_ms_data_frame.columns
+            ),
+            pre_processing.create_min_max_scaler_transformer(
+                columns=settings.min_max_scaler_columns_names,
+                data_frame_columns=precoce_ms_data_frame.columns
+            )
+        ]
+
+        # Create the ColumnTransformer, for preprocessing the data in pipeline
+        preprocessor = ColumnTransformer(
+            transformers=transformers,
+            verbose_feature_names_out=False,
+            remainder='passthrough',
+            n_jobs=settings.n_jobs
+        )
+
+        # Save the representation of the ColumnTransformer
+        # utils.save_estimator_repr(
+        #     estimator=preprocessor,
+        #     file_name='column_transformer',
+        #     path_save_file=settings.path_save_estimators_repr
+        # )
+
+        # Test for the ColumnTransformer
+        # preprocessor.fit(x_train)
+        # print(preprocessor.get_feature_names_out())
+        # print(preprocessor.transform(x_train))
+
+        # Create the pipeline
+        pipe = Pipeline(
+            steps=[
+                ('preprocessor', preprocessor),
+                # ('knn_classifier', KNeighborsClassifier())
+                ('classifier', ClfSwitcher())
+            ]
+        )
+
+        param_grid = {
+            'classifier__estimator': [KNeighborsClassifier()],
+            'classifier__estimator__n_neighbors': list(np.arange(3, 20, 2)),
+            'classifier__estimator__metric': ['euclidean'],
+            'classifier__estimator__weights': ['uniform', 'distance']
+        }  # Test here with old configuration
+
+        grid_search = GridSearchCV(
+            estimator=pipe, param_grid=param_grid, cv=3, n_jobs=settings.n_jobs, verbose=4
+        )
+
+        # Save the representation of the GridSearchCV
+        # utils.save_estimator_repr(
+        #     estimator=grid_search,
+        #     file_name='grid_search',
+        #     path_save_file=settings.path_save_estimators_repr
+        # )
+
+        grid_search.fit(x_train, y_train)
+        print('Training set score: ' + str(grid_search.score(x_train, y_train)))
+        print('Test set score: ' + str(grid_search.score(x_test, y_test)))
+
+        # Access the best set of parameters
+        best_params = grid_search.best_params_
+        print('Best params: {}'.format(best_params))
+
+        # The internal cross-validation score obtained by those parameters
+        print('Internal CV score: {:.3f}'.format(grid_search.best_score_))
+
+        cv_results = pd.DataFrame(grid_search.cv_results_)
+        cv_results = cv_results.sort_values("mean_test_score", ascending=False)
+        # cv_results[
+        #     [
+        #         "mean_test_score",
+        #         "std_test_score",
+        #         "param_preprocessor__num__imputer__strategy",
+        #         "param_classifier__C",
+        #     ]
+        # ].head(5)
+        print(cv_results.head())
+
+        # Stores the optimum model in best_pipe
+        best_pipe = grid_search.best_estimator_
+        # print('Best pipe: {}'.format(best_pipe))
+
+        # Save the representation of the best pipe in grid search
+        # utils.save_estimator_repr(
+        #     estimator=best_pipe,
+        #     file_name='best_pipe',
+        #     path_save_file=settings.path_save_estimators_repr
+        # )
+
+        # classification report : https://scikit-learn.org/stable/auto_examples/feature_selection/plot_feature_selection_pipeline.html#sphx-glr-auto-examples-feature-selection-plot-feature-selection-pipeline-py
 
     ################################################## PRE PROCESSING ##################################################
 
