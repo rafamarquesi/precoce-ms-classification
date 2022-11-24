@@ -1,6 +1,9 @@
+import os
+
 import utils
 
 import pandas as pd
+import torch
 
 # Some settings are configured by default. If you want to change any settings,
 # just follow the instruction for the specific setting.
@@ -200,3 +203,35 @@ classifiers = dict()
 
 # Dictionary containing the execution results of the models
 models_results = dict()
+
+############################################ TABNET CLF TUNER SETTINGS ############################################
+
+# 'cpu' for cpu training, 'gpu' for gpu training, 'auto' to automatically detect gpu
+device_name = 'auto'
+
+# Flag to use embeddings in the tabnet model
+use_embeddings = True
+
+# List of categorical features indices
+cat_idxs = list()
+
+# List of categorical features number of modalities (number of unique values for a categorical feature) /!\ no new modalities can be predicted
+cat_dims = list()
+
+# Flag to use cat_emb_dim to define the embedding size for each categorical feature
+use_cat_emb_dim = False
+
+# List of embeddings size for each categorical features. (default =1)
+cat_emb_dim = 1
+
+# Threshold of the minimum of categorical features to use embeddings
+threshold_categorical_features = 100
+
+# Number of workers for the dataloader
+num_workers = os.cpu_count() if torch.cuda.is_available() else 0
+
+# List of evaluation metrics. The last metric is used for early stopping.
+eval_metric = ['auc', 'accuracy', 'balanced_accuracy']
+
+# Apply custom data augmentation pipeline during training, the default is None
+augmentations = None
