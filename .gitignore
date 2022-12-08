@@ -8,7 +8,4 @@ staticfiles
 /.vscode
 tests.py
 tests.ipynb
-/plots
-/logs
-/estimators_repr
 /objects_persisted_results_runs
