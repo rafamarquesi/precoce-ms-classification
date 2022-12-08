@@ -151,10 +151,13 @@ delete_columns_names_on_load_data = None
 ############################################ PATH SETTINGS ############################################
 
 # Path to save plots
-path_save_plots = './plots'
+PATH_SAVE_PLOTS = './plots'
 
 # Path to save composite estimators
-path_save_estimators_repr = './estimators_repr'
+PATH_SAVE_ESTIMATORS_REPR = './estimators_repr'
+
+# Path to save the best estimators
+PATH_SAVE_BEST_ESTIMATORS = './best_estimators'
 
 ############################################ ENCODERS SETTINGS ############################################
 

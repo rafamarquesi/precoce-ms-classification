@@ -1,6 +1,7 @@
 import os
 import shutil
 import time
+from joblib import dump
 
 from functools import wraps
 from typing import Callable
@@ -289,6 +290,24 @@ def confirm() -> bool:
     while answer not in ['y', 'n']:
         answer = input('Do you want to continue? (y/n): ').lower()
     return answer == 'y'
+
+
+def save_best_estimator(estimator: object, file_name: str, path_save_file: str = None) -> None:
+    """Save the best estimator.
+
+    Args:
+        estimator (object): Estimator to be saved.
+        file_name (str): File name to be saved.
+        path_save_file (str, optional): Path to save the file. Defaults to None.
+    """
+    path_save_file = define_path_save_file(path_save_file=path_save_file)
+    file = '{}{}-{}.pkl'.format(
+        path_save_file,
+        file_name,
+        get_current_datetime()
+    )
+    dump(estimator, file)
+    print('Best estimator saved in file: {}'.format(file))
 
 #################### DECORATORS ####################
 
