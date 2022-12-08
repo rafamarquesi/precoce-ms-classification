@@ -1,3 +1,5 @@
+import os
+import shutil
 import time
 
 from functools import wraps
@@ -250,6 +252,43 @@ def define_path_save_file(path_save_file: str) -> str:
     else:
         path_save_file = path_save_file + '/'
     return path_save_file
+
+
+def remove_all_files_in_directory(path_directory: str, not_remove: list = ['.gitkeep']) -> None:
+    """Remove all files in a directory.
+
+    Args:
+        path_directory (str): Path of the directory.
+        not_remove (list, optional): List of files not to be removed. Defaults to ['.gitkeep'].
+    """
+    print('Removing all files in directory: {}'.format(path_directory))
+    if confirm():
+        for filename in os.listdir(path_directory):
+            if filename in not_remove:
+                continue
+            file_path = os.path.join(path_directory, filename)
+            try:
+                if os.path.isfile(file_path) or os.path.islink(file_path):
+                    os.remove(file_path)
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
+            except Exception as e:
+                print('Failed to delete {}. Reason: {}'.format(file_path, e))
+        print('All files in directory {} were removed.'.format(path_directory))
+    else:
+        print('Operation canceled.')
+
+
+def confirm() -> bool:
+    """Ask user to enter Y or N (case-insensitive).
+
+    Returns:
+        bool: True or False.
+    """
+    answer = ''
+    while answer not in ['y', 'n']:
+        answer = input('Do you want to continue? (y/n): ').lower()
+    return answer == 'y'
 
 #################### DECORATORS ####################
 
