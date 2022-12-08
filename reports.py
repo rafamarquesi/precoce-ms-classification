@@ -986,6 +986,20 @@ def simulate_recursive_feature_elimination_with_cv(data_frame: pd.DataFrame, est
     print('*****FIM SIMULATE RECURSIVE FEATURE ELIMINATION CV******\n')
 
 
+def show_settings(settings: object) -> None:
+    """Show the settings of the project.
+
+    Args:
+        settings (object): Settings of the project.
+    """
+
+    print('*****INICIO SHOW SETTINGS******')
+    for key, value in settings.__dict__.items():
+        if not (key[:2] == '__' and key[-2:] == '__'):
+            print('{} = {}'.format(key, value))
+    print('*****FIM SHOW SETTINGS******\n')
+
+
 ################################################## PRIVATE METHODS ##################################################
 
 
