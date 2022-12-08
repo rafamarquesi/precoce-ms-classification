@@ -15,7 +15,7 @@ pd.set_option('display.max_rows', utils.PANDAS_MAX_ROWS)
 random_seed = 42
 
 # Set number of jobs to run in parallel
-n_jobs = -1
+n_jobs = 1
 
 ############################################ CSV SETTINGS ############################################
 
@@ -235,3 +235,26 @@ eval_metric = ['auc', 'accuracy', 'balanced_accuracy']
 
 # Apply custom data augmentation pipeline during training, the default is None
 augmentations = None
+
+############################################  PERSISTENCE OBJECTS DURING RUN OF PIPELINE ############################################
+
+# Flag to save the results of each split in the pipeline execution, to be used in a possible new execution, in case the execution is interrupted
+save_results_during_run = True
+
+# Whether True, the objects saved in the path_objects_persisted_results_will be cleaned before the execution of the pipeline
+new_run = False
+
+# Path to objects persisted with the results of executions of the pipeline
+PATH_OBJECTS_PERSISTED_RESULTS_RUNS = './objects_persisted_results_runs'
+
+# File name to save the parameters executed in the pipeline execution
+PARAMETERS_PERSIST_FILENAME = utils.define_path_save_file(
+    path_save_file=PATH_OBJECTS_PERSISTED_RESULTS_RUNS) + 'parameters_persist'
+
+# File name to save all the results of each split of all estimator in the pipeline execution
+RESULTS_PERSIST_FILENAME = utils.define_path_save_file(
+    path_save_file=PATH_OBJECTS_PERSISTED_RESULTS_RUNS) + 'results_persist'
+
+# File name to save the results of each split of estimator in the pipeline execution
+SPLIT_PERSIST_FILENAME = utils.define_path_save_file(
+    path_save_file=PATH_OBJECTS_PERSISTED_RESULTS_RUNS) + 'split_persist'
