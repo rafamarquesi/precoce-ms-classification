@@ -17,6 +17,9 @@ random_seed = 42
 # Set number of jobs to run in parallel
 n_jobs = 1
 
+# Size of test in train and test split
+split_test_size = 0.2
+
 ############################################ CSV SETTINGS ############################################
 
 # Folder path where the CSV file is located, i.e. '/Users/username/Desktop/'
@@ -209,7 +212,7 @@ models_results = dict()
 # 'cpu' for cpu training, 'gpu' for gpu training, 'auto' to automatically detect gpu
 device_name = 'auto'
 
-# Flag to use embeddings in the tabnet model
+# Flag to use embeddings in the tabnet model, default True
 use_embeddings = True
 
 # List of categorical features indices
@@ -218,10 +221,10 @@ cat_idxs = list()
 # List of categorical features number of modalities (number of unique values for a categorical feature) /!\ no new modalities can be predicted
 cat_dims = list()
 
-# Flag to use cat_emb_dim to define the embedding size for each categorical feature
+# Flag to use cat_emb_dim to define the embedding size for each categorical feature, with False the embedding size is 1
 use_cat_emb_dim = False
 
-# List of embeddings size for each categorical features. (default =1)
+# Embeddings size for each categorical features. (default =1)
 cat_emb_dim = 1
 
 # Threshold of the minimum of categorical features to use embeddings

@@ -1,14 +1,13 @@
 # import sys
 
-import csv_treatments
-import pre_processing
-import reports
-import pattern_extraction
-import utils
-import settings
-
 import numpy as np
 import pandas as pd
+
+from sklearn.model_selection import GridSearchCV, StratifiedKFold
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.metrics import classification_report, precision_score, recall_score, roc_auc_score
 
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
@@ -17,11 +16,29 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 
-# TODO: Treat imbalanced classes (Book Albon - Chapter 5.5) (https://github.com/alod83/data-science/blob/master/Preprocessing/Balancing/Balancing.ipynb) (https://machinelearningmastery.com/imbalanced-classification-with-the-adult-income-dataset/) (https://machinelearningmastery.com/imbalanced-classification-of-good-and-bad-credit/)
+from xgboost import XGBClassifier
+
+import torch
+from pytorch_tabnet.augmentations import ClassificationSMOTE
+
+from clf_switcher import ClfSwitcher
+from pytorch_tabnet_tuner.tabnet_clf_tuner import TabNetClfTuner
+from sklearn_tuner.model_selection_tuner import GridSearchCVTuner
+
+import csv_treatments
+import pre_processing
+import reports
+import pattern_extraction
+import utils
+import settings
+
+# TODO: Treat imbalanced classes (Book Albon - Chapter 5.5) (https://github.com/alod83/data-science/blob/master/Preprocessing/Balancing/Balancing.ipynb) (https://machinelearningmastery.com/imbalanced-classification-with-the-adult-income-dataset/) (https://machinelearningmastery.com/imbalanced-classification-of-good-and-bad-credit/) (https://machinelearningmastery.com/cross-validation-for-imbalanced-classification/)
 
 # TODO: Use the cross_validate function, for evaluation of multiple metrics (https://scikit-learn.org/stable/modules/cross_validation.html#multimetric-cross-validation)
 
-# TODO: IDEA: Save results for each function, in reports in a file
+# TODO: IDEA: Save results for each function, in reports in a file (https://stackoverflow.com/questions/11325019/how-to-output-to-the-console-and-file/11325249#11325249)
+
+# TODO: IDEA: Places to run the code: https://www.linkedin.com/posts/ashishpatel2604_data-datascience-machinelearning-activity-6997071480664559616-doXm?utm_source=share&utm_medium=member_desktop
 
 if __name__ == '__main__':
 
@@ -35,20 +52,21 @@ if __name__ == '__main__':
     # just follow the instruction for the specific setting.
 
     # Number of jobs to run in parallel
-    settings.n_jobs = 1
+    # settings.n_jobs = 1
 
     # Folder path where the CSV file is located
     settings.dataset_folder_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/'
 
     # Path to the dataset
     settings.csv_path = csv_treatments.choose_csv_path(
-        sampling='0.2', folder_path=settings.dataset_folder_path)
+        sampling='2', folder_path=settings.dataset_folder_path)
 
     # Number of lines to be read from the dataset, where None read all lines
-    settings.number_csv_lines = 1000
+    # settings.number_csv_lines = 1000
 
     # List with columns to delete when loading dataset
     settings.delete_columns_names_on_load_data = [
+        'DataAbate',
         'Frigorifico_ID', 'Frigorifico_CNPJ', 'Frigorifico_RazaoSocial', 'Municipio_Frigorifico',
         'EstabelecimentoIdentificador', 'Data_homol', 'Questionario_ID',
         'area so confinamento', 'Lista Trace', 'Motivo', 'data_homol_select', 'dif_datas',
@@ -61,11 +79,11 @@ if __name__ == '__main__':
     ]
 
     # Dict update for ordinal encoding
-    settings.ordinal_encoder_columns_names.update(
-        {
-            'DataAbate': None
-        }
-    )
+    # settings.ordinal_encoder_columns_names.update(
+    #     {
+    #         'DataAbate': None
+    #     }
+    # )
 
     # List with column names to apply the label encoder
     settings.label_encoder_columns_names = [
@@ -146,6 +164,8 @@ if __name__ == '__main__':
 
         precoce_ms_data_frame = utils.delete_columns(
             data_frame=precoce_ms_data_frame, delete_columns_names=['ID_ANIMAL'])
+
+        # TODO: Implement the function show missing values using missingno library (https://towardsdatascience.com/tabnet-deep-neural-network-for-structured-tabular-data-39eb4b27a9e4)
 
         # Delete NaN rows
         precoce_ms_data_frame = pre_processing.delete_nan_rows(
@@ -346,6 +366,26 @@ if __name__ == '__main__':
 
     if execute_classifiers_pipeline:
 
+        # Flag to save the results of each split in the pipeline execution, to be used in a possible new execution, in case the execution is interrupted
+        # settings.save_results_during_run = False
+
+        # Whether True, the objects saved in the path_objects_persisted_results_will be cleaned before the execution of the pipeline
+        # settings.new_run = True
+
+        ##### Tab Net Settings #####
+        # Flag to use embeddings in the tabnet model
+        settings.use_embeddings = True
+        # Threshold of the minimum of categorical features to use embeddings
+        settings.threshold_categorical_features = 150
+        # Use cat_emb_dim to set the embedding size for each categorical feature, for TabNet classifier
+        # Flag to use cat_emb_dim to define the embedding size for each categorical feature, with False the embedding size is 1
+        settings.use_cat_emb_dim = True
+        # 'cpu' for cpu training, 'gpu' for gpu training, 'auto' to automatically detect gpu
+        settings.device_name = 'cpu'
+        # Apply custom data augmentation pipeline during training
+        settings.augmentations = ClassificationSMOTE(
+            p=0.2, device_name=settings.device_name)  # aug, None
+
         # Delete duplicated rows by attribute
         precoce_ms_data_frame = pre_processing.delete_duplicate_rows_by_attribute(
             data_frame=precoce_ms_data_frame, attribute_name='ID_ANIMAL')
@@ -384,20 +424,15 @@ if __name__ == '__main__':
             data_frame=precoce_ms_data_frame
         )
 
-        from sklearn.model_selection import train_test_split
-
         # Split the data into test and train
         x_train, x_test, y_train, y_test = train_test_split(
-            x, y, test_size=0.2, random_state=settings.random_seed
+            x, y, test_size=settings.split_test_size, random_state=settings.random_seed, stratify=y
         )
 
-        print(x_train.shape)
-        print(x_test.shape)
-
-        from sklearn.pipeline import Pipeline
-        from sklearn.compose import ColumnTransformer
-        from sklearn.model_selection import GridSearchCV
-        from clf_switcher import ClfSwitcher
+        print('x_train shape: {}'.format(x_train.shape))
+        print('x_test shape: {}'.format(x_test.shape))
+        print('y_train shape: {}'.format(y_train.shape))
+        print('y_test shape: {}'.format(y_test.shape))
 
         # Create the fransformers for ColumnTransformer
         transformers = [
@@ -405,13 +440,13 @@ if __name__ == '__main__':
                 ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
                 data_frame_columns=precoce_ms_data_frame.columns,
             ),
-            pre_processing.create_ordinal_encoder_transformer(
-                ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
-                data_frame_columns=precoce_ms_data_frame.columns,
-                handle_unknown='use_encoded_value',
-                unknown_value=-1,
-                with_categories=False
-            ),
+            # pre_processing.create_ordinal_encoder_transformer(
+            #     ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
+            #     data_frame_columns=precoce_ms_data_frame.columns,
+            #     handle_unknown='use_encoded_value',
+            #     unknown_value=-1,
+            #     with_categories=False
+            # ),
             pre_processing.create_one_hot_encoder_transformer(
                 columns=settings.one_hot_encoder_columns_names,
                 data_frame_columns=precoce_ms_data_frame.columns
@@ -446,21 +481,144 @@ if __name__ == '__main__':
         pipe = Pipeline(
             steps=[
                 ('preprocessor', preprocessor),
-                # ('knn_classifier', KNeighborsClassifier())
                 ('classifier', ClfSwitcher())
             ]
         )
 
-        param_grid = {
-            'classifier__estimator': [KNeighborsClassifier()],
-            'classifier__estimator__n_neighbors': list(np.arange(3, 20, 2)),
-            'classifier__estimator__metric': ['euclidean'],
-            'classifier__estimator__weights': ['uniform', 'distance']
-        }  # Test here with old configuration
+        # https://github.com/dreamquark-ai/tabnet/issues/288
+        # The link above show the suggest parameters to use in GridSearchCV, and book name's where the parameters are explained
+        param_grid = [
+            {
+                'classifier__estimator': [GaussianNB()]
+            },
+            {
+                'classifier__estimator': [KNeighborsClassifier()],
+                'classifier__estimator__metric': ['euclidean'],
+                # 'classifier__estimator__n_neighbors': list(np.arange(3, 20, 2)),
+                'classifier__estimator__weights': ['uniform', 'distance'],
+                # 'classifier__estimator__p': [1, 2, 3]
+            },
+            {
+                'classifier__estimator': [DecisionTreeClassifier()],
+                'classifier__estimator__random_state': [0],
+                'classifier__estimator__criterion': ['gini', 'entropy'],
+                # 'classifier__estimator__max_depth': list(np.arange(1, 11)) + [None],
+                # 'classifier__estimator__class_weight': ['balanced', None]
+            },
+            # {
+            #     'classifier__estimator': [SVC()],
+            #     'classifier__estimator__gamma': ['auto', 'scale'],
+            #     'classifier__estimator__kernel': ['linear', 'poly', 'rbf'],
+            #     'classifier__estimator__C': list(np.power(10, np.arange(-3, 4, dtype=np.float16))),
+            #     'classifier__estimator__max_iter': [100, 1000, 10000],
+            #     'classifier__estimator__class_weight': ['balanced', None]
+            # },
+            # {
+            #     'classifier__estimator': [MLPClassifier()],
+            #     'classifier__estimator__max_iter': [1000],
+            #     'classifier__estimator__solver': ['adam', 'sgd'],
+            #     'classifier__estimator__momentum': np.arange(0, 1, 0.2),
+            #     'classifier__estimator__learning_rate': ['constant', 'adaptive'],
+            #     'classifier__estimator__alpha': [0.0001, 0.05],
+            #     'classifier__estimator__learning_rate_init': [0.0001, 0.001],
+            #     'classifier__estimator__activation': ['logistic', 'relu'],
+            #     'classifier__estimator__hidden_layer_sizes': [(50, 100, 50), (100,), (200, 100)],
+            # },
+            # {
+            #     'classifier__estimator': [RandomForestClassifier()],
+            #     'classifier__estimator__random_state': [settings.random_seed],
+            #     'classifier__estimator__n_estimators': [120, 300, 500, 800, 1200],
+            #     'classifier__estimator__criterion': ['gini', 'entropy'],
+            #     'classifier__estimator__max_depth': [5, 8, 15, 25, 30, None],
+            #     'classifier__estimator__min_samples_split': [1, 2, 5, 10, 15, 100],
+            #     'classifier__estimator__min_samples_leaf': [1, 2, 5, 10],
+            #     'classifier__estimator__max_features': ['log2', 'sqrt', None],
+            #     'classifier__estimator__class_weight': ['balanced', None]
+            # },
+            {
+                # https://xgboost.readthedocs.io/en/stable/tutorials/param_tuning.html#control-overfitting
+                # https://www.kaggle.com/code/prashant111/a-guide-on-xgboost-hyperparameters-tuning/notebook
+                # https://www.analyticsvidhya.com/blog/2016/03/complete-guide-parameter-tuning-xgboost-with-codes-python/
+                'classifier__estimator': [XGBClassifier()],
+                'classifier__estimator__tree_method': ['hist'],
+                'classifier__estimator__max_delta_step': [1.0],
+                # 'classifier__estimator__learning_rate': [0.001] + list(np.arange(0.01, 0.03, 0.01)) + list(np.arange(0.1, 0.3, 0.1)),
+                # 'classifier__estimator__gamma': list(np.arange(0.05, 0.11, 0.01)) + [0.3, 0.5, 0.7, 0.9, 1.0],
+                # 'classifier__estimator__max_depth': [3, 5, 7, 9, 12, 15, 17, 25],
+                # 'classifier__estimator__min_child_weight': [1, 3, 5, 7],
+                # 'classifier__estimator__subsample': [0.6, 0.7, 0.8, 0.9, 1.0],
+                # 'classifier__estimator__colsample_bytree': [0.6, 0.7, 0.8, 0.9, 1.0],
+                # 'classifier__estimator__reg_lambda': list(np.arange(0.01, 0.11, 0.01)) + [1.0],
+                # 'classifier__estimator__reg_alpha': [0, 0.1, 0.5, 1.0]
+            },
+            {
+                # https://www.kaggle.com/code/optimo/tabnetbaseline/notebook
+                # Using TabNetClassifier: https://github.com/dreamquark-ai/tabnet/issues/238
+                # https://github.com/dreamquark-ai/tabnet/blob/develop/census_example.ipynb
+                'classifier__estimator': [TabNetClfTuner(device_name=settings.device_name)],
+                # 'classifier__estimator__cat_idxs': settings.cat_idxs,
+                # 'classifier__estimator__cat_dims': settings.cat_dims,
+                'classifier__estimator__seed': [settings.random_seed],
+                'classifier__estimator__clip_value': [1],
+                'classifier__estimator__verbose': [1],
+                'classifier__estimator__optimizer_fn': [torch.optim.Adam],
+                'classifier__estimator__optimizer_params': [dict(lr=2e-2)],
+                # 'classifier__estimator__optimizer_params': [
+                #     {'lr': 0.02},
+                #     {'lr': 0.01},
+                #     {'lr': 0.001}
+                # ],
+                'classifier__estimator__scheduler_fn': [torch.optim.lr_scheduler.StepLR],
+                'classifier__estimator__scheduler_params': [{
+                    'step_size': 10,  # how to use learning rate scheduler
+                    'gamma': 0.95
+                }],
+                'classifier__estimator__mask_type': ['entmax'],
+                # 'classifier__estimator__n_a': [3, 5, 8, 13, 21],
+                # 'classifier__estimator__n_steps': [3, 5, 8, 10],
+                # 'classifier__estimator__gamma': [0.5, 1.3, 3],
+                # 'classifier__estimator__cat_emb_dim': [10, 20],
+                # 'classifier__estimator__n_independent': [1, 2, 5],
+                # 'classifier__estimator__n_shared': [0, 1, 2],
+                # 'classifier__estimator__momentum': [0.1, 0.05, 0.02, 0.005],
+                # 'classifier__estimator__lambda_sparse': [0.1, 0.01, 0.001]
+            }
+        ]
 
-        grid_search = GridSearchCV(
-            estimator=pipe, param_grid=param_grid, cv=3, n_jobs=settings.n_jobs, verbose=4
+        cv = StratifiedKFold(
+            n_splits=3,
+            shuffle=False
         )
+
+        # TODO: Another way to search for the best parameters https://www.kaggle.com/code/prashant111/a-guide-on-xgboost-hyperparameters-tuning/notebook
+
+        # TODO: Indication of the advisor on how to load and save the parameters already executed in the grid search https://github.com/ragero/text_categorization_tool_python/blob/master/utilities/generate_parameters_list.py
+        # TODO: Test this score: http://scikit-learn.org/stable/modules/generated/sklearn.metrics.balanced_accuracy_score.html
+        if settings.save_results_during_run:
+
+            if settings.new_run:
+                utils.remove_all_files_in_directory(
+                    path_directory=settings.PATH_OBJECTS_PERSISTED_RESULTS_RUNS)
+
+            grid_search = GridSearchCVTuner(
+                estimator=pipe,
+                param_grid=param_grid,
+                cv=cv,
+                scoring='accuracy',
+                n_jobs=settings.n_jobs,
+                verbose=20
+                # error_score='raise'
+            )
+        else:
+            grid_search = GridSearchCV(
+                estimator=pipe,
+                param_grid=param_grid,
+                cv=cv,
+                scoring='accuracy',
+                n_jobs=settings.n_jobs,
+                verbose=20
+                # error_score='raise'
+            )
 
         # Save the representation of the GridSearchCV
         # utils.save_estimator_repr(
@@ -470,8 +628,20 @@ if __name__ == '__main__':
         # )
 
         grid_search.fit(x_train, y_train)
+
+        # https://xgboost.readthedocs.io/en/stable/tutorials/param_tuning.html#control-overfitting
+        # When you observe high training accuracy, but low test accuracy, it is likely that you encountered overfitting problem.
+        print('!!!>> When you observe high training accuracy, but low test accuracy, it is likely that you encountered overfitting problem.')
         print('Training set score: ' + str(grid_search.score(x_train, y_train)))
         print('Test set score: ' + str(grid_search.score(x_test, y_test)))
+
+        # Predict the test set
+        y_pred = grid_search.predict(x_test)
+
+        # Test data performance
+        print("Test Precision:", precision_score(y_pred, y_test))
+        print("Test Recall:", recall_score(y_pred, y_test))
+        print("Test ROC AUC Score:", roc_auc_score(y_pred, y_test))
 
         # Access the best set of parameters
         best_params = grid_search.best_params_
@@ -482,15 +652,16 @@ if __name__ == '__main__':
 
         cv_results = pd.DataFrame(grid_search.cv_results_)
         cv_results = cv_results.sort_values("mean_test_score", ascending=False)
-        # cv_results[
+        # cv_results = cv_results[
         #     [
-        #         "mean_test_score",
-        #         "std_test_score",
-        #         "param_preprocessor__num__imputer__strategy",
-        #         "param_classifier__C",
+        #         'mean_fit_time', 'std_fit_time',
+        #         'mean_score_time', 'std_score_time',
+        #         'param_classifier__estimator',
+        #         'params',
+        #         'mean_test_score', 'std_test_score', 'rank_test_score'
         #     ]
-        # ].head(5)
-        print(cv_results.head())
+        # ]
+        print(cv_results)
 
         # Stores the optimum model in best_pipe
         best_pipe = grid_search.best_estimator_
@@ -504,6 +675,8 @@ if __name__ == '__main__':
         # )
 
         # classification report : https://scikit-learn.org/stable/auto_examples/feature_selection/plot_feature_selection_pipeline.html#sphx-glr-auto-examples-feature-selection-plot-feature-selection-pipeline-py
+        print(classification_report(y_test, y_pred))
+        #cv_results[cv_results['param_classifier__estimator'].values == cv_results['param_classifier__estimator'][0:1].values[0]]
 
     ################################################## PRE PROCESSING ##################################################
 
@@ -613,7 +786,6 @@ if __name__ == '__main__':
 
         reports.class_distribution(y)
 
-        # TODO: Implement XGBoost and TabNet
         # k-nearest neighbors
         # Algorithm parameter{‘auto’, ‘ball_tree’, ‘kd_tree’, ‘brute’}, default=’auto’ for now is in auto
         # ‘auto’ will attempt to decide the most appropriate algorithm based on the values passed to fit method.
@@ -636,64 +808,64 @@ if __name__ == '__main__':
         settings.classifiers[GaussianNB().__class__.__name__] = [
             GaussianNB(), param_dist]
 
-        # # Decision Trees (c4.5)
-        # # Algorithm parameter settings, look for more (see documentation):
-        # # min_impurity_decrease ??? The algorithm presents an error when a value greater than 0.0 is added
-        # # ccp_alpha ??? the algorithm has an error when increasing the value
-        # # max_depth -> use a great search to calibrate
-        # # class_weight
-        # # I identified, that for the default parameters, the maximum depth of the created tree is 9. For the current amount of data.
-        # # criterion{“gini”, “entropy”},
-        # param_dist = {
-        #     'criterion': ['gini', 'entropy'],
-        #     'max_depth': list(np.arange(1, 11)) + [None],
-        #     'random_state': [0],
-        #     'class_weight': ['balanced', None]
-        # }
-        # classifiers[DecisionTreeClassifier().__class__.__name__] = [
-        #     DecisionTreeClassifier(), param_dist]
+        # Decision Trees (c4.5)
+        # Algorithm parameter settings, look for more (see documentation):
+        # min_impurity_decrease ??? The algorithm presents an error when a value greater than 0.0 is added
+        # ccp_alpha ??? the algorithm has an error when increasing the value
+        # max_depth -> use a great search to calibrate
+        # class_weight
+        # I identified, that for the default parameters, the maximum depth of the created tree is 9. For the current amount of data.
+        # criterion{“gini”, “entropy”},
+        param_dist = {
+            'criterion': ['gini', 'entropy'],
+            'max_depth': list(np.arange(1, 11)) + [None],
+            'random_state': [0],
+            'class_weight': ['balanced', None]
+        }
+        settings.classifiers[DecisionTreeClassifier().__class__.__name__] = [
+            DecisionTreeClassifier(), param_dist]
 
-        # # Neural Network
-        # # param_dist = {'solver': ['sgd'], 'learning_rate' : ['constant'], 'momentum' : scipy.stats.expon(scale=.1),
-        # # 'alpha' : scipy.stats.expon(scale=.0001), 'activation' : ['logistic'],
-        # # 'learning_rate_init' : scipy.stats.expon(scale=.01), 'hidden_layer_sizes':(200,100), 'max_iter':[500]}
-        # # learning_rate_init -> change this parameter if the result is not good
-        # # max_iter -> can also help to improve the result
-        # # hidden_layer_sizes -> (layer_x_with_y_neurons, layer_x_with_y_neurons)
-        # param_dist = {
-        #     'solver': ['adam'],
-        #     'learning_rate': ['constant'],
-        #     'alpha': [0.001],
-        #     'activation': ['relu'],
-        #     'hidden_layer_sizes': (200, 100),
-        #     'max_iter': [1000]
-        # }
-        # classifiers[MLPClassifier().__class__.__name__] = [
-        #     MLPClassifier(), param_dist]
+        # Neural Network
+        # param_dist = {'solver': ['sgd'], 'learning_rate' : ['constant'], 'momentum' : scipy.stats.expon(scale=.1),
+        # 'alpha' : scipy.stats.expon(scale=.0001), 'activation' : ['logistic'],
+        # 'learning_rate_init' : scipy.stats.expon(scale=.01), 'hidden_layer_sizes':(200,100), 'max_iter':[500]}
+        # learning_rate_init -> change this parameter if the result is not good
+        # max_iter -> can also help to improve the result
+        # hidden_layer_sizes -> (layer_x_with_y_neurons, layer_x_with_y_neurons)
+        param_dist = {
+            'solver': ['adam'],
+            'learning_rate': ['constant'],
+            'alpha': [0.001],
+            'activation': ['relu'],
+            'hidden_layer_sizes': (200, 100),
+            'max_iter': [1000]
+        }
+        settings.classifiers[MLPClassifier().__class__.__name__] = [
+            MLPClassifier(), param_dist]
 
-        # # Vector Support Machine
-        # # kernel: ‘linear’, ‘poly’, ‘rbf’
-        # #     # C: 10^x (-2 a 2)
-        # #     # 'max_iter': [100, 1000]
-        # #     # gamma : auto
-        # param_dist = {
-        #     'kernel': ['linear', 'poly', 'rbf'],
-        #     'C': list(np.power(10, np.arange(-2, 2, dtype=np.float16))),
-        #     'max_iter': [10000],
-        #     'gamma': ['auto']
-        # }
-        # classifiers[SVC().__class__.__name__] = [SVC(), param_dist]
+        # Vector Support Machine
+        # kernel: ‘linear’, ‘poly’, ‘rbf’
+        #     # C: 10^x (-2 a 2)
+        #     # 'max_iter': [100, 1000]
+        #     # gamma : auto
+        param_dist = {
+            'kernel': ['linear', 'poly', 'rbf'],
+            'C': list(np.power(10, np.arange(-2, 2, dtype=np.float16))),
+            'max_iter': [10000],
+            'gamma': ['auto']
+        }
+        settings.classifiers[SVC().__class__.__name__] = [SVC(), param_dist]
 
-        # # Random forest classifier
-        # param_dist = {
-        #     'n_estimators': [10, 50, 100],
-        #     'criterion': ['gini', 'entropy'],
-        #     'max_depth': list(np.arange(1, 11)) + [None],
-        #     'random_state': [0],
-        #     'class_weight': ['balanced', None]
-        # }
-        # classifiers[RandomForestClassifier().__class__.__name__] = [
-        #     RandomForestClassifier(), param_dist]
+        # Random forest classifier
+        param_dist = {
+            'n_estimators': [10, 50, 100],
+            'criterion': ['gini', 'entropy'],
+            'max_depth': list(np.arange(1, 11)) + [None],
+            'random_state': [0],
+            'class_weight': ['balanced', None]
+        }
+        settings.classifiers[RandomForestClassifier().__class__.__name__] = [
+            RandomForestClassifier(), param_dist]
 
         # Running the classifiers
         settings.models_results = pattern_extraction.run_models(
