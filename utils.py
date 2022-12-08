@@ -302,7 +302,7 @@ def dump_object(object: object, file_name: str, extension: str = '.pkl', path_sa
         path_save_file (str, optional): Path to save the file. Defaults to None.
     """
     path_save_file = define_path_save_file(path_save_file=path_save_file)
-    file = '{}{}-{}{}}'.format(
+    file = '{}{}-{}{}'.format(
         path_save_file,
         file_name,
         get_current_datetime(),
