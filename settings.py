@@ -159,6 +159,9 @@ PATH_SAVE_ESTIMATORS_REPR = './estimators_repr'
 # Path to save the best estimators
 PATH_SAVE_BEST_ESTIMATORS = './best_estimators'
 
+# Path to save the results
+PATH_SAVE_RESULTS = './results'
+
 ############################################ ENCODERS SETTINGS ############################################
 
 # Dictionary with column names to apply the ordinal encoder
