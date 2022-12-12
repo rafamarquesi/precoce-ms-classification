@@ -162,6 +162,9 @@ PATH_SAVE_BEST_ESTIMATORS = './runs/best_estimators'
 # Path to save the results
 PATH_SAVE_RESULTS = './runs/results'
 
+# Path to save the logs
+PATH_SAVE_LOGS = './logs'
+
 ############################################ ENCODERS SETTINGS ############################################
 
 # Dictionary with column names to apply the ordinal encoder

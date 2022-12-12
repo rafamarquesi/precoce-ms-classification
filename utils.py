@@ -288,7 +288,8 @@ def confirm() -> bool:
     """
     answer = ''
     while answer not in ['y', 'n']:
-        answer = input('Do you want to continue? (y/n): ').lower()
+        print('Do you want to continue? (y/n): ')
+        answer = input().lower()
     return answer == 'y'
 
 
