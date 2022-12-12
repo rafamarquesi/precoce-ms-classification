@@ -1,4 +1,4 @@
-# import sys
+import sys
 
 import numpy as np
 import pandas as pd
@@ -7,7 +7,7 @@ from sklearn.model_selection import GridSearchCV, StratifiedKFold
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
-from sklearn.metrics import classification_report, precision_score, recall_score, roc_auc_score
+from sklearn.metrics import classification_report, precision_score, recall_score, roc_auc_score, accuracy_score, f1_score, balanced_accuracy_score
 
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
@@ -31,22 +31,30 @@ import reports
 import pattern_extraction
 import utils
 import settings
+from tee import Tee
 
 # TODO: Treat imbalanced classes (Book Albon - Chapter 5.5) (https://github.com/alod83/data-science/blob/master/Preprocessing/Balancing/Balancing.ipynb) (https://machinelearningmastery.com/imbalanced-classification-with-the-adult-income-dataset/) (https://machinelearningmastery.com/imbalanced-classification-of-good-and-bad-credit/) (https://machinelearningmastery.com/cross-validation-for-imbalanced-classification/)
 
 # TODO: Use the cross_validate function, for evaluation of multiple metrics (https://scikit-learn.org/stable/modules/cross_validation.html#multimetric-cross-validation)
 
-# TODO: IDEA: Save results for each function, in reports in a file (https://stackoverflow.com/questions/11325019/how-to-output-to-the-console-and-file/11325249#11325249)
-
 # TODO: IDEA: Places to run the code: https://www.linkedin.com/posts/ashishpatel2604_data-datascience-machinelearning-activity-6997071480664559616-doXm?utm_source=share&utm_medium=member_desktop
 
 if __name__ == '__main__':
 
-    # # Create a log file
-    # run_log_file = open(
-    #     'logs/run_log-{}.txt'.format(utils.get_current_datetime()), 'w'
-    # )
-    # sys.stdout = run_log_file
+    # Create a log file
+    tee_log_file = Tee(
+        sys.stdout,
+        open(
+            ''.join(
+                [
+                    utils.define_path_save_file(
+                        path_save_file=settings.PATH_SAVE_LOGS),
+                    'run_log-{}.log'.format(utils.get_current_datetime())
+                ]
+            ),
+            'w'
+        )
+    ).open()
 
     # Some settings are configured by default. If you want to change any settings,
     # just follow the instruction for the specific setting.
@@ -140,8 +148,8 @@ if __name__ == '__main__':
     #         data_frame=utils.random_sampling_data(
     #             data_frame=precoce_ms_data_frame, how_generate='percentage', frac=percentage
     #         ),
-    #         csv_path='/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1-{}-percentage-sampling.csv'.format(
-    #             percentage*100)
+    #         csv_path='/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados,
+    #         csv_name='TAB_MODELAGEM_RAFAEL_2020_1-{}-percentage-sampling'.format(percentage*100)
     #     )
 
     # Load the dataset
@@ -216,7 +224,7 @@ if __name__ == '__main__':
         #     data_frame=precoce_ms_data_frame,
         #     thresholds=np.arange(0.0, 0.10, 0.05),
         #     separate_numeric_columns=True,
-        #     path_save_fig=settings.path_save_plots,
+        #     path_save_fig=settings.PATH_SAVE_PLOTS,
         #     display_figure=True
         # )
 
@@ -263,24 +271,24 @@ if __name__ == '__main__':
         # Correlation matrix using pearson method, between all attributes
         reports.correlation_matrix(
             data_frame=precoce_ms_data_frame, method='pearson',
-            display_matrix=True, export_matrix=export_matrix, path_save_matrix=settings.path_save_plots,
+            display_matrix=True, export_matrix=export_matrix, path_save_matrix=settings.PATH_SAVE_PLOTS,
             print_corr_matrix_summarized=True)
 
         # Correlation matrix using pearson method, between all attributes and the class attribute
         reports.correlation_matrix(
             data_frame=precoce_ms_data_frame, method='pearson', attribute=settings.class_column,
-            display_matrix=True, export_matrix=export_matrix, path_save_matrix=settings.path_save_plots)
+            display_matrix=True, export_matrix=export_matrix, path_save_matrix=settings.PATH_SAVE_PLOTS)
 
         # Correlation matrix using spearman method, between all attributes
         reports.correlation_matrix(
             data_frame=precoce_ms_data_frame, method='spearman',
-            display_matrix=True, export_matrix=export_matrix, path_save_matrix=settings.path_save_plots,
+            display_matrix=True, export_matrix=export_matrix, path_save_matrix=settings.PATH_SAVE_PLOTS,
             print_corr_matrix_summarized=True)
 
         # Correlation matrix using spearman method, between all attributes and the class attribute
         reports.correlation_matrix(
             data_frame=precoce_ms_data_frame, method='spearman', attribute=settings.class_column,
-            display_matrix=True, export_matrix=export_matrix, path_save_matrix=settings.path_save_plots)
+            display_matrix=True, export_matrix=export_matrix, path_save_matrix=settings.PATH_SAVE_PLOTS)
 
         # Delete features by correlation
         precoce_ms_data_frame = pre_processing.drop_feature_by_correlation(
@@ -290,7 +298,7 @@ if __name__ == '__main__':
         # reports.feature_importance_using_coefficients_of_linear_models(
         #     data_frame=precoce_ms_data_frame,
         #     models=['logistic_regression', 'linear_svc', 'sgd_classifier'],
-        #     path_save_fig=settings.path_save_plots,
+        #     path_save_fig=settings.PATH_SAVE_PLOTS,
         #     display_figure=True,
         #     class_weight='balanced',
         #     n_jobs=settings.n_jobs
@@ -301,7 +309,7 @@ if __name__ == '__main__':
         #     data_frame=precoce_ms_data_frame,
         #     models=['decision_tree_classifier',
         #             'random_forest_classifier', 'xgb_classifier'],
-        #     path_save_fig=settings.path_save_plots,
+        #     path_save_fig=settings.PATH_SAVE_PLOTS,
         #     display_figure=True,
         #     class_weight='balanced',
         #     n_jobs=settings.n_jobs
@@ -314,7 +322,7 @@ if __name__ == '__main__':
         #     models=['knneighbors_classifier', 'gaussian_nb'],
         #     n_repeats=3,
         #     n_jobs=settings.n_jobs,
-        #     path_save_fig=settings.path_save_plots,
+        #     path_save_fig=settings.PATH_SAVE_PLOTS,
         #     display_figure=True
         # )
 
@@ -329,7 +337,7 @@ if __name__ == '__main__':
         #     cv=3,
         #     n_jobs=settings.n_jobs,
         #     save_fig=False,
-        #     path_save_fig=settings.path_save_plots
+        #     path_save_fig=settings.PATH_SAVE_PLOTS
         # )
 
         # Simulate recursive feature elimination wiht cross validation
@@ -339,7 +347,7 @@ if __name__ == '__main__':
             scoring='accuracy',
             n_jobs=settings.n_jobs,
             save_fig=False,
-            path_save_fig=settings.path_save_plots
+            path_save_fig=settings.PATH_SAVE_PLOTS
         )
 
         # # Apply inverse ordinal encoder to the columns
@@ -370,7 +378,7 @@ if __name__ == '__main__':
         # settings.save_results_during_run = False
 
         # Whether True, the objects saved in the path_objects_persisted_results_will be cleaned before the execution of the pipeline
-        # settings.new_run = True
+        settings.new_run = True
 
         ##### Tab Net Settings #####
         # Flag to use embeddings in the tabnet model
@@ -385,6 +393,9 @@ if __name__ == '__main__':
         # Apply custom data augmentation pipeline during training
         settings.augmentations = ClassificationSMOTE(
             p=0.2, device_name=settings.device_name)  # aug, None
+
+        # Show settings of the project
+        reports.show_settings(settings=settings)
 
         # Delete duplicated rows by attribute
         precoce_ms_data_frame = pre_processing.delete_duplicate_rows_by_attribute(
@@ -430,8 +441,8 @@ if __name__ == '__main__':
         )
 
         print('x_train shape: {}'.format(x_train.shape))
-        print('x_test shape: {}'.format(x_test.shape))
         print('y_train shape: {}'.format(y_train.shape))
+        print('x_test shape: {}'.format(x_test.shape))
         print('y_test shape: {}'.format(y_test.shape))
 
         # Create the fransformers for ColumnTransformer
@@ -466,11 +477,11 @@ if __name__ == '__main__':
         )
 
         # Save the representation of the ColumnTransformer
-        # utils.save_estimator_repr(
-        #     estimator=preprocessor,
-        #     file_name='column_transformer',
-        #     path_save_file=settings.path_save_estimators_repr
-        # )
+        utils.save_estimator_repr(
+            estimator=preprocessor,
+            file_name='column_transformer',
+            path_save_file=settings.PATH_SAVE_ESTIMATORS_REPR
+        )
 
         # Test for the ColumnTransformer
         # preprocessor.fit(x_train)
@@ -508,33 +519,33 @@ if __name__ == '__main__':
             # {
             #     'classifier__estimator': [SVC()],
             #     'classifier__estimator__gamma': ['auto', 'scale'],
-            #     'classifier__estimator__kernel': ['linear', 'poly', 'rbf'],
-            #     'classifier__estimator__C': list(np.power(10, np.arange(-3, 4, dtype=np.float16))),
-            #     'classifier__estimator__max_iter': [100, 1000, 10000],
-            #     'classifier__estimator__class_weight': ['balanced', None]
+            #     # 'classifier__estimator__kernel': ['linear', 'poly', 'rbf'],
+            #     # 'classifier__estimator__C': list(np.power(10, np.arange(-3, 4, dtype=np.float16))),
+            #     # 'classifier__estimator__max_iter': [100, 1000, 10000],
+            #     # 'classifier__estimator__class_weight': ['balanced', None]
             # },
             # {
             #     'classifier__estimator': [MLPClassifier()],
             #     'classifier__estimator__max_iter': [1000],
-            #     'classifier__estimator__solver': ['adam', 'sgd'],
-            #     'classifier__estimator__momentum': np.arange(0, 1, 0.2),
-            #     'classifier__estimator__learning_rate': ['constant', 'adaptive'],
-            #     'classifier__estimator__alpha': [0.0001, 0.05],
-            #     'classifier__estimator__learning_rate_init': [0.0001, 0.001],
-            #     'classifier__estimator__activation': ['logistic', 'relu'],
-            #     'classifier__estimator__hidden_layer_sizes': [(50, 100, 50), (100,), (200, 100)],
+            #     # 'classifier__estimator__solver': ['adam', 'sgd'],
+            #     # 'classifier__estimator__momentum': np.arange(0, 1, 0.2),
+            #     # 'classifier__estimator__learning_rate': ['constant', 'adaptive'],
+            #     # 'classifier__estimator__alpha': [0.0001, 0.05],
+            #     # 'classifier__estimator__learning_rate_init': [0.0001, 0.001],
+            #     # 'classifier__estimator__activation': ['logistic', 'relu'],
+            #     # 'classifier__estimator__hidden_layer_sizes': [(50, 100, 50), (100,), (200, 100)],
             # },
-            # {
-            #     'classifier__estimator': [RandomForestClassifier()],
-            #     'classifier__estimator__random_state': [settings.random_seed],
-            #     'classifier__estimator__n_estimators': [120, 300, 500, 800, 1200],
-            #     'classifier__estimator__criterion': ['gini', 'entropy'],
-            #     'classifier__estimator__max_depth': [5, 8, 15, 25, 30, None],
-            #     'classifier__estimator__min_samples_split': [1, 2, 5, 10, 15, 100],
-            #     'classifier__estimator__min_samples_leaf': [1, 2, 5, 10],
-            #     'classifier__estimator__max_features': ['log2', 'sqrt', None],
-            #     'classifier__estimator__class_weight': ['balanced', None]
-            # },
+            {
+                'classifier__estimator': [RandomForestClassifier()],
+                'classifier__estimator__random_state': [settings.random_seed],
+                # 'classifier__estimator__n_estimators': [120, 300, 500, 800, 1200],
+                # 'classifier__estimator__criterion': ['gini', 'entropy'],
+                # 'classifier__estimator__max_depth': [5, 8, 15, 25, 30, None],
+                # 'classifier__estimator__min_samples_split': [1, 2, 5, 10, 15, 100],
+                # 'classifier__estimator__min_samples_leaf': [1, 2, 5, 10],
+                # 'classifier__estimator__max_features': ['log2', 'sqrt', None],
+                # 'classifier__estimator__class_weight': ['balanced', None]
+            },
             {
                 # https://xgboost.readthedocs.io/en/stable/tutorials/param_tuning.html#control-overfitting
                 # https://www.kaggle.com/code/prashant111/a-guide-on-xgboost-hyperparameters-tuning/notebook
@@ -551,49 +562,54 @@ if __name__ == '__main__':
                 # 'classifier__estimator__reg_lambda': list(np.arange(0.01, 0.11, 0.01)) + [1.0],
                 # 'classifier__estimator__reg_alpha': [0, 0.1, 0.5, 1.0]
             },
-            {
-                # https://www.kaggle.com/code/optimo/tabnetbaseline/notebook
-                # Using TabNetClassifier: https://github.com/dreamquark-ai/tabnet/issues/238
-                # https://github.com/dreamquark-ai/tabnet/blob/develop/census_example.ipynb
-                'classifier__estimator': [TabNetClfTuner(device_name=settings.device_name)],
-                # 'classifier__estimator__cat_idxs': settings.cat_idxs,
-                # 'classifier__estimator__cat_dims': settings.cat_dims,
-                'classifier__estimator__seed': [settings.random_seed],
-                'classifier__estimator__clip_value': [1],
-                'classifier__estimator__verbose': [1],
-                'classifier__estimator__optimizer_fn': [torch.optim.Adam],
-                'classifier__estimator__optimizer_params': [dict(lr=2e-2)],
-                # 'classifier__estimator__optimizer_params': [
-                #     {'lr': 0.02},
-                #     {'lr': 0.01},
-                #     {'lr': 0.001}
-                # ],
-                'classifier__estimator__scheduler_fn': [torch.optim.lr_scheduler.StepLR],
-                'classifier__estimator__scheduler_params': [{
-                    'step_size': 10,  # how to use learning rate scheduler
-                    'gamma': 0.95
-                }],
-                'classifier__estimator__mask_type': ['entmax'],
-                # 'classifier__estimator__n_a': [3, 5, 8, 13, 21],
-                # 'classifier__estimator__n_steps': [3, 5, 8, 10],
-                # 'classifier__estimator__gamma': [0.5, 1.3, 3],
-                # 'classifier__estimator__cat_emb_dim': [10, 20],
-                # 'classifier__estimator__n_independent': [1, 2, 5],
-                # 'classifier__estimator__n_shared': [0, 1, 2],
-                # 'classifier__estimator__momentum': [0.1, 0.05, 0.02, 0.005],
-                # 'classifier__estimator__lambda_sparse': [0.1, 0.01, 0.001]
-            }
+            # {
+            #     # https://www.kaggle.com/code/optimo/tabnetbaseline/notebook
+            #     # Using TabNetClassifier: https://github.com/dreamquark-ai/tabnet/issues/238
+            #     # https://github.com/dreamquark-ai/tabnet/blob/develop/census_example.ipynb
+            #     'classifier__estimator': [TabNetClfTuner(device_name=settings.device_name)],
+            #     # 'classifier__estimator__cat_idxs': settings.cat_idxs,
+            #     # 'classifier__estimator__cat_dims': settings.cat_dims,
+            #     'classifier__estimator__seed': [settings.random_seed],
+            #     'classifier__estimator__clip_value': [1],
+            #     'classifier__estimator__verbose': [1],
+            #     'classifier__estimator__optimizer_fn': [torch.optim.Adam],
+            #     'classifier__estimator__optimizer_params': [dict(lr=2e-2)],
+            #     # 'classifier__estimator__optimizer_params': [
+            #     #     {'lr': 0.02},
+            #     #     {'lr': 0.01},
+            #     #     {'lr': 0.001}
+            #     # ],
+            #     'classifier__estimator__scheduler_fn': [torch.optim.lr_scheduler.StepLR],
+            #     'classifier__estimator__scheduler_params': [{
+            #         'step_size': 10,  # how to use learning rate scheduler
+            #         'gamma': 0.95
+            #     }],
+            #     'classifier__estimator__mask_type': ['entmax'],
+            #     # 'classifier__estimator__n_a': [3, 5, 8, 13, 21],
+            #     # 'classifier__estimator__n_steps': [3, 5, 8, 10],
+            #     # 'classifier__estimator__gamma': [0.5, 1.3, 3],
+            #     # 'classifier__estimator__cat_emb_dim': [10, 20],
+            #     # 'classifier__estimator__n_independent': [1, 2, 5],
+            #     # 'classifier__estimator__n_shared': [0, 1, 2],
+            #     # 'classifier__estimator__momentum': [0.1, 0.05, 0.02, 0.005],
+            #     # 'classifier__estimator__lambda_sparse': [0.1, 0.01, 0.001]
+            # }
         ]
 
+        # Cross validation for grid search
         cv = StratifiedKFold(
             n_splits=3,
             shuffle=False
+            # random_state=settings.random_seed
         )
 
         # TODO: Another way to search for the best parameters https://www.kaggle.com/code/prashant111/a-guide-on-xgboost-hyperparameters-tuning/notebook
 
         # TODO: Indication of the advisor on how to load and save the parameters already executed in the grid search https://github.com/ragero/text_categorization_tool_python/blob/master/utilities/generate_parameters_list.py
         # TODO: Test this score: http://scikit-learn.org/stable/modules/generated/sklearn.metrics.balanced_accuracy_score.html
+        # Custom refit strategy of a grid search with cross-validation (2 scores): https://scikit-learn.org/stable/auto_examples/model_selection/plot_grid_search_digits.html#sphx-glr-auto-examples-model-selection-plot-grid-search-digits-py
+        # score = 'accuracy'
+        score = 'balanced_accuracy'
         if settings.save_results_during_run:
 
             if settings.new_run:
@@ -604,9 +620,9 @@ if __name__ == '__main__':
                 estimator=pipe,
                 param_grid=param_grid,
                 cv=cv,
-                scoring='accuracy',
+                scoring=score,
                 n_jobs=settings.n_jobs,
-                verbose=20
+                verbose=10
                 # error_score='raise'
             )
         else:
@@ -614,69 +630,181 @@ if __name__ == '__main__':
                 estimator=pipe,
                 param_grid=param_grid,
                 cv=cv,
-                scoring='accuracy',
+                scoring=score,
                 n_jobs=settings.n_jobs,
-                verbose=20
+                verbose=10
                 # error_score='raise'
             )
 
         # Save the representation of the GridSearchCV
-        # utils.save_estimator_repr(
-        #     estimator=grid_search,
-        #     file_name='grid_search',
-        #     path_save_file=settings.path_save_estimators_repr
-        # )
+        utils.save_estimator_repr(
+            estimator=grid_search,
+            file_name='grid_search',
+            path_save_file=settings.PATH_SAVE_ESTIMATORS_REPR
+        )
 
         grid_search.fit(x_train, y_train)
 
+        print('--------------------- RESULTS ---------------------')
+
+        # Cross validation results in a DataFrame
+        cv_results = pd.DataFrame.from_dict(
+            grid_search.cv_results_, orient='columns')
+        cv_results = cv_results.sort_values('mean_test_score', ascending=False)
+        csv_treatments.generate_new_csv(
+            data_frame=cv_results,
+            csv_path=settings.PATH_SAVE_RESULTS,
+            csv_name='cv_results-{}'.format(utils.get_current_datetime())
+        )
+        print('Cross validation results: \n{}'.format(cv_results))
+
+        # Stores the optimum model in best_pipe
+        best_pipe = grid_search.best_estimator_
+
+        # Save best pipe
+        utils.dump_object(
+            object=best_pipe,
+            file_name='best_pipe',
+            path_save_file=settings.PATH_SAVE_BEST_ESTIMATORS
+        )
+
+        # Save the representation of the best pipe in grid search
+        utils.save_estimator_repr(
+            estimator=best_pipe,
+            file_name='best_pipe',
+            path_save_file=settings.PATH_SAVE_ESTIMATORS_REPR
+        )
+
+        # Store the best model in best_estimator
+        best_estimator = best_pipe.steps[-1][-1].estimator
+
+        # Save best estimator
+        utils.dump_object(
+            object=best_estimator,
+            file_name='best_estimator',
+            path_save_file=settings.PATH_SAVE_BEST_ESTIMATORS
+        )
+
+        # Save the representation of the best estimator in grid search
+        utils.save_estimator_repr(
+            estimator=best_estimator,
+            file_name='best_estimator',
+            path_save_file=settings.PATH_SAVE_ESTIMATORS_REPR
+        )
+
+        print('Best estimator: {}'.format(best_estimator))
+
+        # Dict with the grid search results
+        grid_search_results = dict()
+
+        print('Internal CV score obtained by the best set of parameters: {}'.format(
+            grid_search.best_score_))
+        # Save the best_score_ in grid_search_results
+        grid_search_results['best_score_'] = grid_search.best_score_
+
+        # Access the best set of parameters
+        print('Best params: {}'.format(grid_search.best_params_))
+        # Save the best_params_ in grid_search_results
+        grid_search_results['best_params_'] = [grid_search.best_params_]
+
+        # Scorer function used on the held out data to choose the best parameters for the model
+        print('Scorer function: {}'.format(grid_search.scorer_))
+        grid_search_results['scorer_'] = grid_search.scorer_
+
+        # The number of cross-validation splits (folds/iterations)
+        print('The number of CV splits: {}'.format(grid_search.n_splits_))
+        grid_search_results['n_splits_'] = grid_search.n_splits_
+
+        print('Seconds used for refitting the best model on the whole dataset: {}'.format(
+            grid_search.refit_time_))
+        grid_search_results['refit_time_'] = grid_search.refit_time_
+
+        print('Whether the scorers compute several metrics: {}'.format(
+            grid_search.multimetric_))
+        grid_search_results['multimetric_'] = grid_search.multimetric_
+
+        # Don't work!!!!
+        # print('The classes labels: {}'.format(grid_search.classes_))
+        # grid_search_results['classes_'] = grid_search.classes_
+
+        print('The number of features when fit is performed: {}'.format(
+            grid_search.n_features_in_))
+        grid_search_results['n_features_in_'] = grid_search.n_features_in_
+
+        print('Names of features seen during fit: {}'.format(
+            grid_search.feature_names_in_))
+        grid_search_results['feature_names_in_'] = [
+            grid_search.feature_names_in_]
+
         # https://xgboost.readthedocs.io/en/stable/tutorials/param_tuning.html#control-overfitting
-        # When you observe high training accuracy, but low test accuracy, it is likely that you encountered overfitting problem.
-        print('!!!>> When you observe high training accuracy, but low test accuracy, it is likely that you encountered overfitting problem.')
-        print('Training set score: ' + str(grid_search.score(x_train, y_train)))
-        print('Test set score: ' + str(grid_search.score(x_test, y_test)))
+        print('\n!!!>> When you observe high training accuracy, but low test accuracy, it is likely that you encountered overfitting problem.')
+
+        training_set_score = grid_search.score(x_train, y_train)
+        print('Training set score: {}'.format(training_set_score))
+        grid_search_results['training_set_score'] = training_set_score
+
+        test_set_score = grid_search.score(x_test, y_test)
+        print('Test set score: {}'.format(test_set_score))
+        grid_search_results['test_set_score'] = test_set_score
+
+        csv_treatments.generate_new_csv(
+            data_frame=pd.DataFrame.from_dict(
+                grid_search_results, orient='columns'),
+            csv_path=settings.PATH_SAVE_RESULTS,
+            csv_name='grid_search_results-{}'.format(
+                utils.get_current_datetime())
+        )
 
         # Predict the test set
         y_pred = grid_search.predict(x_test)
 
-        # Test data performance
-        print("Test Precision:", precision_score(y_pred, y_test))
-        print("Test Recall:", recall_score(y_pred, y_test))
-        print("Test ROC AUC Score:", roc_auc_score(y_pred, y_test))
+        print('--- Test data performance ---')
 
-        # Access the best set of parameters
-        best_params = grid_search.best_params_
-        print('Best params: {}'.format(best_params))
+        dict_results = dict()
 
-        # The internal cross-validation score obtained by those parameters
-        print('Internal CV score: {:.3f}'.format(grid_search.best_score_))
+        dict_results['Acurácia'] = accuracy_score(y_test, y_pred)
+        dict_results['Revocação'] = recall_score(y_test, y_pred)
+        dict_results['Micro Revocação'] = recall_score(
+            y_test, y_pred, average='micro')
+        dict_results['Macro Revocação'] = recall_score(
+            y_test, y_pred, average='macro')
+        dict_results['Precisão'] = precision_score(y_test, y_pred)
+        dict_results['Micro Precisão'] = precision_score(
+            y_test, y_pred, average='micro', labels=np.unique(y_pred))
+        dict_results['Macro Precisão'] = precision_score(
+            y_test, y_pred, average='macro', labels=np.unique(y_pred))
+        dict_results['Micro F1'] = f1_score(y_test, y_pred, average='micro')
+        dict_results['Macro F1'] = f1_score(y_test, y_pred, average='macro')
+        dict_results['Acurácia Balanceada'] = balanced_accuracy_score(
+            y_test, y_pred)
+        dict_results['ROC AUC Score'] = roc_auc_score(y_pred, y_test)
 
-        cv_results = pd.DataFrame(grid_search.cv_results_)
-        cv_results = cv_results.sort_values("mean_test_score", ascending=False)
-        # cv_results = cv_results[
-        #     [
-        #         'mean_fit_time', 'std_fit_time',
-        #         'mean_score_time', 'std_score_time',
-        #         'param_classifier__estimator',
-        #         'params',
-        #         'mean_test_score', 'std_test_score', 'rank_test_score'
-        #     ]
-        # ]
-        print(cv_results)
+        for key, value in dict_results.items():
+            print('Test {}: {}'.format(key, value))
 
-        # Stores the optimum model in best_pipe
-        best_pipe = grid_search.best_estimator_
-        # print('Best pipe: {}'.format(best_pipe))
-
-        # Save the representation of the best pipe in grid search
-        # utils.save_estimator_repr(
-        #     estimator=best_pipe,
-        #     file_name='best_pipe',
-        #     path_save_file=settings.path_save_estimators_repr
-        # )
+        csv_treatments.generate_new_csv(
+            data_frame=pd.DataFrame(
+                dict_results, index=[0]),
+            csv_path=settings.PATH_SAVE_RESULTS,
+            csv_name='performance_results-{}'.format(
+                utils.get_current_datetime())
+        )
 
         # classification report : https://scikit-learn.org/stable/auto_examples/feature_selection/plot_feature_selection_pipeline.html#sphx-glr-auto-examples-feature-selection-plot-feature-selection-pipeline-py
-        print(classification_report(y_test, y_pred))
-        #cv_results[cv_results['param_classifier__estimator'].values == cv_results['param_classifier__estimator'][0:1].values[0]]
+        classification_report_str = classification_report(y_test, y_pred)
+        print(classification_report_str)
+        csv_treatments.generate_new_csv(
+            data_frame=pd.DataFrame.from_records(
+                [
+                    {
+                        'classification_report_str': [classification_report_str],
+                        'classification_report_dict': [classification_report(y_test, y_pred, output_dict=True)]
+                    }
+                ]),
+            csv_path=settings.PATH_SAVE_RESULTS,
+            csv_name='classification_report-{}'.format(
+                utils.get_current_datetime())
+        )
 
     ################################################## PRE PROCESSING ##################################################
 
@@ -768,11 +896,14 @@ if __name__ == '__main__':
         ######################### NOT USED OR TESTED #########################
         reports.informations(precoce_ms_data_frame)
 
-        path_save_csv_after_pre_processing = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1_after_pre_processing-{}.csv'.format(
-            utils.get_current_datetime())
+        path_save_csv_after_pre_processing = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados'
 
         csv_treatments.generate_new_csv(
-            data_frame=precoce_ms_data_frame, csv_path=path_save_csv_after_pre_processing)
+            data_frame=precoce_ms_data_frame,
+            csv_path=path_save_csv_after_pre_processing,
+            csv_name='TAB_MODELAGEM_RAFAEL_2020_1_after_pre_processing-{}'.format(
+                utils.get_current_datetime()),
+        )
 
     ################################################## PATTERN EXTRACTION ##################################################
 
@@ -872,6 +1003,6 @@ if __name__ == '__main__':
             x=x, y=y, models=settings.classifiers, models_results=settings.models_results)
 
         reports.models_results(
-            models_results=settings.models_results, path_save_fig=settings.path_save_plots)
+            models_results=settings.models_results, path_save_fig=settings.PATH_SAVE_PLOTS)
 
-    # run_log_file.close()
+    tee_log_file.close()
