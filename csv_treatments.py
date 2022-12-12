@@ -52,18 +52,22 @@ def load_data(csv_path: str, sep: str = ';', encoding: str = 'latin1', decimal: 
 
 
 @utils.timeit
-def generate_new_csv(data_frame: pd.DataFrame, csv_path: str, sep: str = ';', encoding: str = 'latin1', index: bool = False, date_format: str = '%d%b%Y', decimal: str = ',') -> None:
+def generate_new_csv(data_frame: pd.DataFrame, csv_path: str, csv_name: str, sep: str = ';', encoding: str = 'latin1', index: bool = False, date_format: str = '%d%b%Y', decimal: str = ',') -> None:
     """Generate a new CSV file, given the DataFrame and the path, passed as parameters.
 
     Args:
         data_frame (pd.DataFrame): DataFrame to be treated.
         csv_path (str): Path where the CSV file will be generated.
+        csv_name (str): Name of the CSV file to be generated.
         sep (str, optional): Separator of the CSV file. Defaults to ';'.
         encoding (str, optional): Encoding of the CSV file. Defaults to 'latin1'.
         index (bool, optional): If True, the index will be included in the CSV file. Defaults to False.
         date_format (str, optional): Date format of the CSV file. Defaults to '%d%b%Y'.
         decimal (str, optional): Decimal separator of the CSV file. Defaults to ','.
     """
+    csv_path = utils.define_path_save_file(
+        path_save_file=csv_path) + csv_name + '.csv'
+
     data_frame.to_csv(
         csv_path, sep=sep, encoding=encoding,
         index=index, date_format=date_format,
