@@ -153,14 +153,14 @@ delete_columns_names_on_load_data = None
 # Path to save plots
 PATH_SAVE_PLOTS = './plots'
 
-# Path to save composite estimators
-PATH_SAVE_ESTIMATORS_REPR = './estimators_repr'
+# Path to save estimators representation
+PATH_SAVE_ESTIMATORS_REPR = './runs/estimators_repr'
 
 # Path to save the best estimators
-PATH_SAVE_BEST_ESTIMATORS = './best_estimators'
+PATH_SAVE_BEST_ESTIMATORS = './runs/best_estimators'
 
 # Path to save the results
-PATH_SAVE_RESULTS = './results'
+PATH_SAVE_RESULTS = './runs/results'
 
 ############################################ ENCODERS SETTINGS ############################################
 
@@ -254,7 +254,7 @@ save_results_during_run = True
 new_run = False
 
 # Path to objects persisted with the results of executions of the pipeline
-PATH_OBJECTS_PERSISTED_RESULTS_RUNS = './objects_persisted_results_runs'
+PATH_OBJECTS_PERSISTED_RESULTS_RUNS = './runs/objects_persisted_results_runs'
 
 # File name to save the parameters executed in the pipeline execution
 PARAMETERS_PERSIST_FILENAME = utils.define_path_save_file(
