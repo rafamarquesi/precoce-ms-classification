@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import sys
+import traceback
 
 
 class Tee(object):
@@ -43,11 +44,19 @@ class Tee(object):
             f.flush()
 
 
+# Printi exception with stack trace to file: https://stackoverflow.com/questions/31636884/print-exception-with-stack-trace-to-file/31637063#31637063
 # if __name__ == '__main__':
 #     print('Start...')
-#     t = Tee(sys.stdout, open('/tmp/test.txt', 'w')).open()
-#     print('Hello world')
-#     t.close()
+#     try:
+#         t = Tee(sys.stdout, open('/tmp/test.txt', 'w')).open()
+#         print('Hello world')
+#         raise Exception('Test')
+#         t.close()
+#     except Exception as e:
+#         print(e)
+#         print(traceback.format_exc())
+#         t.close()
+#         raise e
 #     print('Goodbye')
 
 """
