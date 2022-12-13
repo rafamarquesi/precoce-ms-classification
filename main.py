@@ -391,9 +391,9 @@ if __name__ == '__main__':
             settings.use_cat_emb_dim = True
             # 'cpu' for cpu training, 'gpu' for gpu training, 'auto' to automatically detect gpu
             settings.device_name = 'cpu'
-            # Apply custom data augmentation pipeline during training
-            settings.augmentations = ClassificationSMOTE(
-                p=0.2, device_name=settings.device_name)  # aug, None
+            # Apply custom data augmentation pipeline during training (parameter for fit method)
+            # settings.augmentations = ClassificationSMOTE(
+            #     p=0.2, device_name=settings.device_name)  # aug, None
 
             # Show settings of the project
             reports.show_settings(settings=settings)
@@ -435,16 +435,6 @@ if __name__ == '__main__':
             x, y = utils.create_x_y_dataframe_data(
                 data_frame=precoce_ms_data_frame
             )
-
-            # Split the data into test and train
-            x_train, x_test, y_train, y_test = train_test_split(
-                x, y, test_size=settings.split_test_size, random_state=settings.random_seed, stratify=y
-            )
-
-            print('x_train shape: {}'.format(x_train.shape))
-            print('y_train shape: {}'.format(y_train.shape))
-            print('x_test shape: {}'.format(x_test.shape))
-            print('y_test shape: {}'.format(y_test.shape))
 
             # Create the fransformers for ColumnTransformer
             transformers = [
@@ -495,6 +485,13 @@ if __name__ == '__main__':
                     ('preprocessor', preprocessor),
                     ('classifier', ClfSwitcher())
                 ]
+            )
+
+            # Save the representation of the pipeline
+            utils.save_estimator_repr(
+                estimator=pipe,
+                file_name='pipeline',
+                path_save_file=settings.PATH_SAVE_ESTIMATORS_REPR
             )
 
             # https://github.com/dreamquark-ai/tabnet/issues/288
@@ -563,251 +560,68 @@ if __name__ == '__main__':
                     # 'classifier__estimator__reg_lambda': list(np.arange(0.01, 0.11, 0.01)) + [1.0],
                     # 'classifier__estimator__reg_alpha': [0, 0.1, 0.5, 1.0]
                 },
-                # {
-                #     # https://www.kaggle.com/code/optimo/tabnetbaseline/notebook
-                #     # Using TabNetClassifier: https://github.com/dreamquark-ai/tabnet/issues/238
-                #     # https://github.com/dreamquark-ai/tabnet/blob/develop/census_example.ipynb
-                #     'classifier__estimator': [TabNetClfTuner(device_name=settings.device_name)],
-                #     # 'classifier__estimator__cat_idxs': settings.cat_idxs,
-                #     # 'classifier__estimator__cat_dims': settings.cat_dims,
-                #     'classifier__estimator__seed': [settings.random_seed],
-                #     'classifier__estimator__clip_value': [1],
-                #     'classifier__estimator__verbose': [1],
-                #     'classifier__estimator__optimizer_fn': [torch.optim.Adam],
-                #     'classifier__estimator__optimizer_params': [dict(lr=2e-2)],
-                #     # 'classifier__estimator__optimizer_params': [
-                #     #     {'lr': 0.02},
-                #     #     {'lr': 0.01},
-                #     #     {'lr': 0.001}
-                #     # ],
-                #     'classifier__estimator__scheduler_fn': [torch.optim.lr_scheduler.StepLR],
-                #     'classifier__estimator__scheduler_params': [{
-                #         'step_size': 10,  # how to use learning rate scheduler
-                #         'gamma': 0.95
-                #     }],
-                #     'classifier__estimator__mask_type': ['entmax'],
-                #     # 'classifier__estimator__n_a': [3, 5, 8, 13, 21],
-                #     # 'classifier__estimator__n_steps': [3, 5, 8, 10],
-                #     # 'classifier__estimator__gamma': [0.5, 1.3, 3],
-                #     # 'classifier__estimator__cat_emb_dim': [10, 20],
-                #     # 'classifier__estimator__n_independent': [1, 2, 5],
-                #     # 'classifier__estimator__n_shared': [0, 1, 2],
-                #     # 'classifier__estimator__momentum': [0.1, 0.05, 0.02, 0.005],
-                #     # 'classifier__estimator__lambda_sparse': [0.1, 0.01, 0.001]
-                # }
+                {
+                    # https://www.kaggle.com/code/optimo/tabnetbaseline/notebook
+                    # Using TabNetClassifier: https://github.com/dreamquark-ai/tabnet/issues/238
+                    # https://github.com/dreamquark-ai/tabnet/blob/develop/census_example.ipynb
+                    'classifier__estimator': [TabNetClfTuner(device_name=settings.device_name)],
+                    # 'classifier__estimator__cat_idxs': settings.cat_idxs,
+                    # 'classifier__estimator__cat_dims': settings.cat_dims,
+                    'classifier__estimator__seed': [settings.random_seed],
+                    'classifier__estimator__clip_value': [1],
+                    'classifier__estimator__verbose': [1],
+                    'classifier__estimator__optimizer_fn': [torch.optim.Adam],
+                    'classifier__estimator__optimizer_params': [dict(lr=2e-2)],
+                    # 'classifier__estimator__optimizer_params': [
+                    #     {'lr': 0.02},
+                    #     {'lr': 0.01},
+                    #     {'lr': 0.001}
+                    # ],
+                    'classifier__estimator__scheduler_fn': [torch.optim.lr_scheduler.StepLR],
+                    'classifier__estimator__scheduler_params': [{
+                        'step_size': 10,  # how to use learning rate scheduler
+                        'gamma': 0.95
+                    }],
+                    'classifier__estimator__mask_type': ['entmax'],
+                    # 'classifier__estimator__n_a': [3, 5, 8, 13, 21],
+                    # 'classifier__estimator__n_steps': [3, 5, 8, 10],
+                    # 'classifier__estimator__gamma': [0.5, 1.3, 3],
+                    # 'classifier__estimator__cat_emb_dim': [10, 20],
+                    # 'classifier__estimator__n_independent': [1, 2, 5],
+                    # 'classifier__estimator__n_shared': [0, 1, 2],
+                    # 'classifier__estimator__momentum': [0.1, 0.05, 0.02, 0.005],
+                    # 'classifier__estimator__lambda_sparse': [0.1, 0.01, 0.001]
+                }
             ]
 
             # Cross validation for grid search
+            n_splits = 3
+            print('Number of folds for cross validation: {}'.format(n_splits))
             cv = StratifiedKFold(
-                n_splits=3,
+                n_splits=n_splits,
                 shuffle=False
-                # random_state=settings.random_seed
             )
 
             # TODO: Another way to search for the best parameters https://www.kaggle.com/code/prashant111/a-guide-on-xgboost-hyperparameters-tuning/notebook
-
             # TODO: Indication of the advisor on how to load and save the parameters already executed in the grid search https://github.com/ragero/text_categorization_tool_python/blob/master/utilities/generate_parameters_list.py
             # TODO: Test this score: http://scikit-learn.org/stable/modules/generated/sklearn.metrics.balanced_accuracy_score.html
             # Custom refit strategy of a grid search with cross-validation (2 scores): https://scikit-learn.org/stable/auto_examples/model_selection/plot_grid_search_digits.html#sphx-glr-auto-examples-model-selection-plot-grid-search-digits-py
             # score = 'accuracy'
-            score = 'balanced_accuracy'
-            if settings.save_results_during_run:
+            # score = 'balanced_accuracy'
 
-                if settings.new_run:
-                    utils.remove_all_files_in_directory(
-                        path_directory=settings.PATH_OBJECTS_PERSISTED_RESULTS_RUNS)
+            # Size of test in train and test split
+            # split_test_size = 0.2
 
-                grid_search = GridSearchCVTuner(
-                    estimator=pipe,
-                    param_grid=param_grid,
-                    cv=cv,
-                    scoring=score,
-                    n_jobs=settings.n_jobs,
-                    verbose=10
-                    # error_score='raise'
-                )
-            else:
-                grid_search = GridSearchCV(
-                    estimator=pipe,
-                    param_grid=param_grid,
-                    cv=cv,
-                    scoring=score,
-                    n_jobs=settings.n_jobs,
-                    verbose=10
-                    # error_score='raise'
-                )
-
-            # Save the representation of the GridSearchCV
-            utils.save_estimator_repr(
-                estimator=grid_search,
-                file_name='grid_search',
-                path_save_file=settings.PATH_SAVE_ESTIMATORS_REPR
-            )
-
-            grid_search.fit(x_train, y_train)
-
-            print('--------------------- RESULTS ---------------------')
-
-            # Cross validation results in a DataFrame
-            cv_results = pd.DataFrame.from_dict(
-                grid_search.cv_results_, orient='columns')
-            cv_results = cv_results.sort_values(
-                'mean_test_score', ascending=False)
-            csv_treatments.generate_new_csv(
-                data_frame=cv_results,
-                csv_path=settings.PATH_SAVE_RESULTS,
-                csv_name='cv_results-{}'.format(utils.get_current_datetime())
-            )
-            print('Cross validation results: \n{}'.format(cv_results))
-
-            # Stores the optimum model in best_pipe
-            best_pipe = grid_search.best_estimator_
-
-            # Save best pipe
-            utils.dump_object(
-                object=best_pipe,
-                file_name='best_pipe',
-                path_save_file=settings.PATH_SAVE_BEST_ESTIMATORS
-            )
-
-            # Save the representation of the best pipe in grid search
-            utils.save_estimator_repr(
-                estimator=best_pipe,
-                file_name='best_pipe',
-                path_save_file=settings.PATH_SAVE_ESTIMATORS_REPR
-            )
-
-            # Store the best model in best_estimator
-            best_estimator = best_pipe.steps[-1][-1].estimator
-
-            # Save best estimator
-            utils.dump_object(
-                object=best_estimator,
-                file_name='best_estimator',
-                path_save_file=settings.PATH_SAVE_BEST_ESTIMATORS
-            )
-
-            # Save the representation of the best estimator in grid search
-            utils.save_estimator_repr(
-                estimator=best_estimator,
-                file_name='best_estimator',
-                path_save_file=settings.PATH_SAVE_ESTIMATORS_REPR
-            )
-
-            print('Best estimator: {}'.format(best_estimator))
-
-            # Dict with the grid search results
-            grid_search_results = dict()
-
-            print('Internal CV score obtained by the best set of parameters: {}'.format(
-                grid_search.best_score_))
-            # Save the best_score_ in grid_search_results
-            grid_search_results['best_score_'] = grid_search.best_score_
-
-            # Access the best set of parameters
-            print('Best params: {}'.format(grid_search.best_params_))
-            # Save the best_params_ in grid_search_results
-            grid_search_results['best_params_'] = [grid_search.best_params_]
-
-            # Scorer function used on the held out data to choose the best parameters for the model
-            print('Scorer function: {}'.format(grid_search.scorer_))
-            grid_search_results['scorer_'] = grid_search.scorer_
-
-            # The number of cross-validation splits (folds/iterations)
-            print('The number of CV splits: {}'.format(grid_search.n_splits_))
-            grid_search_results['n_splits_'] = grid_search.n_splits_
-
-            print('Seconds used for refitting the best model on the whole dataset: {}'.format(
-                grid_search.refit_time_))
-            grid_search_results['refit_time_'] = grid_search.refit_time_
-
-            print('Whether the scorers compute several metrics: {}'.format(
-                grid_search.multimetric_))
-            grid_search_results['multimetric_'] = grid_search.multimetric_
-
-            # Don't work!!!!
-            # print('The classes labels: {}'.format(grid_search.classes_))
-            # grid_search_results['classes_'] = grid_search.classes_
-
-            print('The number of features when fit is performed: {}'.format(
-                grid_search.n_features_in_))
-            grid_search_results['n_features_in_'] = grid_search.n_features_in_
-
-            print('Names of features seen during fit: {}'.format(
-                grid_search.feature_names_in_))
-            grid_search_results['feature_names_in_'] = [
-                grid_search.feature_names_in_]
-
-            # https://xgboost.readthedocs.io/en/stable/tutorials/param_tuning.html#control-overfitting
-            print('\n!!!>> When you observe high training accuracy, but low test accuracy, it is likely that you encountered overfitting problem.')
-
-            training_set_score = grid_search.score(x_train, y_train)
-            print('Training set score: {}'.format(training_set_score))
-            grid_search_results['training_set_score'] = training_set_score
-
-            test_set_score = grid_search.score(x_test, y_test)
-            print('Test set score: {}'.format(test_set_score))
-            grid_search_results['test_set_score'] = test_set_score
-
-            csv_treatments.generate_new_csv(
-                data_frame=pd.DataFrame.from_dict(
-                    grid_search_results, orient='columns'),
-                csv_path=settings.PATH_SAVE_RESULTS,
-                csv_name='grid_search_results-{}'.format(
-                    utils.get_current_datetime())
-            )
-
-            # Predict the test set
-            y_pred = grid_search.predict(x_test)
-
-            print('--- Test data performance ---')
-
-            dict_results = dict()
-
-            dict_results['Acurácia'] = accuracy_score(y_test, y_pred)
-            dict_results['Revocação'] = recall_score(y_test, y_pred)
-            dict_results['Micro Revocação'] = recall_score(
-                y_test, y_pred, average='micro')
-            dict_results['Macro Revocação'] = recall_score(
-                y_test, y_pred, average='macro')
-            dict_results['Precisão'] = precision_score(y_test, y_pred)
-            dict_results['Micro Precisão'] = precision_score(
-                y_test, y_pred, average='micro', labels=np.unique(y_pred))
-            dict_results['Macro Precisão'] = precision_score(
-                y_test, y_pred, average='macro', labels=np.unique(y_pred))
-            dict_results['Micro F1'] = f1_score(
-                y_test, y_pred, average='micro')
-            dict_results['Macro F1'] = f1_score(
-                y_test, y_pred, average='macro')
-            dict_results['Acurácia Balanceada'] = balanced_accuracy_score(
-                y_test, y_pred)
-            dict_results['ROC AUC Score'] = roc_auc_score(y_pred, y_test)
-
-            for key, value in dict_results.items():
-                print('Test {}: {}'.format(key, value))
-
-            csv_treatments.generate_new_csv(
-                data_frame=pd.DataFrame(
-                    dict_results, index=[0]),
-                csv_path=settings.PATH_SAVE_RESULTS,
-                csv_name='performance_results-{}'.format(
-                    utils.get_current_datetime())
-            )
-
-            # classification report : https://scikit-learn.org/stable/auto_examples/feature_selection/plot_feature_selection_pipeline.html#sphx-glr-auto-examples-feature-selection-plot-feature-selection-pipeline-py
-            classification_report_str = classification_report(y_test, y_pred)
-            print(classification_report_str)
-            csv_treatments.generate_new_csv(
-                data_frame=pd.DataFrame.from_records(
-                    [
-                        {
-                            'classification_report_str': [classification_report_str],
-                            'classification_report_dict': [classification_report(y_test, y_pred, output_dict=True)]
-                        }
-                    ]),
-                csv_path=settings.PATH_SAVE_RESULTS,
-                csv_name='classification_report-{}'.format(
-                    utils.get_current_datetime())
+            pattern_extraction.run_grid_search(
+                x=x,
+                y=y,
+                estimator=pipe,
+                param_grid=param_grid,
+                cv=cv,
+                # score=score,
+                n_jobs=settings.n_jobs,
+                test_size=0.2,
+                random_state=settings.random_seed
             )
 
         ################################################## PRE PROCESSING ##################################################

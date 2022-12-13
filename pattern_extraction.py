@@ -1,13 +1,262 @@
 import utils
+from sys import displayhook
 
+from typing import Union
 from copy import deepcopy
 
 import pandas as pd
 import numpy as np
 
 from sklearn.utils.multiclass import type_of_target
-from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, balanced_accuracy_score, roc_auc_score, classification_report
 from sklearn.model_selection import GridSearchCV, StratifiedKFold, train_test_split
+
+import settings
+import csv_treatments
+from sklearn_tuner.model_selection_tuner import GridSearchCVTuner
+
+
+@utils.timeit
+def run_grid_search(
+    x: pd.DataFrame,
+    y: pd.Series,
+    estimator: object,
+    param_grid: Union[dict, list],
+    cv: Union[None, int, object, iter] = None,
+    score: str = 'accuracy',
+    n_jobs: int = None,
+    test_size: Union[float, int, None] = None,
+    random_state: Union[int, np.random.RandomState, None] = None,
+    verbose: int = 10,
+    error_score=np.nan
+) -> dict:
+    """
+    Run Grid Search CV and save the results, best parameters, and best model.
+
+    Args:
+        x (pd.DataFrame): Data will be used to train the models.
+        y (pd.Series): Real classes of the data.
+        estimator (object): Estimator to be used.
+        param_grid (Union[dict, list]): Dictionary or list with the dictionaries with parameters to be tested.
+        cv (Union[None, int, object, iter], optional): Cross-validation splitting strategy. Defaults to None.
+        score (str, optional): Scoring metric. Defaults to 'accuracy'.
+        n_jobs (int, optional): Number of jobs to run in parallel. Defaults to None.
+        test_size (Union[float, int, None], optional): Size of the test data. Defaults to None.
+        random_state (int, optional): Random the class into the folds. Defaults to None.
+        verbose (int, optional): Controls the verbosity: the higher, the more messages. Defaults to 10.
+        error_score (optional): Value to assign to the score if an error occurs in estimator fitting. If set to 'raise', the error is raised. If a numeric value is given, FitFailedWarning is raised. This parameter does not affect the refit step, which will always raise the error. Defaults to np.nan.
+    """
+
+    # Split the data into test and train
+    x_train, x_test, y_train, y_test = train_test_split(
+        x, y, test_size=test_size, random_state=random_state, stratify=y
+    )
+
+    print('Test Size: {}\n'.format(test_size))
+    print('x_train shape: {}'.format(x_train.shape))
+    print('y_train shape: {}'.format(y_train.shape))
+    print('x_test shape: {}'.format(x_test.shape))
+    print('y_test shape: {}'.format(y_test.shape))
+
+    if settings.save_results_during_run:
+
+        if settings.new_run:
+            utils.remove_all_files_in_directory(
+                path_directory=settings.PATH_OBJECTS_PERSISTED_RESULTS_RUNS)
+
+        grid_search = GridSearchCVTuner(
+            estimator=estimator,
+            param_grid=param_grid,
+            cv=cv,
+            scoring=score,
+            n_jobs=n_jobs,
+            verbose=verbose,
+            error_score=error_score
+        )
+    else:
+        grid_search = GridSearchCV(
+            estimator=estimator,
+            param_grid=param_grid,
+            cv=cv,
+            scoring=score,
+            n_jobs=n_jobs,
+            verbose=verbose,
+            error_score=error_score
+        )
+
+    # Save the representation of the GridSearchCV
+    utils.save_estimator_repr(
+        estimator=grid_search,
+        file_name='grid_search',
+        path_save_file=settings.PATH_SAVE_ESTIMATORS_REPR
+    )
+
+    grid_search.fit(x_train, y_train)
+
+    print('--------------------- RESULTS ---------------------')
+
+    # Cross validation results in a DataFrame
+    cv_results = pd.DataFrame.from_dict(
+        grid_search.cv_results_, orient='columns')
+    cv_results = cv_results.sort_values(
+        'mean_test_score', ascending=False)
+    csv_treatments.generate_new_csv(
+        data_frame=cv_results,
+        csv_path=settings.PATH_SAVE_RESULTS,
+        csv_name='cv_results-{}'.format(utils.get_current_datetime())
+    )
+    print('Cross validation results:')
+    displayhook(cv_results)
+
+    # Stores the optimum model in best_pipe
+    best_pipe = grid_search.best_estimator_
+
+    # Save best pipe
+    utils.dump_object(
+        object=best_pipe,
+        file_name='best_pipe',
+        path_save_file=settings.PATH_SAVE_BEST_ESTIMATORS
+    )
+
+    # Save the representation of the best pipe in grid search
+    utils.save_estimator_repr(
+        estimator=best_pipe,
+        file_name='best_pipe',
+        path_save_file=settings.PATH_SAVE_ESTIMATORS_REPR
+    )
+
+    # Store the best model in best_estimator
+    best_estimator = best_pipe.steps[-1][-1].estimator
+
+    # Save best estimator
+    utils.dump_object(
+        object=best_estimator,
+        file_name='best_estimator',
+        path_save_file=settings.PATH_SAVE_BEST_ESTIMATORS
+    )
+
+    # Save the representation of the best estimator in grid search
+    utils.save_estimator_repr(
+        estimator=best_estimator,
+        file_name='best_estimator',
+        path_save_file=settings.PATH_SAVE_ESTIMATORS_REPR
+    )
+
+    print('Best estimator: {}'.format(best_estimator))
+
+    # Dict with the grid search results
+    grid_search_results = dict()
+
+    print('Internal CV score obtained by the best set of parameters: {}'.format(
+        grid_search.best_score_))
+    # Save the best_score_ in grid_search_results
+    grid_search_results['best_score_'] = grid_search.best_score_
+
+    # Access the best set of parameters
+    print('Best params: {}'.format(grid_search.best_params_))
+    # Save the best_params_ in grid_search_results
+    grid_search_results['best_params_'] = [grid_search.best_params_]
+
+    # Scorer function used on the held out data to choose the best parameters for the model
+    print('Scorer function: {}'.format(grid_search.scorer_))
+    grid_search_results['scorer_'] = grid_search.scorer_
+
+    # The number of cross-validation splits (folds/iterations)
+    print('The number of CV splits: {}'.format(grid_search.n_splits_))
+    grid_search_results['n_splits_'] = grid_search.n_splits_
+
+    print('Seconds used for refitting the best model on the whole dataset: {}'.format(
+        grid_search.refit_time_))
+    grid_search_results['refit_time_'] = grid_search.refit_time_
+
+    print('Whether the scorers compute several metrics: {}'.format(
+        grid_search.multimetric_))
+    grid_search_results['multimetric_'] = grid_search.multimetric_
+
+    # Don't work!!!!
+    # print('The classes labels: {}'.format(grid_search.classes_))
+    # grid_search_results['classes_'] = grid_search.classes_
+
+    print('The number of features when fit is performed: {}'.format(
+        grid_search.n_features_in_))
+    grid_search_results['n_features_in_'] = grid_search.n_features_in_
+
+    print('Names of features seen during fit: {}'.format(
+        grid_search.feature_names_in_))
+    grid_search_results['feature_names_in_'] = [
+        grid_search.feature_names_in_]
+
+    # https://xgboost.readthedocs.io/en/stable/tutorials/param_tuning.html#control-overfitting
+    print('\n!!!>> When you observe high training accuracy, but low test accuracy, it is likely that you encountered overfitting problem.')
+
+    training_set_score = grid_search.score(x_train, y_train)
+    print('Training set score: {}'.format(training_set_score))
+    grid_search_results['training_set_score'] = training_set_score
+
+    test_set_score = grid_search.score(x_test, y_test)
+    print('Test set score: {}'.format(test_set_score))
+    grid_search_results['test_set_score'] = test_set_score
+
+    csv_treatments.generate_new_csv(
+        data_frame=pd.DataFrame.from_dict(
+            grid_search_results, orient='columns'),
+        csv_path=settings.PATH_SAVE_RESULTS,
+        csv_name='grid_search_results-{}'.format(
+            utils.get_current_datetime())
+    )
+
+    # Predict the test set
+    y_pred = grid_search.predict(x_test)
+
+    print('\n--- Test data performance ---')
+
+    dict_results = dict()
+
+    dict_results['Acurácia'] = accuracy_score(y_test, y_pred)
+    dict_results['Revocação'] = recall_score(y_test, y_pred)
+    dict_results['Micro Revocação'] = recall_score(
+        y_test, y_pred, average='micro')
+    dict_results['Macro Revocação'] = recall_score(
+        y_test, y_pred, average='macro')
+    dict_results['Precisão'] = precision_score(y_test, y_pred)
+    dict_results['Micro Precisão'] = precision_score(
+        y_test, y_pred, average='micro', labels=np.unique(y_pred))
+    dict_results['Macro Precisão'] = precision_score(
+        y_test, y_pred, average='macro', labels=np.unique(y_pred))
+    dict_results['Micro F1'] = f1_score(
+        y_test, y_pred, average='micro')
+    dict_results['Macro F1'] = f1_score(
+        y_test, y_pred, average='macro')
+    dict_results['Acurácia Balanceada'] = balanced_accuracy_score(
+        y_test, y_pred)
+    dict_results['ROC AUC Score'] = roc_auc_score(y_pred, y_test)
+
+    for key, value in dict_results.items():
+        print('Test {}: {}'.format(key, value))
+
+    csv_treatments.generate_new_csv(
+        data_frame=pd.DataFrame(
+            dict_results, index=[0]),
+        csv_path=settings.PATH_SAVE_RESULTS,
+        csv_name='performance_results-{}'.format(
+            utils.get_current_datetime())
+    )
+
+    # classification report : https://scikit-learn.org/stable/auto_examples/feature_selection/plot_feature_selection_pipeline.html#sphx-glr-auto-examples-feature-selection-plot-feature-selection-pipeline-py
+    classification_report_str = classification_report(y_test, y_pred)
+    print(classification_report_str)
+    csv_treatments.generate_new_csv(
+        data_frame=pd.DataFrame.from_records(
+            [
+                {
+                    'classification_report_str': [classification_report_str],
+                    'classification_report_dict': [classification_report(y_test, y_pred, output_dict=True)]
+                }
+            ]),
+        csv_path=settings.PATH_SAVE_RESULTS,
+        csv_name='classification_report-{}'.format(
+            utils.get_current_datetime())
+    )
 
 
 @utils.timeit
