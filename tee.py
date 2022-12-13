@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import sys
 import traceback
+import warnings
 
 
 class Tee(object):
@@ -23,16 +24,24 @@ class Tee(object):
             # Only do this once just in case stdout was already initialized
             # @note Will fail if stdout for some reason changes
             sys._stdout = sys.stdout
+        """ Redirect stderr """
+        if not hasattr(sys, '_stderr'):
+            # Only do this once just in case stderr was already initialized
+            # @note Will fail if stderr for some reason changes
+            sys._stderr = sys.stderr
         sys.stdout = self
+        sys.stderr = self
         return self
 
     def close(self):
         """ Restore """
         stdout = sys._stdout
+        stderr = sys._stderr
         for f in self.files:
-            if f != stdout:
+            if f != stdout and f != stderr:
                 f.close()
         sys.stdout = stdout
+        sys.stderr = stderr
 
     def write(self, obj):
         for f in self.files:
@@ -50,6 +59,7 @@ class Tee(object):
 #     try:
 #         t = Tee(sys.stdout, open('/tmp/test.txt', 'w')).open()
 #         print('Hello world')
+#         warnings.warn('Warning msg!!!!!')
 #         raise Exception('Test')
 #         t.close()
 #     except Exception as e:
