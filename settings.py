@@ -267,3 +267,8 @@ RESULTS_PERSIST_FILENAME = utils.define_path_save_file(
 # File name to save the results of each split of estimator in the pipeline execution
 SPLIT_PERSIST_FILENAME = utils.define_path_save_file(
     path_save_file=PATH_OBJECTS_PERSISTED_RESULTS_RUNS) + 'split_persist'
+
+############################################ XGBOOST SETTINGS ############################################
+
+# The tree method to use for training the model. 'gpu_hist' is recommended for GPU training. 'hist' is recommended for CPU training.
+tree_method = 'gpu_hist' if torch.cuda.is_available() else 'hist'
