@@ -11,9 +11,18 @@ from sklearn.utils.multiclass import type_of_target
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, balanced_accuracy_score, roc_auc_score, classification_report
 from sklearn.model_selection import GridSearchCV, StratifiedKFold, train_test_split
 
+from xgboost import XGBClassifier
+
 import settings
 import csv_treatments
+import utils
 from sklearn_tuner.model_selection_tuner import GridSearchCVTuner
+from pytorch_tabnet_tuner.tab_model_tuner import TabNetClassifierTuner
+
+_ESTIMATORS_WITH_SAVE_LOAD_METHOD = [
+    XGBClassifier().__class__.__name__,
+    TabNetClassifierTuner().__class__.__name__
+]
 
 
 @utils.timeit
@@ -112,7 +121,7 @@ def run_grid_search(
     best_pipe = grid_search.best_estimator_
 
     # Save best pipe
-    utils.dump_object(
+    utils.dump_joblib(
         object=best_pipe,
         file_name='best_pipe',
         path_save_file=settings.PATH_SAVE_BEST_ESTIMATORS
@@ -129,11 +138,12 @@ def run_grid_search(
     best_estimator = best_pipe.steps[-1][-1].estimator
 
     # Save best estimator
-    utils.dump_object(
-        object=best_estimator,
-        file_name='best_estimator',
-        path_save_file=settings.PATH_SAVE_BEST_ESTIMATORS
-    )
+    __save_best_estimator(best_estimator=best_estimator)
+    # utils.dump_joblib(
+    #     object=best_estimator,
+    #     file_name='best_estimator',
+    #     path_save_file=settings.PATH_SAVE_BEST_ESTIMATORS
+    # )
 
     # Save the representation of the best estimator in grid search
     utils.save_estimator_repr(
@@ -340,6 +350,39 @@ def run_models(x: np.array, y: np.array, models: dict, models_results: dict, n_s
 
 
 ############# PRIVATE METHODS #############
+
+def __save_best_estimator(best_estimator: object) -> None:
+    """
+    Save the best estimator of grid search.
+
+    Args:
+        best_estimator (object): Estimator will be saved.
+    """
+
+    file_name = 'best_estimator'
+
+    if best_estimator.__class__.__name__ not in _ESTIMATORS_WITH_SAVE_LOAD_METHOD:
+        utils.dump_joblib(
+            object=best_estimator,
+            file_name='-'.join([file_name, best_estimator.__class__.__name__]),
+            path_save_file=settings.PATH_SAVE_BEST_ESTIMATORS
+        )
+    else:
+        file = '{}{}-{}-{}'.format(
+            utils.define_path_save_file(
+                path_save_file=settings.PATH_SAVE_BEST_ESTIMATORS),
+            file_name,
+            best_estimator.__class__.__name__,
+            utils.get_current_datetime()
+        )
+        # If XGBoost
+        if best_estimator.__class__.__name__ == _ESTIMATORS_WITH_SAVE_LOAD_METHOD[0]:
+            file = ''.join([file, '.json'])
+            best_estimator.save_model(file)
+        # If TabNetClassifier
+        elif best_estimator.__class__.__name__ == _ESTIMATORS_WITH_SAVE_LOAD_METHOD[1]:
+            best_estimator.save_model(file)
+        print('Object saved in file: {}'.format(file))
 
 
 def __tunning_parameters(model_params: dict, x: np.array, y: np.array, train_size: float = 0.70, test_size: float = 0.30, n_splits: int = 3, shuffle: bool = True, random_state: int = 0) -> object:
