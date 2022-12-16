@@ -1,15 +1,20 @@
 import warnings
-
-import settings
+import json
+from pathlib import Path
+import shutil
 
 import numpy as np
+import torch
 
 from pytorch_tabnet.tab_model import TabNetClassifier
 
 from sklearn.model_selection import train_test_split
 
+import settings
+from pytorch_tabnet_tuner.utils_tuner import ComplexEncoderTuner
 
-class TabNetClfTuner(TabNetClassifier):
+
+class TabNetClassifierTuner(TabNetClassifier):
     """A custom TabNetClassifier that can be tuned with a parameter search algorithm, for example: Grid Search."""
 
     def fit(self, X: np.ndarray, y: np.ndarray, *args, **kwargs):
@@ -108,3 +113,50 @@ class TabNetClfTuner(TabNetClassifier):
             drop_last=False,
             augmentations=settings.augmentations
         )
+
+    def save_model(self, path):
+        """This function was custom for serealize all types of numpy arrays.
+        Chenged ComplexEncoder to ComplexEncoderTuner.
+
+        Saving TabNet model in two distinct files.
+
+        Parameters
+        ----------
+        path : str
+            Path of the model.
+
+        Returns
+        -------
+        str
+            input filepath with ".zip" appended
+
+        """
+        saved_params = {}
+        init_params = {}
+        for key, val in self.get_params().items():
+            if isinstance(val, type):
+                # Don't save torch specific params
+                continue
+            else:
+                init_params[key] = val
+        saved_params["init_params"] = init_params
+
+        class_attrs = {
+            "preds_mapper": self.preds_mapper
+        }
+        saved_params["class_attrs"] = class_attrs
+
+        # Create folder
+        Path(path).mkdir(parents=True, exist_ok=True)
+
+        # Save models params
+        with open(Path(path).joinpath("model_params.json"), "w", encoding="utf8") as f:
+            json.dump(saved_params, f, cls=ComplexEncoderTuner)
+
+        # Save state_dict
+        torch.save(self.network.state_dict(),
+                   Path(path).joinpath("network.pt"))
+        shutil.make_archive(path, "zip", path)
+        shutil.rmtree(path)
+        print(f"Successfully saved model at {path}.zip")
+        return f"{path}.zip"
