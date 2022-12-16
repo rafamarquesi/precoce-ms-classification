@@ -293,21 +293,19 @@ def confirm() -> bool:
     return answer == 'y'
 
 
-def dump_object(object: object, file_name: str, extension: str = '.pkl', path_save_file: str = None) -> None:
+def dump_joblib(object: object, file_name: str, path_save_file: str = None) -> None:
     """Save object in file, using dump from joblib.
 
     Args:
         object (object): Object to be saved.
         file_name (str): File name to be saved.
-        extension (str, optional): Extension of the file. Ex: '.pkl'. Defaults to ''.
         path_save_file (str, optional): Path to save the file. Defaults to None.
     """
-    path_save_file = define_path_save_file(path_save_file=path_save_file)
     file = '{}{}-{}{}'.format(
-        path_save_file,
+        define_path_save_file(path_save_file=path_save_file),
         file_name,
         get_current_datetime(),
-        extension
+        '.joblib'
     )
     dump(object, file)
     print('Object saved in file: {}'.format(file))
