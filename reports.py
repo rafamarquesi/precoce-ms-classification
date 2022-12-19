@@ -12,6 +12,7 @@ import numpy as np
 import seaborn as sns
 import dataframe_image as dfi
 import matplotlib.pyplot as plt
+import missingno as msno
 
 from sklearn.model_selection import train_test_split
 
@@ -90,6 +91,8 @@ def nan_attributes(data_frame: pd.DataFrame, total_nan: int) -> None:
         #     {'Coluna': column, 'total_NaN': data_frame[column].isna().sum()}, ignore_index=True)
     df_nan = df_nan.sort_values(['total_NaN'], ascending=[False])
     displayhook(df_nan)
+    print('A matrix representation of the missing values (white) by variable')
+    msno.matrix(data_frame)
     print('*****FIM RELATÓRIO ATRIBUTOS NAN******')
 
 
