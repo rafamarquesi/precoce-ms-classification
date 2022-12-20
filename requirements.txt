@@ -10,7 +10,7 @@ autopep8==1.6.0
 backcall==0.2.0
 beautifulsoup4==4.11.1
 bleach==5.0.1
-certifi==2022.6.15
+certifi==2022.12.7
 cffi==1.15.1
 charset-normalizer==2.1.0
 comm==0.1.2
@@ -105,7 +105,7 @@ terminado==0.17.1
 threadpoolctl==3.1.0
 tinycss2==1.2.1
 toml==0.10.2
-torch==1.13.0
+torch==1.13.1
 tornado==6.2
 tqdm==4.64.1
 traitlets==5.8.0
