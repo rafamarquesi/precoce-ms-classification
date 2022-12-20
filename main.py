@@ -14,7 +14,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
-from sklearn.svm import SVC
+from sklearn.svm import LinearSVC, SVC
 from sklearn.ensemble import RandomForestClassifier
 
 from xgboost import XGBClassifier
@@ -23,7 +23,7 @@ import torch
 from pytorch_tabnet.augmentations import ClassificationSMOTE
 
 from clf_switcher import ClfSwitcher
-from pytorch_tabnet_tuner.tabnet_clf_tuner import TabNetClfTuner
+from pytorch_tabnet_tuner.tab_model_tuner import TabNetClassifierTuner
 from sklearn_tuner.model_selection_tuner import GridSearchCVTuner
 
 import csv_treatments
@@ -58,7 +58,7 @@ if __name__ == '__main__':
         ).open()
 
         # Some settings are configured by default. If you want to change any settings,
-        # just follow the instruction for the specific setting.
+        # just follow the instruction for the specific setting. For more information, view the settings.py file.
 
         # Number of jobs to run in parallel
         # settings.n_jobs = 1
@@ -68,7 +68,7 @@ if __name__ == '__main__':
 
         # Path to the dataset
         settings.csv_path = csv_treatments.choose_csv_path(
-            sampling='2', folder_path=settings.dataset_folder_path)
+            sampling='0.2', folder_path=settings.dataset_folder_path)
 
         # Number of lines to be read from the dataset, where None read all lines
         # settings.number_csv_lines = 1000
@@ -85,6 +85,7 @@ if __name__ == '__main__':
             'tot3m_Chuva', 'med3m_TempInst', 'med3m_UmidInst', 'med3m_formITUmax', 'med3m_NDVI', 'med3m_EVI',
             'tot6m_Chuva', 'med6m_TempInst', 'med6m_UmidInst', 'med6m_NDVI', 'med6m_EVI',
             'tot12m_Chuva', 'med12m_TempInst', 'med12m_TempMin', 'med12m_UmidInst', 'med12m_NDVI', 'med12m_EVI',
+            # 'CATEGORIA'
         ]
 
         # Dict update for ordinal encoding
@@ -99,8 +100,7 @@ if __name__ == '__main__':
             'classificacao'
         ]
 
-        # TODO: Check with the professor how to encode 'DataAbate', I tried with one hot, but, does not work very well
-        # List with column names to apply the ordinal encoder
+        # List with column names to apply the one hot encoder
         settings.one_hot_encoder_columns_names = [
             'EstabelecimentoMunicipio', 'Tipificacao', 'ANO'
         ]
@@ -130,34 +130,39 @@ if __name__ == '__main__':
         # Class column name
         settings.class_column = 'classificacao'
 
-        dataset_reports = False
+        dataset_reports = True
         execute_pre_processing = False
         execute_classifiers = False
-        execute_classifiers_pipeline = True
+        execute_classifiers_pipeline = False
 
         ################################################## CSV TREATMENTS ##################################################
 
-        # Generate sample of dataset
-        # precoce_ms_data_frame = csv_treatments.load_data(
-        #     csv_path=settings.csv_path, number_csv_lines=settings.number_csv_lines,
-        #     dtype_dict=settings.dtype_dict, parse_dates=settings.parse_dates
-        # )
+        generate_samples = False
 
-        # percentages = [0.002, 0.005, 0.02, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
-        # for percentage in percentages:
-        #     csv_treatments.generate_new_csv(
-        #         data_frame=utils.random_sampling_data(
-        #             data_frame=precoce_ms_data_frame, how_generate='percentage', frac=percentage
-        #         ),
-        #         csv_path='/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados,
-        #         csv_name='TAB_MODELAGEM_RAFAEL_2020_1-{}-percentage-sampling'.format(percentage*100)
-        #     )
+        if generate_samples:
+            # Generate sample of dataset
+            precoce_ms_data_frame = csv_treatments.load_data(
+                csv_path=settings.csv_path, number_csv_lines=settings.number_csv_lines,
+                dtype_dict=settings.dtype_dict, parse_dates=settings.parse_dates
+            )
 
-        # Load the dataset
-        precoce_ms_data_frame = csv_treatments.load_data(
-            csv_path=settings.csv_path, delete_columns_names=settings.delete_columns_names_on_load_data,
-            number_csv_lines=settings.number_csv_lines, dtype_dict=settings.dtype_dict, parse_dates=settings.parse_dates
-        )
+            percentages = [0.002, 0.005, 0.02,
+                           0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
+            for percentage in percentages:
+                csv_treatments.generate_new_csv(
+                    data_frame=utils.random_sampling_data(
+                        data_frame=precoce_ms_data_frame, how_generate='percentage', frac=percentage
+                    ),
+                    csv_path='/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados',
+                    csv_name='TAB_MODELAGEM_RAFAEL_2020_1-{}-percentage-sampling'.format(
+                        percentage*100)
+                )
+        else:
+            # Load the dataset
+            precoce_ms_data_frame = csv_treatments.load_data(
+                csv_path=settings.csv_path, delete_columns_names=settings.delete_columns_names_on_load_data,
+                number_csv_lines=settings.number_csv_lines, dtype_dict=settings.dtype_dict, parse_dates=settings.parse_dates
+            )
 
         ################################################## REPORTS ##################################################
 
@@ -173,8 +178,6 @@ if __name__ == '__main__':
 
             precoce_ms_data_frame = utils.delete_columns(
                 data_frame=precoce_ms_data_frame, delete_columns_names=['ID_ANIMAL'])
-
-            # TODO: Implement the function show missing values using missingno library (https://towardsdatascience.com/tabnet-deep-neural-network-for-structured-tabular-data-39eb4b27a9e4)
 
             # Delete NaN rows
             precoce_ms_data_frame = pre_processing.delete_nan_rows(
@@ -375,11 +378,16 @@ if __name__ == '__main__':
 
         if execute_classifiers_pipeline:
 
+            ##### Grid Search Settings #####
             # Flag to save the results of each split in the pipeline execution, to be used in a possible new execution, in case the execution is interrupted
             # settings.save_results_during_run = False
 
             # Whether True, the objects saved in the path_objects_persisted_results_will be cleaned before the execution of the pipeline
             settings.new_run = True
+
+            ##### XGBoost Settings #####
+            # The tree method to use for training the model. 'gpu_hist' is recommended for GPU training. 'hist' is recommended for CPU training.
+            settings.tree_method = 'hist'
 
             ##### Tab Net Settings #####
             # Flag to use embeddings in the tabnet model
@@ -502,95 +510,101 @@ if __name__ == '__main__':
                 },
                 {
                     'classifier__estimator': [KNeighborsClassifier()],
-                    'classifier__estimator__metric': ['euclidean'],
-                    # 'classifier__estimator__n_neighbors': list(np.arange(3, 20, 2)),
+                    'classifier__estimator__metric': ['minkowski', 'euclidean'],
+                    'classifier__estimator__n_neighbors': list(np.arange(5, 17, 3)),
                     'classifier__estimator__weights': ['uniform', 'distance'],
-                    # 'classifier__estimator__p': [1, 2, 3]
+                    'classifier__estimator__p': [1, 2, 3]
                 },
                 {
                     'classifier__estimator': [DecisionTreeClassifier()],
-                    'classifier__estimator__random_state': [0],
+                    'classifier__estimator__splitter': ['best'],
+                    'classifier__estimator__random_state': [settings.random_seed],
                     'classifier__estimator__criterion': ['gini', 'entropy'],
-                    # 'classifier__estimator__max_depth': list(np.arange(1, 11)) + [None],
-                    # 'classifier__estimator__class_weight': ['balanced', None]
+                    'classifier__estimator__min_samples_split': [1, 2, 50, 100],
+                    'classifier__estimator__min_samples_leaf': [1, 5, 10],
+                    'classifier__estimator__max_depth': list(np.arange(1, 11, 3)) + [None],
+                    'classifier__estimator__class_weight': ['balanced', None]
                 },
-                # {
-                #     'classifier__estimator': [SVC()],
-                #     'classifier__estimator__gamma': ['auto', 'scale'],
-                #     # 'classifier__estimator__kernel': ['linear', 'poly', 'rbf'],
-                #     # 'classifier__estimator__C': list(np.power(10, np.arange(-3, 4, dtype=np.float16))),
-                #     # 'classifier__estimator__max_iter': [100, 1000, 10000],
-                #     # 'classifier__estimator__class_weight': ['balanced', None]
-                # },
-                # {
-                #     'classifier__estimator': [MLPClassifier()],
-                #     'classifier__estimator__max_iter': [1000],
-                #     # 'classifier__estimator__solver': ['adam', 'sgd'],
-                #     # 'classifier__estimator__momentum': np.arange(0, 1, 0.2),
-                #     # 'classifier__estimator__learning_rate': ['constant', 'adaptive'],
-                #     # 'classifier__estimator__alpha': [0.0001, 0.05],
-                #     # 'classifier__estimator__learning_rate_init': [0.0001, 0.001],
-                #     # 'classifier__estimator__activation': ['logistic', 'relu'],
-                #     # 'classifier__estimator__hidden_layer_sizes': [(50, 100, 50), (100,), (200, 100)],
-                # },
+                {
+                    'classifier__estimator': [LinearSVC()],
+                    'classifier__estimator__random_state': [settings.random_seed],
+                    'classifier__estimator__dual': [False],
+                    'classifier__estimator__penalty': ['l1', 'l2'],
+                    'classifier__estimator__C': list(np.power(10, np.arange(-3, 1, dtype=np.float16))),
+                    'classifier__estimator__max_iter': [100, 1000, 10000],
+                    'classifier__estimator__class_weight': ['balanced', None]
+                },
+                {
+                    'classifier__estimator': [MLPClassifier()],
+                    'classifier__estimator__max_iter': [1000],
+                    'classifier__estimator__early_stopping': [True],
+                    'classifier__estimator__hidden_layer_sizes': [(50, 100, 50), (100,), (200, 100)],
+                    'classifier__estimator__activation': ['logistic', 'relu'],
+                    'classifier__estimator__solver': ['adam', 'sgd'],
+                    'classifier__estimator__alpha': [0.0001, 0.05],
+                    'classifier__estimator__learning_rate': ['constant', 'adaptive'],
+                    'classifier__estimator__learning_rate_init': [0.0001, 0.001],
+                    'classifier__estimator__momentum': list(np.arange(0, 1, 0.3))
+                },
                 {
                     'classifier__estimator': [RandomForestClassifier()],
                     'classifier__estimator__random_state': [settings.random_seed],
-                    # 'classifier__estimator__n_estimators': [120, 300, 500, 800, 1200],
-                    # 'classifier__estimator__criterion': ['gini', 'entropy'],
-                    # 'classifier__estimator__max_depth': [5, 8, 15, 25, 30, None],
-                    # 'classifier__estimator__min_samples_split': [1, 2, 5, 10, 15, 100],
-                    # 'classifier__estimator__min_samples_leaf': [1, 2, 5, 10],
-                    # 'classifier__estimator__max_features': ['log2', 'sqrt', None],
-                    # 'classifier__estimator__class_weight': ['balanced', None]
+                    'classifier__estimator__n_estimators': [120, 700, 1200],
+                    'classifier__estimator__criterion': ['gini', 'entropy'],
+                    'classifier__estimator__max_depth': list(np.arange(5, 30, 7)) + [None],
+                    'classifier__estimator__min_samples_split': [1, 2, 50, 100],
+                    'classifier__estimator__min_samples_leaf': [1, 5, 10],
+                    'classifier__estimator__max_features': ['log2', 'sqrt', None],
+                    'classifier__estimator__class_weight': ['balanced', None]
                 },
                 {
                     # https://xgboost.readthedocs.io/en/stable/tutorials/param_tuning.html#control-overfitting
                     # https://www.kaggle.com/code/prashant111/a-guide-on-xgboost-hyperparameters-tuning/notebook
                     # https://www.analyticsvidhya.com/blog/2016/03/complete-guide-parameter-tuning-xgboost-with-codes-python/
                     'classifier__estimator': [XGBClassifier()],
-                    'classifier__estimator__tree_method': ['hist'],
+                    'classifier__estimator__tree_method': [settings.tree_method],
                     'classifier__estimator__max_delta_step': [1.0],
-                    # 'classifier__estimator__learning_rate': [0.001] + list(np.arange(0.01, 0.03, 0.01)) + list(np.arange(0.1, 0.3, 0.1)),
-                    # 'classifier__estimator__gamma': list(np.arange(0.05, 0.11, 0.01)) + [0.3, 0.5, 0.7, 0.9, 1.0],
-                    # 'classifier__estimator__max_depth': [3, 5, 7, 9, 12, 15, 17, 25],
-                    # 'classifier__estimator__min_child_weight': [1, 3, 5, 7],
-                    # 'classifier__estimator__subsample': [0.6, 0.7, 0.8, 0.9, 1.0],
-                    # 'classifier__estimator__colsample_bytree': [0.6, 0.7, 0.8, 0.9, 1.0],
-                    # 'classifier__estimator__reg_lambda': list(np.arange(0.01, 0.11, 0.01)) + [1.0],
-                    # 'classifier__estimator__reg_alpha': [0, 0.1, 0.5, 1.0]
+                    'classifier__estimator__random_state': [settings.random_seed],
+                    'classifier__estimator__objective': ['binary:logistic'],
+                    'classifier__estimator__n_estimators': [50, 100, 150, 200],
+                    'classifier__estimator__learning_rate': list(np.arange(0.01, 0.03, 0.01)) + list(np.arange(0.1, 0.3, 0.1)),
+                    'classifier__estimator__gamma': list(np.arange(0.05, 0.066, 0.01)) + [0.1, 1.0],
+                    'classifier__estimator__max_depth': [3, 7, 10, 17],
+                    'classifier__estimator__min_child_weight': [1, 7],
+                    'classifier__estimator__subsample': [0.5, 0.8, 1.0],
+                    'classifier__estimator__colsample_bytree': [0.5, 0.8, 1.0],
+                    'classifier__estimator__reg_lambda': list(np.arange(0.01, 0.1, 0.04)) + [1.0],
+                    'classifier__estimator__reg_alpha': [0, 0.1, 0.5, 1.0]
                 },
                 {
                     # https://www.kaggle.com/code/optimo/tabnetbaseline/notebook
                     # Using TabNetClassifier: https://github.com/dreamquark-ai/tabnet/issues/238
                     # https://github.com/dreamquark-ai/tabnet/blob/develop/census_example.ipynb
-                    'classifier__estimator': [TabNetClfTuner(device_name=settings.device_name)],
-                    # 'classifier__estimator__cat_idxs': settings.cat_idxs,
-                    # 'classifier__estimator__cat_dims': settings.cat_dims,
+                    'classifier__estimator': [TabNetClassifierTuner(device_name=settings.device_name)],
                     'classifier__estimator__seed': [settings.random_seed],
                     'classifier__estimator__clip_value': [1],
                     'classifier__estimator__verbose': [1],
                     'classifier__estimator__optimizer_fn': [torch.optim.Adam],
-                    'classifier__estimator__optimizer_params': [dict(lr=2e-2)],
-                    # 'classifier__estimator__optimizer_params': [
-                    #     {'lr': 0.02},
-                    #     {'lr': 0.01},
-                    #     {'lr': 0.001}
-                    # ],
+                    # 'classifier__estimator__optimizer_params': [dict(lr=2e-2)],
+                    'classifier__estimator__optimizer_params': [
+                        {'lr': 0.02},
+                        {'lr': 0.01},
+                        {'lr': 0.001}
+                    ],
                     'classifier__estimator__scheduler_fn': [torch.optim.lr_scheduler.StepLR],
                     'classifier__estimator__scheduler_params': [{
                         'step_size': 10,  # how to use learning rate scheduler
                         'gamma': 0.95
                     }],
-                    'classifier__estimator__mask_type': ['entmax'],
-                    # 'classifier__estimator__n_a': [3, 5, 8, 13, 21],
-                    # 'classifier__estimator__n_steps': [3, 5, 8, 10],
-                    # 'classifier__estimator__gamma': [0.5, 1.3, 3],
-                    # 'classifier__estimator__cat_emb_dim': [10, 20],
-                    # 'classifier__estimator__n_independent': [1, 2, 5],
-                    # 'classifier__estimator__n_shared': [0, 1, 2],
-                    # 'classifier__estimator__momentum': [0.1, 0.05, 0.02, 0.005],
-                    # 'classifier__estimator__lambda_sparse': [0.1, 0.01, 0.001]
+                    'classifier__estimator__mask_type': ['sparsemax', 'entmax'],
+                    'classifier__estimator__n_a': [8, 21, 34, 64],
+                    'classifier__estimator__n_steps': [3, 7, 10],
+                    'classifier__estimator__gamma': [1.0, 1.5, 2.0],
+                    'classifier__estimator__cat_emb_dim': [10, 20],
+                    'classifier__estimator__n_independent': [1, 2, 5],
+                    'classifier__estimator__n_shared': [1, 2, 5],
+                    'classifier__estimator__momentum': [0.005, 0.01, 0.02, 0.4],
+                    'classifier__estimator__lambda_sparse': [0.1, 0.01, 0.001]
                 }
             ]
 
