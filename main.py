@@ -60,7 +60,7 @@ if __name__ == '__main__':
         # Some settings are configured by default. If you want to change any settings,
         # just follow the instruction for the specific setting. For more information, view the settings.py file.
 
-        # Number of jobs to run in parallel
+        # Number of jobs to run in parallel, where -1 means using all processors. The -1 doesn't work for TabNet, instead use 1.
         # settings.n_jobs = 1
 
         # Folder path where the CSV file is located
@@ -85,7 +85,10 @@ if __name__ == '__main__':
             'tot3m_Chuva', 'med3m_TempInst', 'med3m_UmidInst', 'med3m_formITUmax', 'med3m_NDVI', 'med3m_EVI',
             'tot6m_Chuva', 'med6m_TempInst', 'med6m_UmidInst', 'med6m_NDVI', 'med6m_EVI',
             'tot12m_Chuva', 'med12m_TempInst', 'med12m_TempMin', 'med12m_UmidInst', 'med12m_NDVI', 'med12m_EVI',
-            # 'CATEGORIA'
+            # columns above removed because they have 19.352582% of missing values
+            'boa cobertura vegetal, com baixa', 'erosaoo laminar ou em sulco igua',
+            # column above removed because it will not have the attribute at the time of performing the prediction and the target is derived from this attribute
+            'CATEGORIA'
         ]
 
         # Dict update for ordinal encoding
@@ -379,10 +382,11 @@ if __name__ == '__main__':
         if execute_classifiers_pipeline:
 
             ##### Grid Search Settings #####
-            # Flag to save the results of each split in the pipeline execution, to be used in a possible new execution, in case the execution is interrupted
+            # Flag to save the results of each split in the pipeline execution, to be used in a possible new execution,
+            # in case the execution is interrupted. Default is True.
             # settings.save_results_during_run = False
 
-            # Whether True, the objects saved in the path_objects_persisted_results_will be cleaned before the execution of the pipeline
+            # Whether True, the objects persisted in the path_objects_persisted_results_runs will be cleaned before the execution of the pipeline
             settings.new_run = True
 
             ##### XGBoost Settings #####

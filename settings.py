@@ -14,7 +14,7 @@ pd.set_option('display.max_rows', utils.PANDAS_MAX_ROWS)
 # Set random seed
 random_seed = 42
 
-# Set number of jobs to run in parallel
+# Number of jobs to run in parallel, where -1 means using all processors. The -1 doesn't work for TabNet, instead use 1.
 n_jobs = 1
 
 ############################################ CSV SETTINGS ############################################
@@ -247,10 +247,11 @@ augmentations = None
 
 ############################################  PERSISTENCE OBJECTS DURING RUN OF PIPELINE ############################################
 
-# Flag to save the results of each split in the pipeline execution, to be used in a possible new execution, in case the execution is interrupted
+# Flag to save the results of each split in the pipeline execution, to be used in a possible new execution,
+# in case the execution is interrupted. Default is True.
 save_results_during_run = True
 
-# Whether True, the objects saved in the path_objects_persisted_results_will be cleaned before the execution of the pipeline
+# Whether True, the objects persisted in the path_objects_persisted_results_runs will be cleaned before the execution of the pipeline
 new_run = False
 
 # Path to objects persisted with the results of executions of the pipeline
