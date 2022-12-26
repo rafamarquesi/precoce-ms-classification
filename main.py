@@ -68,7 +68,7 @@ if __name__ == '__main__':
 
         # Path to the dataset
         settings.csv_path = csv_treatments.choose_csv_path(
-            sampling='0.2', folder_path=settings.dataset_folder_path)
+            sampling='2', folder_path=settings.dataset_folder_path)
 
         # Number of lines to be read from the dataset, where None read all lines
         # settings.number_csv_lines = 1000
@@ -133,10 +133,10 @@ if __name__ == '__main__':
         # Class column name
         settings.class_column = 'classificacao'
 
-        dataset_reports = True
+        dataset_reports = False
         execute_pre_processing = False
         execute_classifiers = False
-        execute_classifiers_pipeline = False
+        execute_classifiers_pipeline = True
 
         ################################################## CSV TREATMENTS ##################################################
 
@@ -476,7 +476,7 @@ if __name__ == '__main__':
                 transformers=transformers,
                 verbose_feature_names_out=False,
                 remainder='passthrough',
-                n_jobs=settings.n_jobs
+                n_jobs=-1
             )
 
             # Save the representation of the ColumnTransformer
@@ -514,6 +514,7 @@ if __name__ == '__main__':
                 },
                 {
                     'classifier__estimator': [KNeighborsClassifier()],
+                    'classifier__estimator__n_jobs': [-1],
                     'classifier__estimator__metric': ['minkowski', 'euclidean'],
                     'classifier__estimator__n_neighbors': list(np.arange(5, 17, 3)),
                     'classifier__estimator__weights': ['uniform', 'distance'],
@@ -553,6 +554,7 @@ if __name__ == '__main__':
                 {
                     'classifier__estimator': [RandomForestClassifier()],
                     'classifier__estimator__random_state': [settings.random_seed],
+                    'classifier__estimator__n_jobs': [-1],
                     'classifier__estimator__n_estimators': [120, 700, 1200],
                     'classifier__estimator__criterion': ['gini', 'entropy'],
                     'classifier__estimator__max_depth': list(np.arange(5, 30, 7)) + [None],
@@ -570,6 +572,7 @@ if __name__ == '__main__':
                     'classifier__estimator__max_delta_step': [1.0],
                     'classifier__estimator__random_state': [settings.random_seed],
                     'classifier__estimator__objective': ['binary:logistic'],
+                    'classifier__estimator__n_jobs': [-1],
                     'classifier__estimator__n_estimators': [50, 100, 150, 200],
                     'classifier__estimator__learning_rate': list(np.arange(0.01, 0.03, 0.01)) + list(np.arange(0.1, 0.3, 0.1)),
                     'classifier__estimator__gamma': list(np.arange(0.05, 0.066, 0.01)) + [0.1, 1.0],
