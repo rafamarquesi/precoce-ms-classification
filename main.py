@@ -387,7 +387,7 @@ if __name__ == '__main__':
             # settings.save_results_during_run = False
 
             # Whether True, the objects persisted in the path_objects_persisted_results_runs will be cleaned before the execution of the pipeline
-            settings.new_run = True
+            settings.new_run = False
 
             ##### XGBoost Settings #####
             # The tree method to use for training the model. 'gpu_hist' is recommended for GPU training. 'hist' is recommended for CPU training.
@@ -515,6 +515,7 @@ if __name__ == '__main__':
                 {
                     'classifier__estimator': [KNeighborsClassifier()],
                     'classifier__estimator__n_jobs': [-1],
+                    'classifier__estimator__algorithm': ['kd_tree'],
                     'classifier__estimator__metric': ['minkowski', 'euclidean'],
                     'classifier__estimator__n_neighbors': list(np.arange(5, 17, 3)),
                     'classifier__estimator__weights': ['uniform', 'distance'],
@@ -616,7 +617,7 @@ if __name__ == '__main__':
             ]
 
             # Cross validation for grid search
-            n_splits = 3
+            n_splits = 10
             print('Number of folds for cross validation: {}'.format(n_splits))
             cv = StratifiedKFold(
                 n_splits=n_splits,
