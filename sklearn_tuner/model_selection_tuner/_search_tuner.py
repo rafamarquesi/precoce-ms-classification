@@ -126,6 +126,10 @@ class GridSearchCVTuner(GridSearchCV):
                         raise Exception('The file with the results already fitted does not exist. Please, check the path: {}'.format(
                             settings.RESULTS_PERSIST_FILENAME))
 
+                    if n_splits != (len(out_params_fitted)/len(params_fitted)):
+                        raise Exception('The number of folds configured in the GridSearchCV is different from the number of folds already executed.\nThe number of folds configured in the GridSearchCV is {}.\nThe number of folds in the file with the results already fitted is {}'.format(
+                            n_splits, len(out_params_fitted)/len(params_fitted)))
+
                     if params_fitted and out_params_fitted:
                         print('Checking already executed parameters...')
 
