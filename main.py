@@ -61,14 +61,14 @@ if __name__ == '__main__':
         # just follow the instruction for the specific setting. For more information, view the settings.py file.
 
         # Number of jobs to run in parallel, where -1 means using all processors. The -1 doesn't work for TabNet, instead use 1.
-        # settings.n_jobs = 1
+        # settings.n_jobs = -1
 
         # Folder path where the CSV file is located
         settings.dataset_folder_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/'
 
         # Path to the dataset
         settings.csv_path = csv_treatments.choose_csv_path(
-            sampling='2', folder_path=settings.dataset_folder_path)
+            sampling='0.2', folder_path=settings.dataset_folder_path)
 
         # Number of lines to be read from the dataset, where None read all lines
         # settings.number_csv_lines = 1000
@@ -88,7 +88,7 @@ if __name__ == '__main__':
             # columns above removed because they have 19.352582% of missing values
             'boa cobertura vegetal, com baixa', 'erosaoo laminar ou em sulco igua',
             # column above removed because it will not have the attribute at the time of performing the prediction and the target is derived from this attribute
-            'CATEGORIA'
+            'classificacao'
         ]
 
         # Dict update for ordinal encoding
@@ -100,7 +100,7 @@ if __name__ == '__main__':
 
         # List with column names to apply the label encoder
         settings.label_encoder_columns_names = [
-            'classificacao'
+            'CATEGORIA'
         ]
 
         # List with column names to apply the one hot encoder
@@ -127,16 +127,16 @@ if __name__ == '__main__':
             'med7d_preR_boi', 'med1m_preR_boi', 'med3m_preR_boi', 'med6m_preR_boi',
             'med3m_formITUinst',
             'cnt3m_CL_ITUinst',
-            'Maturidade', 'Acabamento', 'Peso', 'classificacao'
+            'Maturidade', 'Acabamento', 'Peso', 'CATEGORIA'
         ]
 
         # Class column name
-        settings.class_column = 'classificacao'
+        settings.class_column = 'CATEGORIA'
 
-        dataset_reports = False
+        dataset_reports = True
         execute_pre_processing = False
         execute_classifiers = False
-        execute_classifiers_pipeline = True
+        execute_classifiers_pipeline = False
 
         ################################################## CSV TREATMENTS ##################################################
 
@@ -273,7 +273,7 @@ if __name__ == '__main__':
             # The value must be interpreted, where often a value below -0.5 or above 0.5 indicates a notable correlation,
             # and values below those values suggests a less notable correlation.
 
-            export_matrix = False
+            export_matrix = True
 
             # Correlation matrix using pearson method, between all attributes
             reports.correlation_matrix(

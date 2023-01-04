@@ -155,14 +155,19 @@ def class_distribution(y: np.array) -> None:
         y (np.array): NumPy Array to be treated.
     """
     print('\n*****INICIO RELATÓRIO DISTRIBUIÇÃO DE CLASSES******')
-    dist_1 = y[y.nonzero()].size / y.size
-    dist_0 = (y.size - y[y.nonzero()].size) / y.size
-    print('Distribuição da classe 1: {0:.0%}'.format(dist_1))
-    print('Distribuição da classe 0: {0:.0%}'.format(dist_0))
-    if dist_1 > dist_0:
-        print('Erro majoritário: {0:.0%}'.format(1 - dist_1))
+    unique, counts = np.unique(y, return_counts=True)
+    if unique.size == 2:
+        dist_1 = y[y.nonzero()].size / y.size
+        dist_0 = (y.size - y[y.nonzero()].size) / y.size
+        print('Distribuição da classe 1: {0:.0%}'.format(dist_1))
+        print('Distribuição da classe 0: {0:.0%}'.format(dist_0))
+        if dist_1 > dist_0:
+            print('Erro majoritário: {0:.0%}'.format(1 - dist_1))
+        else:
+            print('Erro majoritário: {0:.0%}'.format(1 - dist_0))
     else:
-        print('Erro majoritário: {0:.0%}'.format(1 - dist_0))
+        for key, value in dict(zip(unique, counts)).items():
+            print('Distribuição da classe {}: {:.0%}'.format(key, value/y.size))
     print('*****FIM RELATÓRIO DISTRIBUIÇÃO DE CLASSES******')
 
 

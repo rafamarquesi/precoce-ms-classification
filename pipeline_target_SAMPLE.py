@@ -125,32 +125,11 @@ if __name__ == '__main__':
 
         ################################################## CSV TREATMENTS ##################################################
 
-        generate_samples = False
-
-        if generate_samples:
-            # Generate sample of dataset
-            precoce_ms_data_frame = csv_treatments.load_data(
-                csv_path=settings.csv_path, number_csv_lines=settings.number_csv_lines,
-                dtype_dict=settings.dtype_dict, parse_dates=settings.parse_dates
-            )
-
-            percentages = [0.002, 0.005, 0.02,
-                           0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
-            for percentage in percentages:
-                csv_treatments.generate_new_csv(
-                    data_frame=utils.random_sampling_data(
-                        data_frame=precoce_ms_data_frame, how_generate='percentage', frac=percentage
-                    ),
-                    csv_path='/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados',
-                    csv_name='TAB_MODELAGEM_RAFAEL_2020_1-{}-percentage-sampling'.format(
-                        percentage*100)
-                )
-        else:
-            # Load the dataset
-            precoce_ms_data_frame = csv_treatments.load_data(
-                csv_path=settings.csv_path, delete_columns_names=settings.delete_columns_names_on_load_data,
-                number_csv_lines=settings.number_csv_lines, dtype_dict=settings.dtype_dict, parse_dates=settings.parse_dates
-            )
+        # Load the dataset
+        precoce_ms_data_frame = csv_treatments.load_data(
+            csv_path=settings.csv_path, delete_columns_names=settings.delete_columns_names_on_load_data,
+            number_csv_lines=settings.number_csv_lines, dtype_dict=settings.dtype_dict, parse_dates=settings.parse_dates
+        )
 
         ################################################## PIPELINE FOR CLASSIFICATION #####################################
 
@@ -162,11 +141,11 @@ if __name__ == '__main__':
             # settings.save_results_during_run = False
 
             # Whether True, the objects persisted in the path_objects_persisted_results_runs will be cleaned before the execution of the pipeline
-            settings.new_run = False
+            settings.new_run = True
 
             ##### XGBoost Settings #####
             # The tree method to use for training the model. 'gpu_hist' is recommended for GPU training. 'hist' is recommended for CPU training.
-            settings.tree_method = 'hist'
+            # settings.tree_method = 'hist'
 
             ##### Tab Net Settings #####
             # Flag to use embeddings in the tabnet model
@@ -177,7 +156,7 @@ if __name__ == '__main__':
             # Flag to use cat_emb_dim to define the embedding size for each categorical feature, with False the embedding size is 1
             settings.use_cat_emb_dim = True
             # 'cpu' for cpu training, 'gpu' for gpu training, 'auto' to automatically detect gpu
-            settings.device_name = 'cpu'
+            # settings.device_name = 'cpu'
             # Apply custom data augmentation pipeline during training (parameter for fit method)
             # settings.augmentations = ClassificationSMOTE(
             #     p=0.2, device_name=settings.device_name)  # aug, None
