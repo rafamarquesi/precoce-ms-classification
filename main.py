@@ -97,6 +97,7 @@ if __name__ == '__main__':
         #         'DataAbate': None
         #     }
         # )
+        settings.ordinal_encoder_columns_names.pop('CATEGORIA')
 
         # List with column names to apply the label encoder
         settings.label_encoder_columns_names = [
@@ -133,10 +134,10 @@ if __name__ == '__main__':
         # Class column name
         settings.class_column = 'CATEGORIA'
 
-        dataset_reports = True
+        dataset_reports = False
         execute_pre_processing = False
         execute_classifiers = False
-        execute_classifiers_pipeline = False
+        execute_classifiers_pipeline = True
 
         ################################################## CSV TREATMENTS ##################################################
 
@@ -381,19 +382,29 @@ if __name__ == '__main__':
 
         if execute_classifiers_pipeline:
 
+            # Get the number of classes in the target column
+            class_number = len(
+                precoce_ms_data_frame[settings.class_column].value_counts())
+
             ##### Grid Search Settings #####
             # Flag to save the results of each split in the pipeline execution, to be used in a possible new execution,
             # in case the execution is interrupted. Default is True.
             # settings.save_results_during_run = False
 
             # Whether True, the objects persisted in the path_objects_persisted_results_runs will be cleaned before the execution of the pipeline
-            settings.new_run = False
+            settings.new_run = True
 
             ##### XGBoost Settings #####
             # The tree method to use for training the model. 'gpu_hist' is recommended for GPU training. 'hist' is recommended for CPU training.
             settings.tree_method = 'hist'
+            # Specify the learning task and the corresponding learning objective. 'binary:logistic' is for binary classification.
+            if class_number > 2:
+                settings.objective = 'multi:softmax'
 
             ##### Tab Net Settings #####
+            # If multi-class classification, the eval_metric 'auc' is removed from the list
+            if class_number > 2:
+                settings.eval_metric.remove('auc')
             # Flag to use embeddings in the tabnet model
             settings.use_embeddings = True
             # Threshold of the minimum of categorical features to use embeddings
@@ -433,6 +444,8 @@ if __name__ == '__main__':
                 data_frame=precoce_ms_data_frame
             )
 
+            # # If binary classification, apply label encoder to the target column
+            # if class_number == 2:
             # Apply label encoder to the columns
             precoce_ms_data_frame, settings.columns_label_encoded = pre_processing.label_encoder_columns(
                 data_frame=precoce_ms_data_frame, columns_label_encoded=settings.columns_label_encoded,
@@ -447,6 +460,13 @@ if __name__ == '__main__':
             x, y = utils.create_x_y_dataframe_data(
                 data_frame=precoce_ms_data_frame
             )
+            # # Either multiclass classification, apply label binarizer to the target column
+            # else:
+            #     # Apply label binarization to the class column
+            #     x, y, settings.columns_label_binarized = pre_processing.label_binarizer_column(
+            #         data_frame=precoce_ms_data_frame, columns_label_binarized=settings.columns_label_binarized,
+            #         column_name=settings.class_column
+            #     )
 
             # Create the fransformers for ColumnTransformer
             transformers = [
@@ -512,15 +532,15 @@ if __name__ == '__main__':
                 {
                     'classifier__estimator': [GaussianNB()]
                 },
-                {
-                    'classifier__estimator': [KNeighborsClassifier()],
-                    'classifier__estimator__n_jobs': [-1],
-                    'classifier__estimator__algorithm': ['kd_tree'],
-                    'classifier__estimator__metric': ['minkowski', 'euclidean'],
-                    'classifier__estimator__n_neighbors': list(np.arange(5, 17, 3)),
-                    'classifier__estimator__weights': ['uniform', 'distance'],
-                    'classifier__estimator__p': [1, 2, 3]
-                },
+                # {
+                #     'classifier__estimator': [KNeighborsClassifier()],
+                #     'classifier__estimator__n_jobs': [-1],
+                #     'classifier__estimator__algorithm': ['kd_tree'],
+                #     'classifier__estimator__metric': ['minkowski', 'euclidean'],
+                #     'classifier__estimator__n_neighbors': list(np.arange(5, 17, 3)),
+                #     'classifier__estimator__weights': ['uniform', 'distance'],
+                #     'classifier__estimator__p': [1, 2, 3]
+                # },
                 {
                     'classifier__estimator': [DecisionTreeClassifier()],
                     'classifier__estimator__splitter': ['best'],
@@ -572,7 +592,9 @@ if __name__ == '__main__':
                     'classifier__estimator__tree_method': [settings.tree_method],
                     'classifier__estimator__max_delta_step': [1.0],
                     'classifier__estimator__random_state': [settings.random_seed],
-                    'classifier__estimator__objective': ['binary:logistic'],
+                    'classifier__estimator__objective': [settings.objective],
+                    # The parameter below, num_class, must be commented when using objective='binary:logistic'
+                    'classifier__estimator__num_class': [class_number],
                     'classifier__estimator__n_jobs': [-1],
                     'classifier__estimator__n_estimators': [50, 100, 150, 200],
                     'classifier__estimator__learning_rate': list(np.arange(0.01, 0.03, 0.01)) + list(np.arange(0.1, 0.3, 0.1)),
@@ -617,7 +639,7 @@ if __name__ == '__main__':
             ]
 
             # Cross validation for grid search
-            n_splits = 10
+            n_splits = 3
             print('Number of folds for cross validation: {}'.format(n_splits))
             cv = StratifiedKFold(
                 n_splits=n_splits,
