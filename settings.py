@@ -195,6 +195,9 @@ min_max_scaler_columns_names = list()
 # Dictionary with the min max scaler object fitted for each column
 columns_min_max_scaled = dict()
 
+# Dictionary with the label binarizer object fitted for each column
+columns_label_binarized = dict()
+
 ############################################ CORRELATION SETTINGS ############################################
 
 # List with column names to drop feature by correlation
@@ -273,3 +276,6 @@ SPLIT_PERSIST_FILENAME = utils.define_path_save_file(
 
 # The tree method to use for training the model. 'gpu_hist' is recommended for GPU training. 'hist' is recommended for CPU training.
 tree_method = 'gpu_hist' if torch.cuda.is_available() else 'hist'
+
+# Specify the learning task and the corresponding learning objective. 'binary:logistic' is for binary classification.
+objective = 'binary:logistic'
