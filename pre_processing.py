@@ -4,7 +4,7 @@ import utils
 import pandas as pd
 import numpy as np
 
-from sklearn.preprocessing import LabelEncoder, MinMaxScaler, OneHotEncoder, OrdinalEncoder
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler, OneHotEncoder, OrdinalEncoder, LabelBinarizer
 from sklearn.feature_selection import VarianceThreshold
 from sklearn.feature_selection import SelectFromModel
 
@@ -184,6 +184,36 @@ def inverse_label_encoder_columns(data_frame: pd.DataFrame, columns_label_encode
                 '!!!>>> Coluna {} não encontrada no DataFrame para inverse label encoding.'.format(column))
     print('*****FIM INVERSE LABEL ENCODER*********')
     return data_frame, columns_label_encoded
+
+
+@utils.timeit
+def label_binarizer_column(data_frame: pd.DataFrame, columns_label_binarized: dict, column_name: str) -> tuple:
+    """Label binarizer the column, given the column name passed as parameters.
+
+    Args:
+        data_frame (pd.DataFrame): DataFrame to be treated.
+        columns_label_binarized (dict): Dictionary with the label binarizers for each column.
+        column_name (str): Column name to label binarizer.
+
+    Returns:
+        tuple: A tuple with the data_frame, encoded column, and the columns_label_binarized, in this order.
+    """
+    print('\n*****INICIO LABEL BINARIZER******')
+    if column_name in data_frame.columns:
+        if column_name not in columns_label_binarized:
+            encoder_column = LabelBinarizer()
+            encoded_column = encoder_column.fit_transform(
+                data_frame[column_name]).astype('uint8')
+            columns_label_binarized[column_name] = encoder_column
+            data_frame = utils.delete_columns(
+                data_frame=data_frame, delete_columns_names=[column_name])
+        else:
+            print('!!!>>> A coluna {} já está codificada.'.format(column_name))
+    else:
+        print(
+            '!!!>>> Coluna {} não encontrada no DataFrame para label binarizer.'.format(column_name))
+    print('*****FIM LABEL BINARIZER*********')
+    return data_frame, encoded_column, columns_label_binarized
 
 
 @utils.timeit
