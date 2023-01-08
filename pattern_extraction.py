@@ -250,6 +250,11 @@ def run_grid_search(
         y_test, y_pred, average='micro', labels=np.unique(y_pred))
     dict_results['Macro Precisão'] = precision_score(
         y_test, y_pred, average='macro', labels=np.unique(y_pred))
+    if class_number == 2:
+        dict_results['F1'] = f1_score(y_test, y_pred)
+    else:
+        dict_results['F1 Ponderado'] = f1_score(
+            y_test, y_pred, average='weighted')
     dict_results['Micro F1'] = f1_score(
         y_test, y_pred, average='micro')
     dict_results['Macro F1'] = f1_score(
