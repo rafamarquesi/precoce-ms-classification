@@ -8,7 +8,7 @@ import pandas as pd
 import numpy as np
 
 from sklearn.utils.multiclass import type_of_target
-from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, balanced_accuracy_score, roc_auc_score, classification_report
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, balanced_accuracy_score, roc_auc_score, classification_report, cohen_kappa_score, matthews_corrcoef, log_loss
 from sklearn.model_selection import GridSearchCV, StratifiedKFold, train_test_split
 
 from xgboost import XGBClassifier
@@ -217,18 +217,35 @@ def run_grid_search(
 
     # Predict the test set
     y_pred = grid_search.predict(x_test)
+    try:
+        y_pred_proba = grid_search.predict_proba(x_test)
+    except:
+        y_pred_proba = None
 
     print('\n--- Test data performance ---')
+
+    # Get the number of classes in the target column
+    class_number = len(y.value_counts())
 
     dict_results = dict()
 
     dict_results['Acurácia'] = accuracy_score(y_test, y_pred)
-    dict_results['Revocação'] = recall_score(y_test, y_pred)
+    dict_results['Acurácia Balanceada'] = balanced_accuracy_score(
+        y_test, y_pred)
+    if class_number == 2:
+        dict_results['Revocação'] = recall_score(y_test, y_pred)
+    else:
+        dict_results['Revocação Ponderada'] = recall_score(
+            y_test, y_pred, average='weighted')
     dict_results['Micro Revocação'] = recall_score(
         y_test, y_pred, average='micro')
     dict_results['Macro Revocação'] = recall_score(
         y_test, y_pred, average='macro')
-    dict_results['Precisão'] = precision_score(y_test, y_pred)
+    if class_number == 2:
+        dict_results['Precisão'] = precision_score(y_test, y_pred)
+    else:
+        dict_results['Precisão Ponderada'] = precision_score(
+            y_test, y_pred, average='weighted')
     dict_results['Micro Precisão'] = precision_score(
         y_test, y_pred, average='micro', labels=np.unique(y_pred))
     dict_results['Macro Precisão'] = precision_score(
@@ -237,9 +254,16 @@ def run_grid_search(
         y_test, y_pred, average='micro')
     dict_results['Macro F1'] = f1_score(
         y_test, y_pred, average='macro')
-    dict_results['Acurácia Balanceada'] = balanced_accuracy_score(
+    dict_results['Coeficiente Kappa'] = cohen_kappa_score(y_test, y_pred)
+    dict_results['Coeficiente de Correlação de Matthews'] = matthews_corrcoef(
         y_test, y_pred)
-    dict_results['ROC AUC Score'] = roc_auc_score(y_pred, y_test)
+    if y_pred_proba is not None:
+        dict_results['Log Loss'] = log_loss(y_test, y_pred_proba)
+        if class_number == 2:
+            dict_results['ROC AUC Score'] = roc_auc_score(y_test, y_pred_proba)
+        else:
+            dict_results['ROC AUC Score Ponderado'] = roc_auc_score(
+                y_test, y_pred_proba, multi_class='ovr', average='weighted')
 
     for key, value in dict_results.items():
         print('Test {}: {}'.format(key, value))
