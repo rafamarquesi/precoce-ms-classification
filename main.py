@@ -23,7 +23,7 @@ import torch
 from pytorch_tabnet.augmentations import ClassificationSMOTE
 
 from clf_switcher import ClfSwitcher
-from pytorch_tabnet_tuner.tab_model_tuner import TabNetClassifierTuner
+from pytorch_tabnet_tuner.tab_model_tuner import TabNetClassifierTuner, F1ScoreMacro
 from sklearn_tuner.model_selection_tuner import GridSearchCVTuner
 
 import csv_treatments
@@ -68,7 +68,7 @@ if __name__ == '__main__':
 
         # Path to the dataset
         settings.csv_path = csv_treatments.choose_csv_path(
-            sampling='0.2', folder_path=settings.dataset_folder_path)
+            sampling='2', folder_path=settings.dataset_folder_path)
 
         # Number of lines to be read from the dataset, where None read all lines
         # settings.number_csv_lines = 1000
@@ -405,6 +405,8 @@ if __name__ == '__main__':
             # If multi-class classification, the eval_metric 'auc' is removed from the list
             if class_number > 2:
                 settings.eval_metric.remove('auc')
+                settings.eval_metric.append('logloss')
+                settings.eval_metric.append(F1ScoreMacro)
             # Flag to use embeddings in the tabnet model
             settings.use_embeddings = True
             # Threshold of the minimum of categorical features to use embeddings
@@ -650,8 +652,12 @@ if __name__ == '__main__':
             # TODO: Indication of the advisor on how to load and save the parameters already executed in the grid search https://github.com/ragero/text_categorization_tool_python/blob/master/utilities/generate_parameters_list.py
             # TODO: Test this score: http://scikit-learn.org/stable/modules/generated/sklearn.metrics.balanced_accuracy_score.html
             # Custom refit strategy of a grid search with cross-validation (2 scores): https://scikit-learn.org/stable/auto_examples/model_selection/plot_grid_search_digits.html#sphx-glr-auto-examples-model-selection-plot-grid-search-digits-py
-            # score = 'accuracy'
-            # score = 'balanced_accuracy'
+            # Scoring strategy for grid search
+            if class_number == 2:
+                score = 'accuracy'
+            else:
+                score = 'f1_macro'
+            print('Scoring strategy for grid search: {}'.format(score))
 
             # Size of test in train and test split
             # split_test_size = 0.2
@@ -662,7 +668,7 @@ if __name__ == '__main__':
                 estimator=pipe,
                 param_grid=param_grid,
                 cv=cv,
-                # score=score,
+                score=score,
                 n_jobs=settings.n_jobs,
                 test_size=0.2,
                 random_state=settings.random_seed
