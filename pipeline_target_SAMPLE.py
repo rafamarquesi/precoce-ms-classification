@@ -21,7 +21,7 @@ import torch
 from pytorch_tabnet.augmentations import ClassificationSMOTE
 
 from clf_switcher import ClfSwitcher
-from pytorch_tabnet_tuner.tab_model_tuner import TabNetClassifierTuner
+from pytorch_tabnet_tuner.tab_model_tuner import TabNetClassifierTuner, F1ScoreMacro
 
 import csv_treatments
 import pre_processing
@@ -159,6 +159,8 @@ if __name__ == '__main__':
             # If multi-class classification, the eval_metric 'auc' is removed from the list
             if class_number > 2:
                 settings.eval_metric.remove('auc')
+                settings.eval_metric.append('logloss')
+                settings.eval_metric.append(F1ScoreMacro)
             # Flag to use embeddings in the tabnet model
             settings.use_embeddings = True
             # Threshold of the minimum of categorical features to use embeddings
@@ -371,12 +373,20 @@ if __name__ == '__main__':
                 shuffle=False
             )
 
+            # Scoring strategy for grid search
+            if class_number == 2:
+                score = 'accuracy'
+            else:
+                score = 'f1_macro'
+            print('Scoring strategy for grid search: {}'.format(score))
+
             pattern_extraction.run_grid_search(
                 x=x,
                 y=y,
                 estimator=pipe,
                 param_grid=param_grid,
                 cv=cv,
+                score=score,
                 n_jobs=settings.n_jobs,
                 test_size=0.2,
                 random_state=settings.random_seed
