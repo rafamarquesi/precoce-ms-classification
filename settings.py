@@ -1,15 +1,16 @@
 import os
 
-import utils
-
 import pandas as pd
 import torch
 
 # Some settings are configured by default. If you want to change any settings,
 # just follow the instruction for the specific setting.
 
+
+# Pandas max rows, None displays all rows
+PANDAS_MAX_ROWS = 5000
 # Set pandas max rows
-pd.set_option('display.max_rows', utils.PANDAS_MAX_ROWS)
+pd.set_option('display.max_rows', PANDAS_MAX_ROWS)
 
 # Set random seed
 random_seed = 42
@@ -162,6 +163,9 @@ PATH_SAVE_RESULTS = './runs/results'
 # Path to save the logs
 PATH_SAVE_LOGS = './logs'
 
+# Path to save the encoders
+PATH_SAVE_ENCODERS_SCALERS = './runs/encoders_scalers'
+
 ############################################ ENCODERS SETTINGS ############################################
 
 # Dictionary with column names to apply the ordinal encoder
@@ -261,16 +265,13 @@ new_run = False
 PATH_OBJECTS_PERSISTED_RESULTS_RUNS = './runs/objects_persisted_results_runs'
 
 # File name to save the parameters executed in the pipeline execution
-PARAMETERS_PERSIST_FILENAME = utils.define_path_save_file(
-    path_save_file=PATH_OBJECTS_PERSISTED_RESULTS_RUNS) + 'parameters_persist'
+PARAMETERS_PERSIST_FILENAME = PATH_OBJECTS_PERSISTED_RESULTS_RUNS + '/parameters_persist'
 
 # File name to save all the results of each split of all estimator in the pipeline execution
-RESULTS_PERSIST_FILENAME = utils.define_path_save_file(
-    path_save_file=PATH_OBJECTS_PERSISTED_RESULTS_RUNS) + 'results_persist'
+RESULTS_PERSIST_FILENAME = PATH_OBJECTS_PERSISTED_RESULTS_RUNS + '/results_persist'
 
 # File name to save the results of each split of estimator in the pipeline execution
-SPLIT_PERSIST_FILENAME = utils.define_path_save_file(
-    path_save_file=PATH_OBJECTS_PERSISTED_RESULTS_RUNS) + 'split_persist'
+SPLIT_PERSIST_FILENAME = PATH_OBJECTS_PERSISTED_RESULTS_RUNS + '/split_persist'
 
 ############################################ XGBOOST SETTINGS ############################################
 
