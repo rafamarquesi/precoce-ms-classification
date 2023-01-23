@@ -204,6 +204,13 @@ if __name__ == '__main__':
                 columns_names=settings.label_encoder_columns_names
             )
 
+            # Save the label encoded columns
+            utils.dump_joblib(
+                object=settings.columns_label_encoded[settings.class_column],
+                file_name='target_encoded',
+                path_save_file=settings.PATH_SAVE_ENCODERS_SCALERS
+            )
+
             # Move the target column to the last position in dataframe
             precoce_ms_data_frame = utils.move_cloumns_last_positions(
                 data_frame=precoce_ms_data_frame, columns_names=[settings.class_column])
@@ -379,6 +386,9 @@ if __name__ == '__main__':
             else:
                 score = 'f1_macro'
             print('Scoring strategy for grid search: {}'.format(score))
+
+            # Delete unused variables
+            del precoce_ms_data_frame
 
             pattern_extraction.run_grid_search(
                 x=x,
