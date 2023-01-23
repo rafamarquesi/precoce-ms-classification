@@ -3,6 +3,7 @@ from typing import Union
 
 import utils
 import pre_processing
+import settings
 
 from sys import displayhook
 
@@ -143,7 +144,7 @@ def all_attributes(data_frame: pd.DataFrame) -> None:
         print('Descrição:\n{}'.format(column_data.describe()))
         print('Número de nan: {}'.format(column_data.isna().sum()))
         print('-------------------------------')
-    pd.set_option('display.max_rows', utils.PANDAS_MAX_ROWS)
+    pd.set_option('display.max_rows', settings.PANDAS_MAX_ROWS)
     print('*****FIM RELATÓRIO ATRIBUTOS******')
 
 

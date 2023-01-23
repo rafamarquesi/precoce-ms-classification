@@ -138,6 +138,8 @@ if __name__ == '__main__':
         execute_pre_processing = False
         execute_classifiers = False
         execute_classifiers_pipeline = True
+        analyze_results = False
+        test_api = False
 
         ################################################## CSV TREATMENTS ##################################################
 
@@ -454,6 +456,13 @@ if __name__ == '__main__':
                 columns_names=settings.label_encoder_columns_names
             )
 
+            # Save the label encoded columns
+            utils.dump_joblib(
+                object=settings.columns_label_encoded[settings.class_column],
+                file_name='target_encoded',
+                path_save_file=settings.PATH_SAVE_ENCODERS_SCALERS
+            )
+
             # Move the target column to the last position in dataframe
             precoce_ms_data_frame = utils.move_cloumns_last_positions(
                 data_frame=precoce_ms_data_frame, columns_names=[settings.class_column])
@@ -662,6 +671,9 @@ if __name__ == '__main__':
             # Size of test in train and test split
             # split_test_size = 0.2
 
+            # Delete unused variables
+            del precoce_ms_data_frame
+
             pattern_extraction.run_grid_search(
                 x=x,
                 y=y,
@@ -673,6 +685,11 @@ if __name__ == '__main__':
                 test_size=0.2,
                 random_state=settings.random_seed
             )
+
+        ################################################## ANALYZE RESULTS #####################################
+
+        if analyze_results:
+            pass
 
         ################################################## PRE PROCESSING ##################################################
 
@@ -873,6 +890,9 @@ if __name__ == '__main__':
 
             reports.models_results(
                 models_results=settings.models_results, path_save_fig=settings.PATH_SAVE_PLOTS)
+
+        if test_api:
+            pass
 
         tee_log_file.close()
     except Exception as e:
