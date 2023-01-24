@@ -382,7 +382,7 @@ def load_object(file_path: str) -> object:
             object_.load_model(file_path)
         # If TabNetClassifier
         elif object_name == _ESTIMATORS_WITH_SAVE_LOAD_METHOD[1]:
-            object_ = TabNetClassifierTuner()
+            object_ = TabNetClassifierTuner(device_name=settings.device_name)
             object_.load_model(file_path)
         else:
             raise ValueError(
