@@ -14,6 +14,7 @@ from sklearn.model_selection import GridSearchCV, StratifiedKFold, train_test_sp
 import settings
 import csv_treatments
 import utils
+import reports
 from sklearn_tuner.model_selection_tuner import GridSearchCVTuner
 
 
@@ -220,6 +221,14 @@ def run_grid_search(
         y_pred_proba = grid_search.predict_proba(x_test)
     except:
         y_pred_proba = None
+
+    # Save confusion matrix
+    reports.confusion_matrix_display(
+        y_true=y_test,
+        y_pred=y_pred,
+        display_figure=False,
+        path_save_fig=settings.PATH_SAVE_PLOTS
+    )
 
     print('\n--- Test data performance ---')
 
