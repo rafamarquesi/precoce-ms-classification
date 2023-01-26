@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 import missingno as msno
 
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import ConfusionMatrixDisplay
 
 from sklearn.linear_model import SGDClassifier
 from sklearn.linear_model import LogisticRegression
@@ -1008,6 +1009,41 @@ def show_settings(settings: object) -> None:
             print('{} = {}'.format(key, value))
     print('*****FIM SHOW SETTINGS******\n')
 
+
+@utils.timeit
+def confusion_matrix_display(y_true: np.array, y_pred: np.array, display_figure: bool = True, save_fig: bool = True, path_save_fig: str = None) -> None:
+    """Display the confusion matrix, based in ConfusionMatrixDisplay.from_predictions from scikit-learn, and save it in a file.
+
+    Args:
+        y_true (np.array): True labels.
+        y_pred (np.array): Predicted labels.
+        display_figure (bool, optional): Flag to display the results, for example in jupyter notebook. Defaults to False.
+        save_fig (bool, optional): Flag to save the figures. Defaults to False.
+        path_save_fig (str, optional): Path to save the figures. If None, save the figures in root path of project. Defaults to None.
+    """
+
+    print('*****INICIO CONFUSION MATRIX DISPLAY******')
+
+    plt.figure(figsize=(10, 8))
+    ConfusionMatrixDisplay.from_predictions(y_true, y_pred)
+
+    if save_fig:
+        path_save_fig = utils.define_path_save_file(
+            path_save_file=path_save_fig)
+
+        name_figure = 'confusion_matrix_display-{}.png'.format(
+            utils.get_current_datetime())
+        plt.savefig(
+            ''.join([path_save_fig, name_figure]), bbox_inches='tight')
+        print('Figure {} saved in {} directory.'.format(
+            name_figure, path_save_fig))
+
+    if display_figure:
+        plt.show()
+
+    plt.close()
+
+    print('*****FIM CONFUSION MATRIX DISPLAY******\n')
 
 ################################################## PRIVATE METHODS ##################################################
 

@@ -68,27 +68,41 @@ if __name__ == '__main__':
 
         # Path to the dataset
         settings.csv_path = csv_treatments.choose_csv_path(
-            sampling='2', folder_path=settings.dataset_folder_path)
+            sampling='0.2', folder_path=settings.dataset_folder_path)
 
         # Number of lines to be read from the dataset, where None read all lines
         # settings.number_csv_lines = 1000
 
+        # Class column name
+        settings.class_column = 'classificacao'
+
         # List with columns to delete when loading dataset
         settings.delete_columns_names_on_load_data = [
-            'DataAbate',
+            'EstabelecimentoMunicipio', 'Maturidade', 'Acabamento', 'Peso',
+            'DataAbate', 'ANO',
             'Frigorifico_ID', 'Frigorifico_CNPJ', 'Frigorifico_RazaoSocial', 'Municipio_Frigorifico',
             'EstabelecimentoIdentificador', 'Data_homol', 'Questionario_ID',
+            'FERTIIRRIGACAO', 'CONCEN_VOLUM', 'CREEPFEEDING', 'FORN_ESTRAT_SILAGEM', 'PROTEICO', 'PROTEICO_ENERGETICO',
+            'RACAO_BAL_CONS_INFERIOR', 'SAL_MINERAL', 'SALMINERAL_UREIA', 'RACAOO_BAL_CONSUMO_IG', 'GRAO_INTEIRO',
+            'ALTO_CONCENTR_VOLUM', 'ALTO_CONCENTRADO', 'BPA',
             'area so confinamento', 'Lista Trace', 'Motivo', 'data_homol_select', 'dif_datas',
             'DataAbate_6m_ANT', 'data12m', 'data6m', 'data3m', 'data1m', 'data7d',
+            'med7d_formITUinst', 'med7d_preR_soja', 'med7d_preR_milho', 'med7d_preR_boi',
+            'med1m_formITUinst', 'med1m_preR_soja', 'med1m_preR_milho', 'med1m_preR_boi',
+            'med3m_preR_soja',
+            'med6m_preR_soja',
+            'med12m_preR_soja',
+            'cnt7d_CL_ITUinst', 'cnt1m_CL_ITUinst', 'cnt3m_CL_ITUinst', 'cnt6m_CL_ITUinst', 'cnt12m_CL_ITUinst',
             'tot7d_Chuva', 'med7d_TempInst', 'med7d_TempMin', 'med7d_UmidInst', 'med7d_formITUmax', 'med7d_NDVI', 'med7d_EVI',
             'tot1m_Chuva', 'med1m_TempInst', 'med1m_UmidInst', 'med1m_NDVI', 'med1m_EVI',
-            'tot3m_Chuva', 'med3m_TempInst', 'med3m_UmidInst', 'med3m_formITUmax', 'med3m_NDVI', 'med3m_EVI',
-            'tot6m_Chuva', 'med6m_TempInst', 'med6m_UmidInst', 'med6m_NDVI', 'med6m_EVI',
-            'tot12m_Chuva', 'med12m_TempInst', 'med12m_TempMin', 'med12m_UmidInst', 'med12m_NDVI', 'med12m_EVI',
+            'med3m_TempInst', 'med3m_UmidInst', 'med3m_formITUmax', 'med3m_EVI',
+            'med6m_TempInst', 'med6m_UmidInst', 'med6m_EVI',
+            'med12m_TempInst', 'med12m_TempMin', 'med12m_UmidInst', 'med12m_EVI',
             # columns above removed because they have 19.352582% of missing values
             'boa cobertura vegetal, com baixa', 'erosaoo laminar ou em sulco igua',
             # column above removed because it will not have the attribute at the time of performing the prediction and the target is derived from this attribute
-            'classificacao'
+            # 'classificacao'
+            'CATEGORIA'
         ]
 
         # Dict update for ordinal encoding
@@ -98,41 +112,33 @@ if __name__ == '__main__':
         #     }
         # )
         settings.ordinal_encoder_columns_names.pop('CATEGORIA')
+        settings.ordinal_encoder_columns_names.pop('Maturidade')
+        settings.ordinal_encoder_columns_names.pop('Acabamento')
 
         # List with column names to apply the label encoder
         settings.label_encoder_columns_names = [
-            'CATEGORIA'
+            settings.class_column
         ]
 
         # List with column names to apply the one hot encoder
         settings.one_hot_encoder_columns_names = [
-            'EstabelecimentoMunicipio', 'Tipificacao', 'ANO'
+            'Tipificacao'
         ]
 
         # List with column names to apply the min max scaler
         settings.min_max_scaler_columns_names = [
-            'Peso',
-            'med7d_formITUinst', 'med7d_preR_soja', 'med7d_preR_milho', 'med7d_preR_boi',
-            'med1m_formITUinst', 'med1m_preR_soja', 'med1m_preR_milho', 'med1m_preR_boi',
-            'med3m_formITUinst', 'med3m_preR_soja', 'med3m_preR_milho', 'med3m_preR_boi',
-            'med6m_formITUinst', 'med6m_preR_soja', 'med6m_preR_milho', 'med6m_preR_boi',
-            'med12m_formITUinst', 'med12m_preR_soja', 'med12m_preR_milho', 'med12m_preR_boi'
+            'tot3m_Chuva', 'med3m_formITUinst', 'med3m_NDVI', 'med3m_preR_milho', 'med3m_preR_boi',
+            'tot6m_Chuva', 'med6m_formITUinst', 'med6m_NDVI', 'med6m_preR_milho', 'med6m_preR_boi',
+            'tot12m_Chuva', 'med12m_formITUinst', 'med12m_NDVI', 'med12m_preR_milho', 'med12m_preR_boi'
         ]
 
         # List with column names to drop feature by correlation
         # I choise the features greater than or equal to threshold 0.95, because the spearman correlation
         # matrix showed that there are some features that are highly correlated
         settings.columns_names_drop_feature_by_correlation = [
-            'med7d_preR_soja', 'med1m_preR_soja', 'med3m_preR_soja', 'med6m_preR_soja', 'med12m_preR_soja',
-            'med7d_preR_milho',
-            'med7d_preR_boi', 'med1m_preR_boi', 'med3m_preR_boi', 'med6m_preR_boi',
-            'med3m_formITUinst',
-            'cnt3m_CL_ITUinst',
-            'Maturidade', 'Acabamento', 'Peso', 'CATEGORIA'
+            'med3m_formITUinst', 'med3m_preR_boi', 'med6m_preR_boi',
+            settings.class_column
         ]
-
-        # Class column name
-        settings.class_column = 'CATEGORIA'
 
         dataset_reports = False
         execute_pre_processing = False
@@ -467,6 +473,10 @@ if __name__ == '__main__':
             precoce_ms_data_frame = utils.move_cloumns_last_positions(
                 data_frame=precoce_ms_data_frame, columns_names=[settings.class_column])
 
+            # Target attribute distribution
+            reports.class_distribution(
+                y=precoce_ms_data_frame[settings.class_column].values)
+
             # Create x, the features, and y, the target
             x, y = utils.create_x_y_dataframe_data(
                 data_frame=precoce_ms_data_frame
@@ -604,7 +614,6 @@ if __name__ == '__main__':
                     'classifier__estimator__max_delta_step': [1.0],
                     'classifier__estimator__random_state': [settings.random_seed],
                     'classifier__estimator__objective': [settings.objective],
-                    # The parameter below, num_class, must be commented when using objective='binary:logistic'
                     'classifier__estimator__num_class': [class_number],
                     'classifier__estimator__n_jobs': [-1],
                     'classifier__estimator__n_estimators': [50, 100, 150, 200],
@@ -648,6 +657,13 @@ if __name__ == '__main__':
                     'classifier__estimator__lambda_sparse': [0.1, 0.01, 0.001]
                 }
             ]
+
+            # Remove num_class parameter from XGBClassifier when using binary classification
+            if class_number == 2:
+                for estimator in param_grid:
+                    if estimator['classifier__estimator'][0].__class__.__name__ == XGBClassifier().__class__.__name__:
+                        estimator.pop('classifier__estimator__num_class')
+                        break
 
             # Cross validation for grid search
             n_splits = 3

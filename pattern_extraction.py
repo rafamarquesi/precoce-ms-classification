@@ -14,6 +14,7 @@ from sklearn.model_selection import GridSearchCV, StratifiedKFold, train_test_sp
 import settings
 import csv_treatments
 import utils
+import reports
 from sklearn_tuner.model_selection_tuner import GridSearchCVTuner
 
 
@@ -221,6 +222,14 @@ def run_grid_search(
     except:
         y_pred_proba = None
 
+    # Save confusion matrix
+    reports.confusion_matrix_display(
+        y_true=y_test,
+        y_pred=y_pred,
+        display_figure=False,
+        path_save_fig=settings.PATH_SAVE_PLOTS
+    )
+
     print('\n--- Test data performance ---')
 
     # Get the number of classes in the target column
@@ -264,7 +273,8 @@ def run_grid_search(
     if y_pred_proba is not None:
         dict_results['Log Loss'] = log_loss(y_test, y_pred_proba)
         if class_number == 2:
-            dict_results['ROC AUC Score'] = roc_auc_score(y_test, y_pred_proba)
+            dict_results['ROC AUC Score'] = roc_auc_score(
+                y_test, y_pred_proba[:, 1])
         else:
             dict_results['ROC AUC Score Ponderado'] = roc_auc_score(
                 y_test, y_pred_proba, multi_class='ovr', average='weighted')
