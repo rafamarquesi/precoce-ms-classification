@@ -273,7 +273,8 @@ def run_grid_search(
     if y_pred_proba is not None:
         dict_results['Log Loss'] = log_loss(y_test, y_pred_proba)
         if class_number == 2:
-            dict_results['ROC AUC Score'] = roc_auc_score(y_test, y_pred_proba)
+            dict_results['ROC AUC Score'] = roc_auc_score(
+                y_test, y_pred_proba[:, 1])
         else:
             dict_results['ROC AUC Score Ponderado'] = roc_auc_score(
                 y_test, y_pred_proba, multi_class='ovr', average='weighted')
