@@ -133,7 +133,9 @@ dtype_dict = {
     'ANO': 'uint16',
     'CATEGORIA': 'category',
     'classificacao': 'category',
-    'Motivo': 'category'
+    'Motivo': 'category',
+    'QTD_ANIMAIS_LOTE': 'uint16',
+    'CATEGORIA_BINARIA': 'category'
 }
 
 # List with dates to parse
@@ -201,6 +203,11 @@ columns_min_max_scaled = dict()
 
 # Dictionary with the label binarizer object fitted for each column
 columns_label_binarized = dict()
+
+############################################ IMPUTER SETTINGS ############################################
+
+# List with column names to apply the simple imputer
+simple_imputer_columns_names = list()
 
 ############################################ CORRELATION SETTINGS ############################################
 
