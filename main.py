@@ -160,7 +160,6 @@ if __name__ == '__main__':
         execute_classifiers = False
         execute_classifiers_pipeline = True
         analyze_results = False
-        test_api = False
 
         ################################################## CSV TREATMENTS ##################################################
 
@@ -992,9 +991,6 @@ if __name__ == '__main__':
 
             reports.models_results(
                 models_results=settings.models_results, path_save_fig=settings.PATH_SAVE_PLOTS)
-
-        if test_api:
-            pass
 
         tee_log_file.close()
     except Exception as e:
