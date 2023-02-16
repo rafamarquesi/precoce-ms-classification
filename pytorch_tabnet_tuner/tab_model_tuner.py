@@ -7,8 +7,10 @@ import numpy as np
 import torch
 
 from pytorch_tabnet.tab_model import TabNetClassifier
+from pytorch_tabnet.metrics import Metric
 
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import f1_score
 
 import settings
 from pytorch_tabnet_tuner.utils_tuner import ComplexEncoderTuner
@@ -102,7 +104,7 @@ class TabNetClassifierTuner(TabNetClassifier):
             y_train=y_train,
             eval_set=[(X_train, y_train), (X_valid, y_valid)],
             eval_name=['train', 'valid'],
-            # TODO: If needed implement F1-score metric: https://github.com/dreamquark-ai/tabnet/issues/245#issuecomment-739745307
+            # If needed implement F1-score metric: https://github.com/dreamquark-ai/tabnet/issues/245#issuecomment-739745307
             eval_metric=settings.eval_metric,
             weights=1,
             max_epochs=1000,
@@ -160,3 +162,14 @@ class TabNetClassifierTuner(TabNetClassifier):
         shutil.rmtree(path)
         print(f"Successfully saved model at {path}.zip")
         return f"{path}.zip"
+
+
+class F1ScoreMacro(Metric):
+    """F1 macro score metric for TabNet."""
+
+    def __init__(self):
+        self._name = 'f1_macro'
+        self._maximize = True
+
+    def __call__(self, y_true, y_score):
+        return f1_score(y_true, np.argmax(y_score, axis=1), average='macro')

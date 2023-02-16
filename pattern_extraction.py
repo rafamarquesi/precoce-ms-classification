@@ -8,21 +8,14 @@ import pandas as pd
 import numpy as np
 
 from sklearn.utils.multiclass import type_of_target
-from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, balanced_accuracy_score, roc_auc_score, classification_report
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, balanced_accuracy_score, roc_auc_score, classification_report, cohen_kappa_score, matthews_corrcoef, log_loss
 from sklearn.model_selection import GridSearchCV, StratifiedKFold, train_test_split
-
-from xgboost import XGBClassifier
 
 import settings
 import csv_treatments
 import utils
+import reports
 from sklearn_tuner.model_selection_tuner import GridSearchCVTuner
-from pytorch_tabnet_tuner.tab_model_tuner import TabNetClassifierTuner
-
-_ESTIMATORS_WITH_SAVE_LOAD_METHOD = [
-    XGBClassifier().__class__.__name__,
-    TabNetClassifierTuner().__class__.__name__
-]
 
 
 @utils.timeit
@@ -138,7 +131,7 @@ def run_grid_search(
     best_estimator = best_pipe.steps[-1][-1].estimator
 
     # Save best estimator
-    __save_best_estimator(best_estimator=best_estimator)
+    utils.save_best_estimator(best_estimator=best_estimator)
     # utils.dump_joblib(
     #     object=best_estimator,
     #     file_name='best_estimator',
@@ -153,6 +146,13 @@ def run_grid_search(
     )
 
     print('Best estimator: {}'.format(best_estimator))
+
+    # Save the column transformer, for preprocessing data in prediction
+    utils.dump_joblib(
+        object=best_pipe.named_steps['preprocessor'],
+        file_name='column_transformer',
+        path_save_file=settings.PATH_SAVE_ENCODERS_SCALERS
+    )
 
     # Dict with the grid search results
     grid_search_results = dict()
@@ -217,29 +217,67 @@ def run_grid_search(
 
     # Predict the test set
     y_pred = grid_search.predict(x_test)
+    try:
+        y_pred_proba = grid_search.predict_proba(x_test)
+    except:
+        y_pred_proba = None
+
+    # Save confusion matrix
+    reports.confusion_matrix_display(
+        y_true=y_test,
+        y_pred=y_pred,
+        display_figure=False,
+        path_save_fig=settings.PATH_SAVE_PLOTS
+    )
 
     print('\n--- Test data performance ---')
+
+    # Get the number of classes in the target column
+    class_number = len(y.value_counts())
 
     dict_results = dict()
 
     dict_results['Acurácia'] = accuracy_score(y_test, y_pred)
-    dict_results['Revocação'] = recall_score(y_test, y_pred)
+    dict_results['Acurácia Balanceada'] = balanced_accuracy_score(
+        y_test, y_pred)
+    if class_number == 2:
+        dict_results['Revocação'] = recall_score(y_test, y_pred)
+    else:
+        dict_results['Revocação Ponderada'] = recall_score(
+            y_test, y_pred, average='weighted')
     dict_results['Micro Revocação'] = recall_score(
         y_test, y_pred, average='micro')
     dict_results['Macro Revocação'] = recall_score(
         y_test, y_pred, average='macro')
-    dict_results['Precisão'] = precision_score(y_test, y_pred)
+    if class_number == 2:
+        dict_results['Precisão'] = precision_score(y_test, y_pred)
+    else:
+        dict_results['Precisão Ponderada'] = precision_score(
+            y_test, y_pred, average='weighted')
     dict_results['Micro Precisão'] = precision_score(
         y_test, y_pred, average='micro', labels=np.unique(y_pred))
     dict_results['Macro Precisão'] = precision_score(
         y_test, y_pred, average='macro', labels=np.unique(y_pred))
+    if class_number == 2:
+        dict_results['F1'] = f1_score(y_test, y_pred)
+    else:
+        dict_results['F1 Ponderado'] = f1_score(
+            y_test, y_pred, average='weighted')
     dict_results['Micro F1'] = f1_score(
         y_test, y_pred, average='micro')
     dict_results['Macro F1'] = f1_score(
         y_test, y_pred, average='macro')
-    dict_results['Acurácia Balanceada'] = balanced_accuracy_score(
+    dict_results['Coeficiente Kappa'] = cohen_kappa_score(y_test, y_pred)
+    dict_results['Coeficiente de Correlação de Matthews'] = matthews_corrcoef(
         y_test, y_pred)
-    dict_results['ROC AUC Score'] = roc_auc_score(y_pred, y_test)
+    if y_pred_proba is not None:
+        dict_results['Log Loss'] = log_loss(y_test, y_pred_proba)
+        if class_number == 2:
+            dict_results['ROC AUC Score'] = roc_auc_score(
+                y_test, y_pred_proba[:, 1])
+        else:
+            dict_results['ROC AUC Score Ponderado'] = roc_auc_score(
+                y_test, y_pred_proba, multi_class='ovr', average='weighted')
 
     for key, value in dict_results.items():
         print('Test {}: {}'.format(key, value))
@@ -350,40 +388,6 @@ def run_models(x: np.array, y: np.array, models: dict, models_results: dict, n_s
 
 
 ############# PRIVATE METHODS #############
-
-def __save_best_estimator(best_estimator: object) -> None:
-    """
-    Save the best estimator of grid search.
-
-    Args:
-        best_estimator (object): Estimator will be saved.
-    """
-
-    file_name = 'best_estimator'
-
-    if best_estimator.__class__.__name__ not in _ESTIMATORS_WITH_SAVE_LOAD_METHOD:
-        utils.dump_joblib(
-            object=best_estimator,
-            file_name='-'.join([file_name, best_estimator.__class__.__name__]),
-            path_save_file=settings.PATH_SAVE_BEST_ESTIMATORS
-        )
-    else:
-        file = '{}{}-{}-{}'.format(
-            utils.define_path_save_file(
-                path_save_file=settings.PATH_SAVE_BEST_ESTIMATORS),
-            file_name,
-            best_estimator.__class__.__name__,
-            utils.get_current_datetime()
-        )
-        # If XGBoost
-        if best_estimator.__class__.__name__ == _ESTIMATORS_WITH_SAVE_LOAD_METHOD[0]:
-            file = ''.join([file, '.json'])
-            best_estimator.save_model(file)
-        # If TabNetClassifier
-        elif best_estimator.__class__.__name__ == _ESTIMATORS_WITH_SAVE_LOAD_METHOD[1]:
-            best_estimator.save_model(file)
-        print('Object saved in file: {}'.format(file))
-
 
 def __tunning_parameters(model_params: dict, x: np.array, y: np.array, train_size: float = 0.70, test_size: float = 0.30, n_splits: int = 3, shuffle: bool = True, random_state: int = 0) -> object:
     """

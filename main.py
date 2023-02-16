@@ -23,7 +23,7 @@ import torch
 from pytorch_tabnet.augmentations import ClassificationSMOTE
 
 from clf_switcher import ClfSwitcher
-from pytorch_tabnet_tuner.tab_model_tuner import TabNetClassifierTuner
+from pytorch_tabnet_tuner.tab_model_tuner import TabNetClassifierTuner, F1ScoreMacro
 from sklearn_tuner.model_selection_tuner import GridSearchCVTuner
 
 import csv_treatments
@@ -61,33 +61,55 @@ if __name__ == '__main__':
         # just follow the instruction for the specific setting. For more information, view the settings.py file.
 
         # Number of jobs to run in parallel, where -1 means using all processors. The -1 doesn't work for TabNet, instead use 1.
-        # settings.n_jobs = 1
+        # settings.n_jobs = -1
 
         # Folder path where the CSV file is located
         settings.dataset_folder_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/'
 
         # Path to the dataset
         settings.csv_path = csv_treatments.choose_csv_path(
-            sampling='2', folder_path=settings.dataset_folder_path)
+            sampling='ANIMAIS-POR-LOTE-CATEGORIA_BINARIA', folder_path=settings.dataset_folder_path)
 
         # Number of lines to be read from the dataset, where None read all lines
         # settings.number_csv_lines = 1000
 
+        # Class column name
+        settings.class_column = 'CATEGORIA_BINARIA'
+
+        # Checks if it is batch separated animals dataset
+        # It was necessary to create to do some validations while loading the dataset, as it was changed from the original.
+        is_batch_dataset = True if settings.csv_path.find(
+            'ANIMAIS-POR-LOTE') != -1 else False
+
         # List with columns to delete when loading dataset
         settings.delete_columns_names_on_load_data = [
-            'DataAbate',
-            'Frigorifico_ID', 'Frigorifico_CNPJ', 'Frigorifico_RazaoSocial', 'Municipio_Frigorifico',
-            'EstabelecimentoIdentificador', 'Data_homol', 'Questionario_ID',
-            'area so confinamento', 'Lista Trace', 'Motivo', 'data_homol_select', 'dif_datas',
-            'DataAbate_6m_ANT', 'data12m', 'data6m', 'data3m', 'data1m', 'data7d',
-            'tot7d_Chuva', 'med7d_TempInst', 'med7d_TempMin', 'med7d_UmidInst', 'med7d_formITUmax', 'med7d_NDVI', 'med7d_EVI',
-            'tot1m_Chuva', 'med1m_TempInst', 'med1m_UmidInst', 'med1m_NDVI', 'med1m_EVI',
-            'tot3m_Chuva', 'med3m_TempInst', 'med3m_UmidInst', 'med3m_formITUmax', 'med3m_NDVI', 'med3m_EVI',
-            'tot6m_Chuva', 'med6m_TempInst', 'med6m_UmidInst', 'med6m_NDVI', 'med6m_EVI',
-            'tot12m_Chuva', 'med12m_TempInst', 'med12m_TempMin', 'med12m_UmidInst', 'med12m_NDVI', 'med12m_EVI',
-            # columns above removed because they have 19.352582% of missing values
+            'EstabelecimentoMunicipio', 'Frigorifico_ID', 'Frigorifico_CNPJ', 'Frigorifico_RazaoSocial', 'Municipio_Frigorifico',
+            'Maturidade', 'Acabamento',
+            'EstabelecimentoIdentificador',
+            'Questionario_ID', 'FERTIIRRIGACAO', 'CONCEN_VOLUM', 'CREEPFEEDING', 'FORN_ESTRAT_SILAGEM',
+            'PROTEICO', 'PROTEICO_ENERGETICO', 'RACAO_BAL_CONS_INFERIOR', 'SAL_MINERAL', 'SALMINERAL_UREIA',
+            'RACAOO_BAL_CONSUMO_IG', 'GRAO_INTEIRO', 'ALTO_CONCENTR_VOLUM', 'ALTO_CONCENTRADO', 'area so confinamento',
+            # two columns above removed because they have 19.352582% of missing values
             'boa cobertura vegetal, com baixa', 'erosaoo laminar ou em sulco igua',
+            'Lista Trace', 'BPA', 'dif_datas',
+            'tot7d_Chuva', 'med7d_TempInst', 'med7d_TempMin', 'med7d_UmidInst',
+            'med7d_formITUinst', 'med7d_formITUmax', 'med7d_NDVI', 'med7d_EVI',
+            'med7d_preR_soja', 'med7d_preR_milho', 'med7d_preR_boi',
+            'tot1m_Chuva', 'med1m_TempInst', 'med1m_UmidInst',
+            'med1m_formITUinst', 'med1m_NDVI', 'med1m_EVI',
+            'med1m_preR_soja', 'med1m_preR_milho', 'med1m_preR_boi',
+            'med3m_TempInst', 'med3m_UmidInst', 'med3m_formITUmax', 'med3m_EVI', 'med3m_preR_soja',
+            'tot6m_Chuva', 'med6m_TempInst', 'med6m_UmidInst', 'med6m_formITUinst', 'med6m_NDVI',
+            'med6m_EVI', 'med6m_preR_soja', 'med6m_preR_milho', 'med6m_preR_boi',
+            'tot12m_Chuva', 'med12m_TempInst', 'med12m_TempMin', 'med12m_UmidInst', 'med12m_formITUinst',
+            'med12m_NDVI', 'med12m_EVI', 'med12m_preR_soja', 'med12m_preR_milho', 'med12m_preR_boi',
+            'cnt7d_CL_ITUinst', 'cnt1m_CL_ITUinst', 'cnt3m_CL_ITUinst', 'cnt6m_CL_ITUinst', 'cnt12m_CL_ITUinst',
+            'ANO', 'Motivo',
+            'DataAbate',
+            'Data_homol', 'DataAbate_6m_ANT', 'data_homol_select',
+            'data12m', 'data6m', 'data3m', 'data1m', 'data7d',
             # column above removed because it will not have the attribute at the time of performing the prediction and the target is derived from this attribute
+            'classificacao',
             'CATEGORIA'
         ]
 
@@ -97,50 +119,52 @@ if __name__ == '__main__':
         #         'DataAbate': None
         #     }
         # )
+        settings.ordinal_encoder_columns_names.pop('CATEGORIA')
+        settings.ordinal_encoder_columns_names.pop('Maturidade')
+        settings.ordinal_encoder_columns_names.pop('Acabamento')
 
         # List with column names to apply the label encoder
         settings.label_encoder_columns_names = [
-            'classificacao'
+            settings.class_column
         ]
 
         # List with column names to apply the one hot encoder
         settings.one_hot_encoder_columns_names = [
-            'EstabelecimentoMunicipio', 'Tipificacao', 'ANO'
+            'Tipificacao'
         ]
 
         # List with column names to apply the min max scaler
         settings.min_max_scaler_columns_names = [
+            'QTD_ANIMAIS_LOTE',
             'Peso',
-            'med7d_formITUinst', 'med7d_preR_soja', 'med7d_preR_milho', 'med7d_preR_boi',
-            'med1m_formITUinst', 'med1m_preR_soja', 'med1m_preR_milho', 'med1m_preR_boi',
-            'med3m_formITUinst', 'med3m_preR_soja', 'med3m_preR_milho', 'med3m_preR_boi',
-            'med6m_formITUinst', 'med6m_preR_soja', 'med6m_preR_milho', 'med6m_preR_boi',
-            'med12m_formITUinst', 'med12m_preR_soja', 'med12m_preR_milho', 'med12m_preR_boi'
+            'tot3m_Chuva', 'med3m_formITUinst', 'med3m_NDVI', 'med3m_preR_milho', 'med3m_preR_boi'
+        ]
+
+        # List with column names to apply the simple imputer
+        settings.simple_imputer_columns_names = [
+            'rastreamento SISBOV', 'regua de manejo', 'identificacao individual',
+            'participa de aliancas mercadolog', 'Confinamento', 'Suplementacao_a_campo',
+            'SemiConfinamento'
         ]
 
         # List with column names to drop feature by correlation
         # I choise the features greater than or equal to threshold 0.95, because the spearman correlation
         # matrix showed that there are some features that are highly correlated
         settings.columns_names_drop_feature_by_correlation = [
-            'med7d_preR_soja', 'med1m_preR_soja', 'med3m_preR_soja', 'med6m_preR_soja', 'med12m_preR_soja',
-            'med7d_preR_milho',
-            'med7d_preR_boi', 'med1m_preR_boi', 'med3m_preR_boi', 'med6m_preR_boi',
-            'med3m_formITUinst',
-            'cnt3m_CL_ITUinst',
-            'Maturidade', 'Acabamento', 'Peso', 'classificacao'
+            'med3m_formITUinst', 'med3m_preR_boi',
+            settings.class_column
         ]
-
-        # Class column name
-        settings.class_column = 'classificacao'
 
         dataset_reports = False
         execute_pre_processing = False
         execute_classifiers = False
         execute_classifiers_pipeline = True
+        analyze_results = False
 
         ################################################## CSV TREATMENTS ##################################################
 
         generate_samples = False
+        generate_batch_dataset = False
 
         if generate_samples:
             # Generate sample of dataset
@@ -161,10 +185,24 @@ if __name__ == '__main__':
                         percentage*100)
                 )
         else:
+            if is_batch_dataset:
+                settings.parse_dates = ['DataAbate']
             # Load the dataset
             precoce_ms_data_frame = csv_treatments.load_data(
                 csv_path=settings.csv_path, delete_columns_names=settings.delete_columns_names_on_load_data,
                 number_csv_lines=settings.number_csv_lines, dtype_dict=settings.dtype_dict, parse_dates=settings.parse_dates
+            )
+
+        if generate_batch_dataset:
+
+            csv_treatments.generate_batch_dataset(
+                precoce_ms_data_frame=precoce_ms_data_frame,
+                attrs_groupby=[
+                    'DataAbate',
+                    'EstabelecimentoIdentificador',
+                    'Tipificacao'],
+                folder_path=settings.dataset_folder_path,
+                csv_name='TAB_MODELAGEM_RAFAEL_2020_1-ANIMAIS-POR-LOTE-CATEGORIA_BINARIA'
             )
 
         ################################################## REPORTS ##################################################
@@ -182,9 +220,33 @@ if __name__ == '__main__':
             precoce_ms_data_frame = utils.delete_columns(
                 data_frame=precoce_ms_data_frame, delete_columns_names=['ID_ANIMAL'])
 
-            # Delete NaN rows
-            precoce_ms_data_frame = pre_processing.delete_nan_rows(
-                data_frame=precoce_ms_data_frame, print_report=True)
+            # Strategies for NaN rows
+            if is_batch_dataset:
+
+                # Show report for NaN rows
+                reports.nan_attributes(
+                    data_frame=precoce_ms_data_frame, total_nan=precoce_ms_data_frame.isna().sum().sum())
+
+                # Simple imputer for NaN rows, strategy mean
+                precoce_ms_data_frame = pre_processing.simple_imputer_dataframe(
+                    data_frame=precoce_ms_data_frame,
+                    strategy='mean',
+                    columns=settings.min_max_scaler_columns_names,
+                    verbose=True
+                )
+
+                # Simple imputer for NaN rows, strategy most_frequent
+                precoce_ms_data_frame = pre_processing.simple_imputer_dataframe(
+                    data_frame=precoce_ms_data_frame,
+                    columns=settings.simple_imputer_columns_names,
+                    strategy='most_frequent',
+                    verbose=True
+                )
+
+            else:
+                # Delete NaN rows
+                precoce_ms_data_frame = pre_processing.delete_nan_rows(
+                    data_frame=precoce_ms_data_frame, print_report=True)
 
             # Convert pandas dtypes to numpy dtypes, some operations doesn't work with pandas dtype, for exemple, the XGBoost models
             precoce_ms_data_frame = utils.convert_pandas_dtype_to_numpy_dtype(
@@ -273,7 +335,7 @@ if __name__ == '__main__':
             # The value must be interpreted, where often a value below -0.5 or above 0.5 indicates a notable correlation,
             # and values below those values suggests a less notable correlation.
 
-            export_matrix = False
+            export_matrix = True
 
             # Correlation matrix using pearson method, between all attributes
             reports.correlation_matrix(
@@ -381,19 +443,31 @@ if __name__ == '__main__':
 
         if execute_classifiers_pipeline:
 
+            # Get the number of classes in the target column
+            class_number = len(
+                precoce_ms_data_frame[settings.class_column].value_counts())
+
             ##### Grid Search Settings #####
             # Flag to save the results of each split in the pipeline execution, to be used in a possible new execution,
             # in case the execution is interrupted. Default is True.
             # settings.save_results_during_run = False
 
             # Whether True, the objects persisted in the path_objects_persisted_results_runs will be cleaned before the execution of the pipeline
-            settings.new_run = False
+            settings.new_run = True
 
             ##### XGBoost Settings #####
             # The tree method to use for training the model. 'gpu_hist' is recommended for GPU training. 'hist' is recommended for CPU training.
             settings.tree_method = 'hist'
+            # Specify the learning task and the corresponding learning objective. 'binary:logistic' is for binary classification.
+            if class_number > 2:
+                settings.objective = 'multi:softmax'
 
             ##### Tab Net Settings #####
+            # If multi-class classification, the eval_metric 'auc' is removed from the list
+            if class_number > 2:
+                settings.eval_metric.remove('auc')
+                settings.eval_metric.append('logloss')
+                settings.eval_metric.append(F1ScoreMacro)
             # Flag to use embeddings in the tabnet model
             settings.use_embeddings = True
             # Threshold of the minimum of categorical features to use embeddings
@@ -418,13 +492,14 @@ if __name__ == '__main__':
             precoce_ms_data_frame = utils.delete_columns(
                 data_frame=precoce_ms_data_frame, delete_columns_names=['ID_ANIMAL'])
 
-            # Delete NaN rows
-            precoce_ms_data_frame = pre_processing.delete_nan_rows(
-                data_frame=precoce_ms_data_frame)
+            if not is_batch_dataset:
+                # Delete NaN rows
+                precoce_ms_data_frame = pre_processing.delete_nan_rows(
+                    data_frame=precoce_ms_data_frame)
 
-            # Convert pandas dtypes to numpy dtypes, some operations doesn't work with pandas dtype, for exemple, the XGBoost models
-            precoce_ms_data_frame = utils.convert_pandas_dtype_to_numpy_dtype(
-                data_frame=precoce_ms_data_frame, pandas_dtypes=[pd.UInt8Dtype()])
+                # Convert pandas dtypes to numpy dtypes, some operations doesn't work with pandas dtype, for exemple, the XGBoost models
+                precoce_ms_data_frame = utils.convert_pandas_dtype_to_numpy_dtype(
+                    data_frame=precoce_ms_data_frame, pandas_dtypes=[pd.UInt8Dtype()])
 
             # TODO: Maybe implement remove outliers. To detect outliers, use pre_processing.detect_outliers
 
@@ -433,43 +508,94 @@ if __name__ == '__main__':
                 data_frame=precoce_ms_data_frame
             )
 
+            # # If binary classification, apply label encoder to the target column
+            # if class_number == 2:
             # Apply label encoder to the columns
             precoce_ms_data_frame, settings.columns_label_encoded = pre_processing.label_encoder_columns(
                 data_frame=precoce_ms_data_frame, columns_label_encoded=settings.columns_label_encoded,
                 columns_names=settings.label_encoder_columns_names
             )
 
+            # Save the label encoded columns
+            utils.dump_joblib(
+                object=settings.columns_label_encoded[settings.class_column],
+                file_name='target_encoded',
+                path_save_file=settings.PATH_SAVE_ENCODERS_SCALERS
+            )
+
             # Move the target column to the last position in dataframe
             precoce_ms_data_frame = utils.move_cloumns_last_positions(
                 data_frame=precoce_ms_data_frame, columns_names=[settings.class_column])
+
+            # Target attribute distribution
+            reports.class_distribution(
+                y=precoce_ms_data_frame[settings.class_column].values)
 
             # Create x, the features, and y, the target
             x, y = utils.create_x_y_dataframe_data(
                 data_frame=precoce_ms_data_frame
             )
+            # # Either multiclass classification, apply label binarizer to the target column
+            # else:
+            #     # Apply label binarization to the class column
+            #     x, y, settings.columns_label_binarized = pre_processing.label_binarizer_column(
+            #         data_frame=precoce_ms_data_frame, columns_label_binarized=settings.columns_label_binarized,
+            #         column_name=settings.class_column
+            #     )
 
             # Create the fransformers for ColumnTransformer
-            transformers = [
-                pre_processing.create_ordinal_encoder_transformer(
-                    ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
-                    data_frame_columns=precoce_ms_data_frame.columns,
-                ),
-                # pre_processing.create_ordinal_encoder_transformer(
-                #     ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
-                #     data_frame_columns=precoce_ms_data_frame.columns,
-                #     handle_unknown='use_encoded_value',
-                #     unknown_value=-1,
-                #     with_categories=False
-                # ),
-                pre_processing.create_one_hot_encoder_transformer(
-                    columns=settings.one_hot_encoder_columns_names,
-                    data_frame_columns=precoce_ms_data_frame.columns
-                ),
-                pre_processing.create_min_max_scaler_transformer(
-                    columns=settings.min_max_scaler_columns_names,
-                    data_frame_columns=precoce_ms_data_frame.columns
-                )
-            ]
+            transformers = list()
+            if is_batch_dataset:
+                transformers = [
+                    pre_processing.create_simple_imputer_transformer(
+                        columns=settings.simple_imputer_columns_names,
+                        data_frame_columns=precoce_ms_data_frame.columns,
+                        strategy='most_frequent'
+                    ),
+                    pre_processing.create_ordinal_encoder_transformer(
+                        ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
+                        data_frame_columns=precoce_ms_data_frame.columns,
+                    ),
+                    # pre_processing.create_ordinal_encoder_transformer(
+                    #     ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
+                    #     data_frame_columns=precoce_ms_data_frame.columns,
+                    #     handle_unknown='use_encoded_value',
+                    #     unknown_value=-1,
+                    #     with_categories=False
+                    # ),
+                    pre_processing.create_one_hot_encoder_transformer(
+                        columns=settings.one_hot_encoder_columns_names,
+                        data_frame_columns=precoce_ms_data_frame.columns
+                    ),
+                    pre_processing.create_min_max_scaler_transformer(
+                        columns=settings.min_max_scaler_columns_names,
+                        data_frame_columns=precoce_ms_data_frame.columns,
+                        imputer=pre_processing.instance_simple_imputer(
+                            strategy='mean')
+                    )
+                ]
+            else:
+                transformers = [
+                    pre_processing.create_ordinal_encoder_transformer(
+                        ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
+                        data_frame_columns=precoce_ms_data_frame.columns,
+                    ),
+                    # pre_processing.create_ordinal_encoder_transformer(
+                    #     ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
+                    #     data_frame_columns=precoce_ms_data_frame.columns,
+                    #     handle_unknown='use_encoded_value',
+                    #     unknown_value=-1,
+                    #     with_categories=False
+                    # ),
+                    pre_processing.create_one_hot_encoder_transformer(
+                        columns=settings.one_hot_encoder_columns_names,
+                        data_frame_columns=precoce_ms_data_frame.columns
+                    ),
+                    pre_processing.create_min_max_scaler_transformer(
+                        columns=settings.min_max_scaler_columns_names,
+                        data_frame_columns=precoce_ms_data_frame.columns
+                    )
+                ]
 
             # Create the ColumnTransformer, for preprocessing the data in pipeline
             preprocessor = ColumnTransformer(
@@ -512,15 +638,15 @@ if __name__ == '__main__':
                 {
                     'classifier__estimator': [GaussianNB()]
                 },
-                {
-                    'classifier__estimator': [KNeighborsClassifier()],
-                    'classifier__estimator__n_jobs': [-1],
-                    'classifier__estimator__algorithm': ['kd_tree'],
-                    'classifier__estimator__metric': ['minkowski', 'euclidean'],
-                    'classifier__estimator__n_neighbors': list(np.arange(5, 17, 3)),
-                    'classifier__estimator__weights': ['uniform', 'distance'],
-                    'classifier__estimator__p': [1, 2, 3]
-                },
+                # {
+                #     'classifier__estimator': [KNeighborsClassifier()],
+                #     'classifier__estimator__n_jobs': [-1],
+                #     'classifier__estimator__algorithm': ['kd_tree'],
+                #     'classifier__estimator__metric': ['minkowski', 'euclidean'],
+                #     'classifier__estimator__n_neighbors': list(np.arange(5, 17, 3)),
+                #     'classifier__estimator__weights': ['uniform', 'distance'],
+                #     'classifier__estimator__p': [1, 2, 3]
+                # },
                 {
                     'classifier__estimator': [DecisionTreeClassifier()],
                     'classifier__estimator__splitter': ['best'],
@@ -572,7 +698,8 @@ if __name__ == '__main__':
                     'classifier__estimator__tree_method': [settings.tree_method],
                     'classifier__estimator__max_delta_step': [1.0],
                     'classifier__estimator__random_state': [settings.random_seed],
-                    'classifier__estimator__objective': ['binary:logistic'],
+                    'classifier__estimator__objective': [settings.objective],
+                    'classifier__estimator__num_class': [class_number],
                     'classifier__estimator__n_jobs': [-1],
                     'classifier__estimator__n_estimators': [50, 100, 150, 200],
                     'classifier__estimator__learning_rate': list(np.arange(0.01, 0.03, 0.01)) + list(np.arange(0.1, 0.3, 0.1)),
@@ -616,8 +743,15 @@ if __name__ == '__main__':
                 }
             ]
 
+            # Remove num_class parameter from XGBClassifier when using binary classification
+            if class_number == 2:
+                for estimator in param_grid:
+                    if estimator['classifier__estimator'][0].__class__.__name__ == XGBClassifier().__class__.__name__:
+                        estimator.pop('classifier__estimator__num_class')
+                        break
+
             # Cross validation for grid search
-            n_splits = 10
+            n_splits = 3
             print('Number of folds for cross validation: {}'.format(n_splits))
             cv = StratifiedKFold(
                 n_splits=n_splits,
@@ -628,11 +762,18 @@ if __name__ == '__main__':
             # TODO: Indication of the advisor on how to load and save the parameters already executed in the grid search https://github.com/ragero/text_categorization_tool_python/blob/master/utilities/generate_parameters_list.py
             # TODO: Test this score: http://scikit-learn.org/stable/modules/generated/sklearn.metrics.balanced_accuracy_score.html
             # Custom refit strategy of a grid search with cross-validation (2 scores): https://scikit-learn.org/stable/auto_examples/model_selection/plot_grid_search_digits.html#sphx-glr-auto-examples-model-selection-plot-grid-search-digits-py
-            # score = 'accuracy'
-            # score = 'balanced_accuracy'
+            # Scoring strategy for grid search
+            if class_number == 2:
+                score = 'accuracy'
+            else:
+                score = 'f1_macro'
+            print('Scoring strategy for grid search: {}'.format(score))
 
             # Size of test in train and test split
             # split_test_size = 0.2
+
+            # Delete unused variables
+            del precoce_ms_data_frame
 
             pattern_extraction.run_grid_search(
                 x=x,
@@ -640,11 +781,16 @@ if __name__ == '__main__':
                 estimator=pipe,
                 param_grid=param_grid,
                 cv=cv,
-                # score=score,
+                score=score,
                 n_jobs=settings.n_jobs,
                 test_size=0.2,
                 random_state=settings.random_seed
             )
+
+        ################################################## ANALYZE RESULTS #####################################
+
+        if analyze_results:
+            pass
 
         ################################################## PRE PROCESSING ##################################################
 

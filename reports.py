@@ -3,6 +3,7 @@ from typing import Union
 
 import utils
 import pre_processing
+import settings
 
 from sys import displayhook
 
@@ -15,6 +16,7 @@ import matplotlib.pyplot as plt
 import missingno as msno
 
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import ConfusionMatrixDisplay
 
 from sklearn.linear_model import SGDClassifier
 from sklearn.linear_model import LogisticRegression
@@ -143,7 +145,7 @@ def all_attributes(data_frame: pd.DataFrame) -> None:
         print('Descrição:\n{}'.format(column_data.describe()))
         print('Número de nan: {}'.format(column_data.isna().sum()))
         print('-------------------------------')
-    pd.set_option('display.max_rows', utils.PANDAS_MAX_ROWS)
+    pd.set_option('display.max_rows', settings.PANDAS_MAX_ROWS)
     print('*****FIM RELATÓRIO ATRIBUTOS******')
 
 
@@ -155,14 +157,19 @@ def class_distribution(y: np.array) -> None:
         y (np.array): NumPy Array to be treated.
     """
     print('\n*****INICIO RELATÓRIO DISTRIBUIÇÃO DE CLASSES******')
-    dist_1 = y[y.nonzero()].size / y.size
-    dist_0 = (y.size - y[y.nonzero()].size) / y.size
-    print('Distribuição da classe 1: {0:.0%}'.format(dist_1))
-    print('Distribuição da classe 0: {0:.0%}'.format(dist_0))
-    if dist_1 > dist_0:
-        print('Erro majoritário: {0:.0%}'.format(1 - dist_1))
+    unique, counts = np.unique(y, return_counts=True)
+    if unique.size == 2:
+        dist_1 = y[y.nonzero()].size / y.size
+        dist_0 = (y.size - y[y.nonzero()].size) / y.size
+        print('Distribuição da classe 1: {0:.0%}'.format(dist_1))
+        print('Distribuição da classe 0: {0:.0%}'.format(dist_0))
+        if dist_1 > dist_0:
+            print('Erro majoritário: {0:.0%}'.format(1 - dist_1))
+        else:
+            print('Erro majoritário: {0:.0%}'.format(1 - dist_0))
     else:
-        print('Erro majoritário: {0:.0%}'.format(1 - dist_0))
+        for key, value in dict(zip(unique, counts)).items():
+            print('Distribuição da classe {}: {:.0%}'.format(key, value/y.size))
     print('*****FIM RELATÓRIO DISTRIBUIÇÃO DE CLASSES******')
 
 
@@ -1002,6 +1009,41 @@ def show_settings(settings: object) -> None:
             print('{} = {}'.format(key, value))
     print('*****FIM SHOW SETTINGS******\n')
 
+
+@utils.timeit
+def confusion_matrix_display(y_true: np.array, y_pred: np.array, display_figure: bool = True, save_fig: bool = True, path_save_fig: str = None) -> None:
+    """Display the confusion matrix, based in ConfusionMatrixDisplay.from_predictions from scikit-learn, and save it in a file.
+
+    Args:
+        y_true (np.array): True labels.
+        y_pred (np.array): Predicted labels.
+        display_figure (bool, optional): Flag to display the results, for example in jupyter notebook. Defaults to False.
+        save_fig (bool, optional): Flag to save the figures. Defaults to False.
+        path_save_fig (str, optional): Path to save the figures. If None, save the figures in root path of project. Defaults to None.
+    """
+
+    print('*****INICIO CONFUSION MATRIX DISPLAY******')
+
+    plt.figure(figsize=(10, 8))
+    ConfusionMatrixDisplay.from_predictions(y_true, y_pred)
+
+    if save_fig:
+        path_save_fig = utils.define_path_save_file(
+            path_save_file=path_save_fig)
+
+        name_figure = 'confusion_matrix_display-{}.png'.format(
+            utils.get_current_datetime())
+        plt.savefig(
+            ''.join([path_save_fig, name_figure]), bbox_inches='tight')
+        print('Figure {} saved in {} directory.'.format(
+            name_figure, path_save_fig))
+
+    if display_figure:
+        plt.show()
+
+    plt.close()
+
+    print('*****FIM CONFUSION MATRIX DISPLAY******\n')
 
 ################################################## PRIVATE METHODS ##################################################
 

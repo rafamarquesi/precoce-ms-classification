@@ -1,15 +1,16 @@
 import os
 
-import utils
-
 import pandas as pd
 import torch
 
 # Some settings are configured by default. If you want to change any settings,
 # just follow the instruction for the specific setting.
 
+
+# Pandas max rows, None displays all rows
+PANDAS_MAX_ROWS = 5000
 # Set pandas max rows
-pd.set_option('display.max_rows', utils.PANDAS_MAX_ROWS)
+pd.set_option('display.max_rows', PANDAS_MAX_ROWS)
 
 # Set random seed
 random_seed = 42
@@ -132,7 +133,9 @@ dtype_dict = {
     'ANO': 'uint16',
     'CATEGORIA': 'category',
     'classificacao': 'category',
-    'Motivo': 'category'
+    'Motivo': 'category',
+    'QTD_ANIMAIS_LOTE': 'uint16',
+    'CATEGORIA_BINARIA': 'category'
 }
 
 # List with dates to parse
@@ -161,6 +164,9 @@ PATH_SAVE_RESULTS = './runs/results'
 
 # Path to save the logs
 PATH_SAVE_LOGS = './logs'
+
+# Path to save the encoders
+PATH_SAVE_ENCODERS_SCALERS = './runs/encoders_scalers'
 
 ############################################ ENCODERS SETTINGS ############################################
 
@@ -194,6 +200,14 @@ columns_one_hot_encoded = dict()
 min_max_scaler_columns_names = list()
 # Dictionary with the min max scaler object fitted for each column
 columns_min_max_scaled = dict()
+
+# Dictionary with the label binarizer object fitted for each column
+columns_label_binarized = dict()
+
+############################################ IMPUTER SETTINGS ############################################
+
+# List with column names to apply the simple imputer
+simple_imputer_columns_names = list()
 
 ############################################ CORRELATION SETTINGS ############################################
 
@@ -258,18 +272,18 @@ new_run = False
 PATH_OBJECTS_PERSISTED_RESULTS_RUNS = './runs/objects_persisted_results_runs'
 
 # File name to save the parameters executed in the pipeline execution
-PARAMETERS_PERSIST_FILENAME = utils.define_path_save_file(
-    path_save_file=PATH_OBJECTS_PERSISTED_RESULTS_RUNS) + 'parameters_persist'
+PARAMETERS_PERSIST_FILENAME = PATH_OBJECTS_PERSISTED_RESULTS_RUNS + '/parameters_persist'
 
 # File name to save all the results of each split of all estimator in the pipeline execution
-RESULTS_PERSIST_FILENAME = utils.define_path_save_file(
-    path_save_file=PATH_OBJECTS_PERSISTED_RESULTS_RUNS) + 'results_persist'
+RESULTS_PERSIST_FILENAME = PATH_OBJECTS_PERSISTED_RESULTS_RUNS + '/results_persist'
 
 # File name to save the results of each split of estimator in the pipeline execution
-SPLIT_PERSIST_FILENAME = utils.define_path_save_file(
-    path_save_file=PATH_OBJECTS_PERSISTED_RESULTS_RUNS) + 'split_persist'
+SPLIT_PERSIST_FILENAME = PATH_OBJECTS_PERSISTED_RESULTS_RUNS + '/split_persist'
 
 ############################################ XGBOOST SETTINGS ############################################
 
 # The tree method to use for training the model. 'gpu_hist' is recommended for GPU training. 'hist' is recommended for CPU training.
 tree_method = 'gpu_hist' if torch.cuda.is_available() else 'hist'
+
+# Specify the learning task and the corresponding learning objective. 'binary:logistic' is for binary classification.
+objective = 'binary:logistic'
