@@ -1,0 +1,322 @@
+
+*****INICIO LOAD DATA******
+
+*****INICIO PRINT INFOS******
+Número total de linhas do DataFrame: 49641
+Número de colunas: 25
+Informações do DataFrame:
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 49641 entries, 0 to 49640
+Data columns (total 25 columns):
+ #   Column                            Non-Null Count  Dtype         
+---  ------                            --------------  -----         
+ 0   DataAbate                         49641 non-null  datetime64[ns]
+ 1   EstabelecimentoIdentificador      49641 non-null  uint16        
+ 2   Tipificacao                       49641 non-null  category      
+ 3   QTD_ANIMAIS_LOTE                  49641 non-null  uint16        
+ 4   Peso                              49641 non-null  float32       
+ 5   QuestionarioClassificacaoEstabel  49641 non-null  uint8         
+ 6   ILP                               49641 non-null  uint8         
+ 7   IFP                               49641 non-null  uint8         
+ 8   ILPF                              49641 non-null  uint8         
+ 9   QuestionarioPossuiOutrosIncentiv  49641 non-null  uint8         
+ 10  QuestionarioFabricaRacao          49641 non-null  uint8         
+ 11  regua de manejo                   49633 non-null  UInt8         
+ 12  identificacao individual          49633 non-null  UInt8         
+ 13  rastreamento SISBOV               49631 non-null  UInt8         
+ 14  participa de aliancas mercadolog  49633 non-null  UInt8         
+ 15  QuestionarioPraticaRecuperacaoPa  49641 non-null  uint8         
+ 16  Confinamento                      49633 non-null  UInt8         
+ 17  Suplementacao_a_campo             49633 non-null  UInt8         
+ 18  SemiConfinamento                  49633 non-null  UInt8         
+ 19  tot3m_Chuva                       48290 non-null  float32       
+ 20  med3m_formITUinst                 49629 non-null  float32       
+ 21  med3m_NDVI                        48081 non-null  float32       
+ 22  med3m_preR_milho                  49629 non-null  float32       
+ 23  med3m_preR_boi                    49629 non-null  float32       
+ 24  CATEGORIA_BINARIA                 49641 non-null  category      
+dtypes: UInt8(7), category(2), datetime64[ns](1), float32(6), uint16(2), uint8(7)
+memory usage: 2.8 MB
+*****FIM PRINT INFOS*********
+Function informations Took 0:00:00.009128
+
+*****INICIO DELETE COLUNAS******
+!!!>>> Coluna " EstabelecimentoMunicipio " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Frigorifico_ID " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Frigorifico_CNPJ " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Frigorifico_RazaoSocial " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Municipio_Frigorifico " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Maturidade " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Acabamento " não encontrada no DataFrame para exclusão.
+Coluna EstabelecimentoIdentificador excluída.
+!!!>>> Coluna " Questionario_ID " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " FERTIIRRIGACAO " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " CONCEN_VOLUM " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " CREEPFEEDING " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " FORN_ESTRAT_SILAGEM " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " PROTEICO " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " PROTEICO_ENERGETICO " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " RACAO_BAL_CONS_INFERIOR " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " SAL_MINERAL " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " SALMINERAL_UREIA " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " RACAOO_BAL_CONSUMO_IG " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " GRAO_INTEIRO " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " ALTO_CONCENTR_VOLUM " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " ALTO_CONCENTRADO " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " area so confinamento " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " boa cobertura vegetal, com baixa " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " erosaoo laminar ou em sulco igua " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Lista Trace " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " BPA " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " dif_datas " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " tot7d_Chuva " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_TempInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_TempMin " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_UmidInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_formITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_formITUmax " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_NDVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_EVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_preR_soja " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_preR_milho " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_preR_boi " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " tot1m_Chuva " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_TempInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_UmidInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_formITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_NDVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_EVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_preR_soja " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_preR_milho " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_preR_boi " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med3m_TempInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med3m_UmidInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med3m_formITUmax " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med3m_EVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med3m_preR_soja " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " tot6m_Chuva " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_TempInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_UmidInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_formITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_NDVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_EVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_preR_soja " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_preR_milho " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_preR_boi " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " tot12m_Chuva " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_TempInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_TempMin " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_UmidInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_formITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_NDVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_EVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_preR_soja " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_preR_milho " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_preR_boi " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " cnt7d_CL_ITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " cnt1m_CL_ITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " cnt3m_CL_ITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " cnt6m_CL_ITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " cnt12m_CL_ITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " ANO " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Motivo " não encontrada no DataFrame para exclusão.
+Coluna DataAbate excluída.
+!!!>>> Coluna " Data_homol " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " DataAbate_6m_ANT " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " data_homol_select " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " data12m " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " data6m " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " data3m " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " data1m " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " data7d " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " classificacao " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " CATEGORIA " não encontrada no DataFrame para exclusão.
+*****FIM DELETE COLUNAS*********
+
+*****INICIO PRINT INFOS******
+Número total de linhas do DataFrame: 49641
+Número de colunas: 23
+Informações do DataFrame:
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 49641 entries, 0 to 49640
+Data columns (total 23 columns):
+ #   Column                            Non-Null Count  Dtype   
+---  ------                            --------------  -----   
+ 0   Tipificacao                       49641 non-null  category
+ 1   QTD_ANIMAIS_LOTE                  49641 non-null  uint16  
+ 2   Peso                              49641 non-null  float32 
+ 3   QuestionarioClassificacaoEstabel  49641 non-null  uint8   
+ 4   ILP                               49641 non-null  uint8   
+ 5   IFP                               49641 non-null  uint8   
+ 6   ILPF                              49641 non-null  uint8   
+ 7   QuestionarioPossuiOutrosIncentiv  49641 non-null  uint8   
+ 8   QuestionarioFabricaRacao          49641 non-null  uint8   
+ 9   regua de manejo                   49633 non-null  UInt8   
+ 10  identificacao individual          49633 non-null  UInt8   
+ 11  rastreamento SISBOV               49631 non-null  UInt8   
+ 12  participa de aliancas mercadolog  49633 non-null  UInt8   
+ 13  QuestionarioPraticaRecuperacaoPa  49641 non-null  uint8   
+ 14  Confinamento                      49633 non-null  UInt8   
+ 15  Suplementacao_a_campo             49633 non-null  UInt8   
+ 16  SemiConfinamento                  49633 non-null  UInt8   
+ 17  tot3m_Chuva                       48290 non-null  float32 
+ 18  med3m_formITUinst                 49629 non-null  float32 
+ 19  med3m_NDVI                        48081 non-null  float32 
+ 20  med3m_preR_milho                  49629 non-null  float32 
+ 21  med3m_preR_boi                    49629 non-null  float32 
+ 22  CATEGORIA_BINARIA                 49641 non-null  category
+dtypes: UInt8(7), category(2), float32(6), uint16(1), uint8(7)
+memory usage: 2.3 MB
+*****FIM PRINT INFOS*********
+Function informations Took 0:00:00.006431
+
+*****FIM LOAD DATA******
+Function load_data Took 0:00:00.413733
+
+*****INICIO SHOW SETTINGS******
+os = <module 'os' from '/usr/local/lib/python3.8/os.py'>
+pd = <module 'pandas' from '/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pandas/__init__.py'>
+torch = <module 'torch' from '/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/torch/__init__.py'>
+PANDAS_MAX_ROWS = 5000
+random_seed = 42
+n_jobs = -1
+dataset_folder_path = /home/externo/rafaelrm/base_dados/
+csv_path = /home/externo/rafaelrm/base_dados/TAB_MODELAGEM_RAFAEL_2020_1-ANIMAIS-POR-LOTE-CATEGORIA_BINARIA.csv
+number_csv_lines = None
+dtype_dict = {'ID_ANIMAL': 'uint32', 'EstabelecimentoMunicipio': 'category', 'Frigorifico_ID': 'uint8', 'Frigorifico_CNPJ': 'uint64', 'Frigorifico_RazaoSocial': 'category', 'Municipio_Frigorifico': 'category', 'Tipificacao': 'category', 'Maturidade': 'category', 'Acabamento': 'category', 'Peso': 'float32', 'EstabelecimentoIdentificador': 'uint16', 'Questionario_ID': 'uint16', 'QuestionarioClassificacaoEstabel': 'uint8', 'FERTIIRRIGACAO': 'uint8', 'ILP': 'uint8', 'IFP': 'uint8', 'ILPF': 'uint8', 'CONCEN_VOLUM': 'UInt8', 'CREEPFEEDING': 'UInt8', 'FORN_ESTRAT_SILAGEM': 'UInt8', 'PROTEICO': 'UInt8', 'PROTEICO_ENERGETICO': 'UInt8', 'RACAO_BAL_CONS_INFERIOR': 'UInt8', 'SAL_MINERAL': 'UInt8', 'SALMINERAL_UREIA': 'UInt8', 'RACAOO_BAL_CONSUMO_IG': 'UInt8', 'GRAO_INTEIRO': 'UInt8', 'ALTO_CONCENTR_VOLUM': 'UInt8', 'ALTO_CONCENTRADO': 'UInt8', 'QuestionarioPossuiOutrosIncentiv': 'uint8', 'QuestionarioFabricaRacao': 'uint8', 'area so confinamento': 'UInt8', 'regua de manejo': 'UInt8', 'boa cobertura vegetal, com baixa': 'UInt8', 'erosaoo laminar ou em sulco igua': 'UInt8', 'identificacao individual': 'UInt8', 'rastreamento SISBOV': 'UInt8', 'Lista Trace': 'UInt8', 'BPA': 'UInt8', 'participa de aliancas mercadolog': 'UInt8', 'QuestionarioPraticaRecuperacaoPa': 'uint8', 'Confinamento': 'UInt8', 'Suplementacao_a_campo': 'UInt8', 'SemiConfinamento': 'UInt8', 'dif_datas': 'uint16', 'tot7d_Chuva': 'float32', 'med7d_TempInst': 'float32', 'med7d_TempMin': 'float32', 'med7d_UmidInst': 'float32', 'med7d_formITUinst': 'float32', 'med7d_formITUmax': 'float32', 'med7d_NDVI': 'float32', 'med7d_EVI': 'float32', 'med7d_preR_soja': 'float32', 'med7d_preR_milho': 'float32', 'med7d_preR_boi': 'float32', 'tot1m_Chuva': 'float32', 'med1m_TempInst': 'float32', 'med1m_UmidInst': 'float32', 'med1m_formITUinst': 'float32', 'med1m_NDVI': 'float32', 'med1m_EVI': 'float32', 'med1m_preR_soja': 'float32', 'med1m_preR_milho': 'float32', 'med1m_preR_boi': 'float32', 'tot3m_Chuva': 'float32', 'med3m_TempInst': 'float32', 'med3m_UmidInst': 'float32', 'med3m_formITUinst': 'float32', 'med3m_formITUmax': 'float32', 'med3m_NDVI': 'float32', 'med3m_EVI': 'float32', 'med3m_preR_soja': 'float32', 'med3m_preR_milho': 'float32', 'med3m_preR_boi': 'float32', 'tot6m_Chuva': 'float32', 'med6m_TempInst': 'float32', 'med6m_UmidInst': 'float32', 'med6m_formITUinst': 'float32', 'med6m_NDVI': 'float32', 'med6m_EVI': 'float32', 'med6m_preR_soja': 'float32', 'med6m_preR_milho': 'float32', 'med6m_preR_boi': 'float32', 'tot12m_Chuva': 'float32', 'med12m_TempInst': 'float32', 'med12m_TempMin': 'float32', 'med12m_UmidInst': 'float32', 'med12m_formITUinst': 'float32', 'med12m_NDVI': 'float32', 'med12m_EVI': 'float32', 'med12m_preR_soja': 'float32', 'med12m_preR_milho': 'float32', 'med12m_preR_boi': 'float32', 'cnt7d_CL_ITUinst': 'float32', 'cnt1m_CL_ITUinst': 'float32', 'cnt3m_CL_ITUinst': 'float32', 'cnt6m_CL_ITUinst': 'float32', 'cnt12m_CL_ITUinst': 'float32', 'ANO': 'uint16', 'CATEGORIA': 'category', 'classificacao': 'category', 'Motivo': 'category', 'QTD_ANIMAIS_LOTE': 'uint16', 'CATEGORIA_BINARIA': 'category'}
+parse_dates = ['DataAbate']
+delete_columns_names_on_load_data = ['EstabelecimentoMunicipio', 'Frigorifico_ID', 'Frigorifico_CNPJ', 'Frigorifico_RazaoSocial', 'Municipio_Frigorifico', 'Maturidade', 'Acabamento', 'EstabelecimentoIdentificador', 'Questionario_ID', 'FERTIIRRIGACAO', 'CONCEN_VOLUM', 'CREEPFEEDING', 'FORN_ESTRAT_SILAGEM', 'PROTEICO', 'PROTEICO_ENERGETICO', 'RACAO_BAL_CONS_INFERIOR', 'SAL_MINERAL', 'SALMINERAL_UREIA', 'RACAOO_BAL_CONSUMO_IG', 'GRAO_INTEIRO', 'ALTO_CONCENTR_VOLUM', 'ALTO_CONCENTRADO', 'area so confinamento', 'boa cobertura vegetal, com baixa', 'erosaoo laminar ou em sulco igua', 'Lista Trace', 'BPA', 'dif_datas', 'tot7d_Chuva', 'med7d_TempInst', 'med7d_TempMin', 'med7d_UmidInst', 'med7d_formITUinst', 'med7d_formITUmax', 'med7d_NDVI', 'med7d_EVI', 'med7d_preR_soja', 'med7d_preR_milho', 'med7d_preR_boi', 'tot1m_Chuva', 'med1m_TempInst', 'med1m_UmidInst', 'med1m_formITUinst', 'med1m_NDVI', 'med1m_EVI', 'med1m_preR_soja', 'med1m_preR_milho', 'med1m_preR_boi', 'med3m_TempInst', 'med3m_UmidInst', 'med3m_formITUmax', 'med3m_EVI', 'med3m_preR_soja', 'tot6m_Chuva', 'med6m_TempInst', 'med6m_UmidInst', 'med6m_formITUinst', 'med6m_NDVI', 'med6m_EVI', 'med6m_preR_soja', 'med6m_preR_milho', 'med6m_preR_boi', 'tot12m_Chuva', 'med12m_TempInst', 'med12m_TempMin', 'med12m_UmidInst', 'med12m_formITUinst', 'med12m_NDVI', 'med12m_EVI', 'med12m_preR_soja', 'med12m_preR_milho', 'med12m_preR_boi', 'cnt7d_CL_ITUinst', 'cnt1m_CL_ITUinst', 'cnt3m_CL_ITUinst', 'cnt6m_CL_ITUinst', 'cnt12m_CL_ITUinst', 'ANO', 'Motivo', 'DataAbate', 'Data_homol', 'DataAbate_6m_ANT', 'data_homol_select', 'data12m', 'data6m', 'data3m', 'data1m', 'data7d', 'classificacao', 'CATEGORIA']
+PATH_SAVE_PLOTS = ./plots
+PATH_SAVE_ESTIMATORS_REPR = ./runs/estimators_repr
+PATH_SAVE_BEST_ESTIMATORS = ./runs/best_estimators
+PATH_SAVE_RESULTS = ./runs/results
+PATH_SAVE_LOGS = ./logs
+PATH_SAVE_ENCODERS_SCALERS = ./runs/encoders_scalers
+ordinal_encoder_columns_names = {'QuestionarioClassificacaoEstabel': ['0', '21', '26', '30']}
+columns_ordinal_encoded = {}
+label_encoder_columns_names = ['CATEGORIA_BINARIA']
+columns_label_encoded = {}
+one_hot_encoder_columns_names = ['Tipificacao']
+columns_one_hot_encoded = {}
+min_max_scaler_columns_names = ['QTD_ANIMAIS_LOTE', 'Peso', 'tot3m_Chuva', 'med3m_formITUinst', 'med3m_NDVI', 'med3m_preR_milho', 'med3m_preR_boi']
+columns_min_max_scaled = {}
+columns_label_binarized = {}
+simple_imputer_columns_names = ['rastreamento SISBOV', 'regua de manejo', 'identificacao individual', 'participa de aliancas mercadolog', 'Confinamento', 'Suplementacao_a_campo', 'SemiConfinamento']
+columns_names_drop_feature_by_correlation = ['med3m_formITUinst', 'med3m_preR_boi', 'CATEGORIA_BINARIA']
+class_column = CATEGORIA_BINARIA
+classifiers = {}
+models_results = {}
+device_name = auto
+use_embeddings = True
+cat_idxs = []
+cat_dims = []
+use_cat_emb_dim = True
+cat_emb_dim = 1
+threshold_categorical_features = 150
+num_workers = 0
+eval_metric = ['auc', 'balanced_accuracy', 'accuracy']
+augmentations = None
+save_results_during_run = True
+new_run = True
+PATH_OBJECTS_PERSISTED_RESULTS_RUNS = ./runs/objects_persisted_results_runs
+PARAMETERS_PERSIST_FILENAME = ./runs/objects_persisted_results_runs/parameters_persist
+RESULTS_PERSIST_FILENAME = ./runs/objects_persisted_results_runs/results_persist
+SPLIT_PERSIST_FILENAME = ./runs/objects_persisted_results_runs/split_persist
+tree_method = hist
+objective = binary:logistic
+*****FIM SHOW SETTINGS******
+
+
+*****INICIO DELETE DUPLICATE ROWS BY ATTRIBUTE******
+!!!>>> Atributo ID_ANIMAL não encontrado no DataFrame para delete duplicates rows by attibute.
+*****FIM DELETE DUPLICATE ROWS BY ATTRIBUTE*********
+Function delete_duplicate_rows_by_attribute Took 0:00:00.000050
+
+*****INICIO DELETE COLUNAS******
+!!!>>> Coluna " ID_ANIMAL " não encontrada no DataFrame para exclusão.
+*****FIM DELETE COLUNAS*********
+
+*****INICIO DELETE COLUMNS WITH SINGLE VALUE******
+>>> Nenhuma coluna com valor único encontrada.
+*****FIM DELETE COLUMNS WITH SINGLE VALUE*********
+Function delete_columns_with_single_value Took 0:00:00.021875
+
+
+*****INICIO LABEL ENCODER******
+*****FIM LABEL ENCODER*********
+Function label_encoder_columns Took 0:00:00.008833
+
+Object saved in file: ./runs/encoders_scalers/target_encoded-17-02-2023_14:26:00.joblib
+
+*****INICIO RELATÓRIO DISTRIBUIÇÃO DE CLASSES******
+Distribuição da classe 1: 50%
+Distribuição da classe 0: 50%
+Erro majoritário: 50%
+*****FIM RELATÓRIO DISTRIBUIÇÃO DE CLASSES******
+Function class_distribution Took 0:00:00.001773
+
+/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:75: UserWarning: Device used : cpu
+  warnings.warn(f"Device used : {self.device}")
+Number of folds for cross validation: 3
+Scoring strategy for grid search: accuracy
+Test Size: 0.2
+
+x_train shape: (39712, 22)
+y_train shape: (39712,)
+x_test shape: (9929, 22)
+y_test shape: (9929,)
+Removing all files in directory: ./runs/objects_persisted_results_runs
+Do you want to continue? (y/n): 
+Do you want to continue? (y/n): 
+All files in directory ./runs/objects_persisted_results_runs were removed.
+Fitting 3 folds for each of 15 candidates, totalling 45 fits
+Error:  [Errno 2] No such file or directory: './runs/objects_persisted_results_runs/split_persist'
+joblib.externals.loky.process_executor._RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/joblib/externals/loky/process_executor.py", line 428, in _process_worker
+    r = call_item()
+  File "/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/joblib/externals/loky/process_executor.py", line 275, in __call__
+    return self.fn(*self.args, **self.kwargs)
+  File "/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/joblib/_parallel_backends.py", line 620, in __call__
+    return self.func(*args, **kwargs)
+  File "/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/joblib/parallel.py", line 288, in __call__
+    return [func(*args, **kwargs)
+  File "/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/joblib/parallel.py", line 288, in <listcomp>
+    return [func(*args, **kwargs)
+  File "/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/sklearn/utils/fixes.py", line 117, in __call__
+    return self.function(*args, **kwargs)
+  File "/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/sklearn_tuner/model_selection_tuner/_validation_tuner.py", line 275, in _fit_and_score_tuner
+    split_persist = load(settings.SPLIT_PERSIST_FILENAME)
+  File "/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/joblib/numpy_pickle.py", line 650, in load
+    with open(filename, 'rb') as f:
+FileNotFoundError: [Errno 2] No such file or directory: './runs/objects_persisted_results_runs/split_persist'
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "pipeline_target_categoria_binaria_lote_17022023.py", line 452, in <module>
+    pattern_extraction.run_grid_search(
+  File "/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/utils.py", line 413, in timeit_wrapper
+    result = func(*args, **kwargs)
+  File "/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/pattern_extraction.py", line 96, in run_grid_search
+    grid_search.fit(x_train, y_train)
+  File "/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/sklearn_tuner/model_selection_tuner/_search_tuner.py", line 261, in fit
+    self._run_search(evaluate_candidates)
+  File "/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/sklearn/model_selection/_search.py", line 1375, in _run_search
+    evaluate_candidates(ParameterGrid(self.param_grid))
+  File "/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/sklearn_tuner/model_selection_tuner/_search_tuner.py", line 206, in evaluate_candidates
+    out = parallel(
+  File "/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/joblib/parallel.py", line 1098, in __call__
+    self.retrieve()
+  File "/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/joblib/parallel.py", line 975, in retrieve
+    self._output.extend(job.get(timeout=self.timeout))
+  File "/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/joblib/_parallel_backends.py", line 567, in wrap_future_result
+    return future.result(timeout=timeout)
+  File "/usr/local/lib/python3.8/concurrent/futures/_base.py", line 444, in result
+    return self.__get_result()
+  File "/usr/local/lib/python3.8/concurrent/futures/_base.py", line 389, in __get_result
+    raise self._exception
+FileNotFoundError: [Errno 2] No such file or directory: './runs/objects_persisted_results_runs/split_persist'
+

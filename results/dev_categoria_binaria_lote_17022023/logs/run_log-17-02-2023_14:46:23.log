@@ -1,0 +1,455 @@
+
+*****INICIO LOAD DATA******
+
+*****INICIO PRINT INFOS******
+Número total de linhas do DataFrame: 49641
+Número de colunas: 25
+Informações do DataFrame:
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 49641 entries, 0 to 49640
+Data columns (total 25 columns):
+ #   Column                            Non-Null Count  Dtype         
+---  ------                            --------------  -----         
+ 0   DataAbate                         49641 non-null  datetime64[ns]
+ 1   EstabelecimentoIdentificador      49641 non-null  uint16        
+ 2   Tipificacao                       49641 non-null  category      
+ 3   QTD_ANIMAIS_LOTE                  49641 non-null  uint16        
+ 4   Peso                              49641 non-null  float32       
+ 5   QuestionarioClassificacaoEstabel  49641 non-null  uint8         
+ 6   ILP                               49641 non-null  uint8         
+ 7   IFP                               49641 non-null  uint8         
+ 8   ILPF                              49641 non-null  uint8         
+ 9   QuestionarioPossuiOutrosIncentiv  49641 non-null  uint8         
+ 10  QuestionarioFabricaRacao          49641 non-null  uint8         
+ 11  regua de manejo                   49633 non-null  UInt8         
+ 12  identificacao individual          49633 non-null  UInt8         
+ 13  rastreamento SISBOV               49631 non-null  UInt8         
+ 14  participa de aliancas mercadolog  49633 non-null  UInt8         
+ 15  QuestionarioPraticaRecuperacaoPa  49641 non-null  uint8         
+ 16  Confinamento                      49633 non-null  UInt8         
+ 17  Suplementacao_a_campo             49633 non-null  UInt8         
+ 18  SemiConfinamento                  49633 non-null  UInt8         
+ 19  tot3m_Chuva                       48290 non-null  float32       
+ 20  med3m_formITUinst                 49629 non-null  float32       
+ 21  med3m_NDVI                        48081 non-null  float32       
+ 22  med3m_preR_milho                  49629 non-null  float32       
+ 23  med3m_preR_boi                    49629 non-null  float32       
+ 24  CATEGORIA_BINARIA                 49641 non-null  category      
+dtypes: UInt8(7), category(2), datetime64[ns](1), float32(6), uint16(2), uint8(7)
+memory usage: 2.8 MB
+*****FIM PRINT INFOS*********
+Function informations Took 0:00:00.009077
+
+*****INICIO DELETE COLUNAS******
+!!!>>> Coluna " EstabelecimentoMunicipio " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Frigorifico_ID " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Frigorifico_CNPJ " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Frigorifico_RazaoSocial " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Municipio_Frigorifico " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Maturidade " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Acabamento " não encontrada no DataFrame para exclusão.
+Coluna EstabelecimentoIdentificador excluída.
+!!!>>> Coluna " Questionario_ID " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " FERTIIRRIGACAO " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " CONCEN_VOLUM " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " CREEPFEEDING " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " FORN_ESTRAT_SILAGEM " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " PROTEICO " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " PROTEICO_ENERGETICO " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " RACAO_BAL_CONS_INFERIOR " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " SAL_MINERAL " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " SALMINERAL_UREIA " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " RACAOO_BAL_CONSUMO_IG " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " GRAO_INTEIRO " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " ALTO_CONCENTR_VOLUM " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " ALTO_CONCENTRADO " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " area so confinamento " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " boa cobertura vegetal, com baixa " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " erosaoo laminar ou em sulco igua " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Lista Trace " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " BPA " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " dif_datas " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " tot7d_Chuva " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_TempInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_TempMin " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_UmidInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_formITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_formITUmax " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_NDVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_EVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_preR_soja " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_preR_milho " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_preR_boi " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " tot1m_Chuva " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_TempInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_UmidInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_formITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_NDVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_EVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_preR_soja " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_preR_milho " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_preR_boi " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med3m_TempInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med3m_UmidInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med3m_formITUmax " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med3m_EVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med3m_preR_soja " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " tot6m_Chuva " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_TempInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_UmidInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_formITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_NDVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_EVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_preR_soja " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_preR_milho " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_preR_boi " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " tot12m_Chuva " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_TempInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_TempMin " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_UmidInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_formITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_NDVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_EVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_preR_soja " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_preR_milho " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_preR_boi " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " cnt7d_CL_ITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " cnt1m_CL_ITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " cnt3m_CL_ITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " cnt6m_CL_ITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " cnt12m_CL_ITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " ANO " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Motivo " não encontrada no DataFrame para exclusão.
+Coluna DataAbate excluída.
+!!!>>> Coluna " Data_homol " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " DataAbate_6m_ANT " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " data_homol_select " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " data12m " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " data6m " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " data3m " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " data1m " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " data7d " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " classificacao " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " CATEGORIA " não encontrada no DataFrame para exclusão.
+*****FIM DELETE COLUNAS*********
+
+*****INICIO PRINT INFOS******
+Número total de linhas do DataFrame: 49641
+Número de colunas: 23
+Informações do DataFrame:
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 49641 entries, 0 to 49640
+Data columns (total 23 columns):
+ #   Column                            Non-Null Count  Dtype   
+---  ------                            --------------  -----   
+ 0   Tipificacao                       49641 non-null  category
+ 1   QTD_ANIMAIS_LOTE                  49641 non-null  uint16  
+ 2   Peso                              49641 non-null  float32 
+ 3   QuestionarioClassificacaoEstabel  49641 non-null  uint8   
+ 4   ILP                               49641 non-null  uint8   
+ 5   IFP                               49641 non-null  uint8   
+ 6   ILPF                              49641 non-null  uint8   
+ 7   QuestionarioPossuiOutrosIncentiv  49641 non-null  uint8   
+ 8   QuestionarioFabricaRacao          49641 non-null  uint8   
+ 9   regua de manejo                   49633 non-null  UInt8   
+ 10  identificacao individual          49633 non-null  UInt8   
+ 11  rastreamento SISBOV               49631 non-null  UInt8   
+ 12  participa de aliancas mercadolog  49633 non-null  UInt8   
+ 13  QuestionarioPraticaRecuperacaoPa  49641 non-null  uint8   
+ 14  Confinamento                      49633 non-null  UInt8   
+ 15  Suplementacao_a_campo             49633 non-null  UInt8   
+ 16  SemiConfinamento                  49633 non-null  UInt8   
+ 17  tot3m_Chuva                       48290 non-null  float32 
+ 18  med3m_formITUinst                 49629 non-null  float32 
+ 19  med3m_NDVI                        48081 non-null  float32 
+ 20  med3m_preR_milho                  49629 non-null  float32 
+ 21  med3m_preR_boi                    49629 non-null  float32 
+ 22  CATEGORIA_BINARIA                 49641 non-null  category
+dtypes: UInt8(7), category(2), float32(6), uint16(1), uint8(7)
+memory usage: 2.3 MB
+*****FIM PRINT INFOS*********
+Function informations Took 0:00:00.006171
+
+*****FIM LOAD DATA******
+Function load_data Took 0:00:00.406579
+
+*****INICIO SHOW SETTINGS******
+os = <module 'os' from '/usr/local/lib/python3.8/os.py'>
+pd = <module 'pandas' from '/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pandas/__init__.py'>
+torch = <module 'torch' from '/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/torch/__init__.py'>
+PANDAS_MAX_ROWS = 5000
+random_seed = 42
+n_jobs = -1
+dataset_folder_path = /home/externo/rafaelrm/base_dados/
+csv_path = /home/externo/rafaelrm/base_dados/TAB_MODELAGEM_RAFAEL_2020_1-ANIMAIS-POR-LOTE-CATEGORIA_BINARIA.csv
+number_csv_lines = None
+dtype_dict = {'ID_ANIMAL': 'uint32', 'EstabelecimentoMunicipio': 'category', 'Frigorifico_ID': 'uint8', 'Frigorifico_CNPJ': 'uint64', 'Frigorifico_RazaoSocial': 'category', 'Municipio_Frigorifico': 'category', 'Tipificacao': 'category', 'Maturidade': 'category', 'Acabamento': 'category', 'Peso': 'float32', 'EstabelecimentoIdentificador': 'uint16', 'Questionario_ID': 'uint16', 'QuestionarioClassificacaoEstabel': 'uint8', 'FERTIIRRIGACAO': 'uint8', 'ILP': 'uint8', 'IFP': 'uint8', 'ILPF': 'uint8', 'CONCEN_VOLUM': 'UInt8', 'CREEPFEEDING': 'UInt8', 'FORN_ESTRAT_SILAGEM': 'UInt8', 'PROTEICO': 'UInt8', 'PROTEICO_ENERGETICO': 'UInt8', 'RACAO_BAL_CONS_INFERIOR': 'UInt8', 'SAL_MINERAL': 'UInt8', 'SALMINERAL_UREIA': 'UInt8', 'RACAOO_BAL_CONSUMO_IG': 'UInt8', 'GRAO_INTEIRO': 'UInt8', 'ALTO_CONCENTR_VOLUM': 'UInt8', 'ALTO_CONCENTRADO': 'UInt8', 'QuestionarioPossuiOutrosIncentiv': 'uint8', 'QuestionarioFabricaRacao': 'uint8', 'area so confinamento': 'UInt8', 'regua de manejo': 'UInt8', 'boa cobertura vegetal, com baixa': 'UInt8', 'erosaoo laminar ou em sulco igua': 'UInt8', 'identificacao individual': 'UInt8', 'rastreamento SISBOV': 'UInt8', 'Lista Trace': 'UInt8', 'BPA': 'UInt8', 'participa de aliancas mercadolog': 'UInt8', 'QuestionarioPraticaRecuperacaoPa': 'uint8', 'Confinamento': 'UInt8', 'Suplementacao_a_campo': 'UInt8', 'SemiConfinamento': 'UInt8', 'dif_datas': 'uint16', 'tot7d_Chuva': 'float32', 'med7d_TempInst': 'float32', 'med7d_TempMin': 'float32', 'med7d_UmidInst': 'float32', 'med7d_formITUinst': 'float32', 'med7d_formITUmax': 'float32', 'med7d_NDVI': 'float32', 'med7d_EVI': 'float32', 'med7d_preR_soja': 'float32', 'med7d_preR_milho': 'float32', 'med7d_preR_boi': 'float32', 'tot1m_Chuva': 'float32', 'med1m_TempInst': 'float32', 'med1m_UmidInst': 'float32', 'med1m_formITUinst': 'float32', 'med1m_NDVI': 'float32', 'med1m_EVI': 'float32', 'med1m_preR_soja': 'float32', 'med1m_preR_milho': 'float32', 'med1m_preR_boi': 'float32', 'tot3m_Chuva': 'float32', 'med3m_TempInst': 'float32', 'med3m_UmidInst': 'float32', 'med3m_formITUinst': 'float32', 'med3m_formITUmax': 'float32', 'med3m_NDVI': 'float32', 'med3m_EVI': 'float32', 'med3m_preR_soja': 'float32', 'med3m_preR_milho': 'float32', 'med3m_preR_boi': 'float32', 'tot6m_Chuva': 'float32', 'med6m_TempInst': 'float32', 'med6m_UmidInst': 'float32', 'med6m_formITUinst': 'float32', 'med6m_NDVI': 'float32', 'med6m_EVI': 'float32', 'med6m_preR_soja': 'float32', 'med6m_preR_milho': 'float32', 'med6m_preR_boi': 'float32', 'tot12m_Chuva': 'float32', 'med12m_TempInst': 'float32', 'med12m_TempMin': 'float32', 'med12m_UmidInst': 'float32', 'med12m_formITUinst': 'float32', 'med12m_NDVI': 'float32', 'med12m_EVI': 'float32', 'med12m_preR_soja': 'float32', 'med12m_preR_milho': 'float32', 'med12m_preR_boi': 'float32', 'cnt7d_CL_ITUinst': 'float32', 'cnt1m_CL_ITUinst': 'float32', 'cnt3m_CL_ITUinst': 'float32', 'cnt6m_CL_ITUinst': 'float32', 'cnt12m_CL_ITUinst': 'float32', 'ANO': 'uint16', 'CATEGORIA': 'category', 'classificacao': 'category', 'Motivo': 'category', 'QTD_ANIMAIS_LOTE': 'uint16', 'CATEGORIA_BINARIA': 'category'}
+parse_dates = ['DataAbate']
+delete_columns_names_on_load_data = ['EstabelecimentoMunicipio', 'Frigorifico_ID', 'Frigorifico_CNPJ', 'Frigorifico_RazaoSocial', 'Municipio_Frigorifico', 'Maturidade', 'Acabamento', 'EstabelecimentoIdentificador', 'Questionario_ID', 'FERTIIRRIGACAO', 'CONCEN_VOLUM', 'CREEPFEEDING', 'FORN_ESTRAT_SILAGEM', 'PROTEICO', 'PROTEICO_ENERGETICO', 'RACAO_BAL_CONS_INFERIOR', 'SAL_MINERAL', 'SALMINERAL_UREIA', 'RACAOO_BAL_CONSUMO_IG', 'GRAO_INTEIRO', 'ALTO_CONCENTR_VOLUM', 'ALTO_CONCENTRADO', 'area so confinamento', 'boa cobertura vegetal, com baixa', 'erosaoo laminar ou em sulco igua', 'Lista Trace', 'BPA', 'dif_datas', 'tot7d_Chuva', 'med7d_TempInst', 'med7d_TempMin', 'med7d_UmidInst', 'med7d_formITUinst', 'med7d_formITUmax', 'med7d_NDVI', 'med7d_EVI', 'med7d_preR_soja', 'med7d_preR_milho', 'med7d_preR_boi', 'tot1m_Chuva', 'med1m_TempInst', 'med1m_UmidInst', 'med1m_formITUinst', 'med1m_NDVI', 'med1m_EVI', 'med1m_preR_soja', 'med1m_preR_milho', 'med1m_preR_boi', 'med3m_TempInst', 'med3m_UmidInst', 'med3m_formITUmax', 'med3m_EVI', 'med3m_preR_soja', 'tot6m_Chuva', 'med6m_TempInst', 'med6m_UmidInst', 'med6m_formITUinst', 'med6m_NDVI', 'med6m_EVI', 'med6m_preR_soja', 'med6m_preR_milho', 'med6m_preR_boi', 'tot12m_Chuva', 'med12m_TempInst', 'med12m_TempMin', 'med12m_UmidInst', 'med12m_formITUinst', 'med12m_NDVI', 'med12m_EVI', 'med12m_preR_soja', 'med12m_preR_milho', 'med12m_preR_boi', 'cnt7d_CL_ITUinst', 'cnt1m_CL_ITUinst', 'cnt3m_CL_ITUinst', 'cnt6m_CL_ITUinst', 'cnt12m_CL_ITUinst', 'ANO', 'Motivo', 'DataAbate', 'Data_homol', 'DataAbate_6m_ANT', 'data_homol_select', 'data12m', 'data6m', 'data3m', 'data1m', 'data7d', 'classificacao', 'CATEGORIA']
+PATH_SAVE_PLOTS = ./plots
+PATH_SAVE_ESTIMATORS_REPR = ./runs/estimators_repr
+PATH_SAVE_BEST_ESTIMATORS = ./runs/best_estimators
+PATH_SAVE_RESULTS = ./runs/results
+PATH_SAVE_LOGS = ./logs
+PATH_SAVE_ENCODERS_SCALERS = ./runs/encoders_scalers
+ordinal_encoder_columns_names = {'QuestionarioClassificacaoEstabel': ['0', '21', '26', '30']}
+columns_ordinal_encoded = {}
+label_encoder_columns_names = ['CATEGORIA_BINARIA']
+columns_label_encoded = {}
+one_hot_encoder_columns_names = ['Tipificacao']
+columns_one_hot_encoded = {}
+min_max_scaler_columns_names = ['QTD_ANIMAIS_LOTE', 'Peso', 'tot3m_Chuva', 'med3m_formITUinst', 'med3m_NDVI', 'med3m_preR_milho', 'med3m_preR_boi']
+columns_min_max_scaled = {}
+columns_label_binarized = {}
+simple_imputer_columns_names = ['rastreamento SISBOV', 'regua de manejo', 'identificacao individual', 'participa de aliancas mercadolog', 'Confinamento', 'Suplementacao_a_campo', 'SemiConfinamento']
+columns_names_drop_feature_by_correlation = ['med3m_formITUinst', 'med3m_preR_boi', 'CATEGORIA_BINARIA']
+class_column = CATEGORIA_BINARIA
+classifiers = {}
+models_results = {}
+device_name = auto
+use_embeddings = True
+cat_idxs = []
+cat_dims = []
+use_cat_emb_dim = True
+cat_emb_dim = 1
+threshold_categorical_features = 150
+num_workers = 0
+eval_metric = ['auc', 'balanced_accuracy', 'accuracy']
+augmentations = None
+save_results_during_run = False
+new_run = False
+PATH_OBJECTS_PERSISTED_RESULTS_RUNS = ./runs/objects_persisted_results_runs
+PARAMETERS_PERSIST_FILENAME = ./runs/objects_persisted_results_runs/parameters_persist
+RESULTS_PERSIST_FILENAME = ./runs/objects_persisted_results_runs/results_persist
+SPLIT_PERSIST_FILENAME = ./runs/objects_persisted_results_runs/split_persist
+tree_method = hist
+objective = binary:logistic
+*****FIM SHOW SETTINGS******
+
+
+*****INICIO DELETE DUPLICATE ROWS BY ATTRIBUTE******
+!!!>>> Atributo ID_ANIMAL não encontrado no DataFrame para delete duplicates rows by attibute.
+*****FIM DELETE DUPLICATE ROWS BY ATTRIBUTE*********
+Function delete_duplicate_rows_by_attribute Took 0:00:00.000060
+
+*****INICIO DELETE COLUNAS******
+!!!>>> Coluna " ID_ANIMAL " não encontrada no DataFrame para exclusão.
+*****FIM DELETE COLUNAS*********
+
+*****INICIO DELETE COLUMNS WITH SINGLE VALUE******
+>>> Nenhuma coluna com valor único encontrada.
+*****FIM DELETE COLUMNS WITH SINGLE VALUE*********
+Function delete_columns_with_single_value Took 0:00:00.021705
+
+
+*****INICIO LABEL ENCODER******
+*****FIM LABEL ENCODER*********
+Function label_encoder_columns Took 0:00:00.008720
+
+Object saved in file: ./runs/encoders_scalers/target_encoded-17-02-2023_14:46:24.joblib
+
+*****INICIO RELATÓRIO DISTRIBUIÇÃO DE CLASSES******
+Distribuição da classe 1: 50%
+Distribuição da classe 0: 50%
+Erro majoritário: 50%
+*****FIM RELATÓRIO DISTRIBUIÇÃO DE CLASSES******
+Function class_distribution Took 0:00:00.001707
+
+/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:75: UserWarning: Device used : cpu
+  warnings.warn(f"Device used : {self.device}")
+Number of folds for cross validation: 5
+Scoring strategy for grid search: accuracy
+Test Size: 0.2
+
+x_train shape: (39712, 22)
+y_train shape: (39712,)
+x_test shape: (9929, 22)
+y_test shape: (9929,)
+Fitting 5 folds for each of 69 candidates, totalling 345 fits
+/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/joblib/externals/loky/process_executor.py:700: UserWarning: A worker stopped while some jobs were given to the executor. This can be caused by a too short worker timeout or by a memory leak.
+  warnings.warn(
+/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/sklearn/model_selection/_validation.py:378: FitFailedWarning: 
+10 fits failed out of a total of 345.
+The score on these train-test partitions for these parameters will be set to nan.
+If these failures are not expected, you can try to debug them by setting error_score='raise'.
+
+Below are more details about the failures:
+--------------------------------------------------------------------------------
+10 fits failed with the following error:
+Traceback (most recent call last):
+  File "/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/sklearn/model_selection/_validation.py", line 686, in _fit_and_score
+    estimator.fit(X_train, y_train, **fit_params)
+  File "/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/sklearn/pipeline.py", line 382, in fit
+    self._final_estimator.fit(Xt, y, **fit_params_last_step)
+  File "/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/clf_switcher.py", line 20, in fit
+    self.estimator.fit(x, y)
+  File "/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/sklearn/tree/_classes.py", line 969, in fit
+    super().fit(
+  File "/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/sklearn/tree/_classes.py", line 265, in fit
+    check_scalar(
+  File "/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/sklearn/utils/validation.py", line 1480, in check_scalar
+    raise ValueError(
+ValueError: min_samples_split == 1, must be >= 2.
+
+  warnings.warn(some_fits_failed_message, FitFailedWarning)
+/home/externo/rafaelrm/algoritmos/dev/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/sklearn/model_selection/_search.py:953: UserWarning: One or more of the test scores are non-finite: [0.63411547 0.70026672 0.69679196 0.69752224 0.69462648 0.70026672
+ 0.69679196 0.69752224 0.69462648        nan 0.63726337 0.66093377
+ 0.67324726        nan 0.64464151 0.66342664 0.67299537 0.66523967
+ 0.66420715 0.66591954 0.6649123  0.6652145  0.66501306 0.66534042
+ 0.66534043 0.66443408 0.66549148 0.66476126 0.69661551 0.68916219
+ 0.69860516 0.73292707 0.7346897  0.73453858 0.73388398 0.73521853
+ 0.73496669 0.70550473 0.70701552 0.7059327  0.70623491 0.70784661
+ 0.70900488 0.70759469 0.70686442 0.6907485  0.68601414 0.66871429
+ 0.69228461 0.68797828 0.66886536 0.68938846 0.68838124 0.66768194
+ 0.69319069 0.69047126 0.66118555 0.69439981 0.69732064 0.67508533
+ 0.69241044 0.69664083 0.67762878 0.69618768 0.69852949 0.67888776
+ 0.69450039 0.69734591 0.68160747]
+  warnings.warn(
+--------------------- RESULTS ---------------------
+
+CSV gerado com sucesso em: ./runs/results/cv_results-17-02-2023_15:00:43.csv.
+Function generate_new_csv Took 0:00:00.051559
+
+Cross validation results:
+    mean_fit_time  std_fit_time  mean_score_time  std_score_time  ... split4_test_score mean_test_score std_test_score rank_test_score
+35      23.345932      0.469300         2.755075        0.270359  ...          0.733191        0.735219       0.002361               1
+36      34.971275      0.678932         2.149673        0.153709  ...          0.731302        0.734967       0.002443               2
+32      19.488249      0.475212         3.741219        0.138596  ...          0.732435        0.734690       0.001967               3
+33      33.402665      0.193782         2.914717        0.270695  ...          0.732183        0.734539       0.002601               4
+34       4.238980      0.672432         1.529860        0.613114  ...          0.734702        0.733884       0.004669               5
+31       2.944528      0.085445         0.460090        0.050321  ...          0.730169        0.732927       0.002728               6
+42       2.318083      0.362641         0.404536        0.147077  ...          0.705993        0.709005       0.002122               7
+41       1.973624      0.327718         0.559635        0.109630  ...          0.707127        0.707847       0.002552               8
+43       3.058180      0.661337         0.139259        0.069442  ...          0.707630        0.707595       0.001906               9
+38       4.652132      0.220575         1.037146        0.190759  ...          0.704860        0.707016       0.001952              10
+44       3.503719      0.784661         0.232612        0.087378  ...          0.704357        0.706864       0.001416              11
+40       4.695305      0.537214         0.520577        0.150741  ...          0.706749        0.706235       0.000466              12
+39       4.847267      0.737127         0.619415        0.118709  ...          0.703349        0.705933       0.001835              13
+37       4.091142      1.010528         0.966315        0.303722  ...          0.705742        0.705505       0.002355              14
+5        1.752122      0.765383         8.358177        0.224871  ...          0.702090        0.700267       0.005121              15
+1        0.255126      0.034510         5.915940        2.261590  ...          0.702090        0.700267       0.005121              15
+30      40.523328      7.217380         0.322199        0.309801  ...          0.700957        0.698605       0.004231              17
+64     168.204850     27.857309         0.272259        0.026429  ...          0.699572        0.698529       0.003817              18
+3        0.456170      0.099466         8.683274        0.843256  ...          0.701209        0.697522       0.003509              19
+7        3.779708      1.214229         7.650733        1.405548  ...          0.701209        0.697522       0.003509              19
+67     177.241014     28.265439         0.275443        0.017288  ...          0.696424        0.697346       0.002920              21
+58     201.683017     76.377789         0.254038        0.039467  ...          0.699824        0.697321       0.004574              22
+2        0.283791      0.082561         7.841990        0.944223  ...          0.696676        0.696792       0.002874              23
+6        3.515432      0.354601         7.834051        0.691152  ...          0.696676        0.696792       0.002874              23
+61     162.275688     26.864008         0.240828        0.004040  ...          0.698691        0.696641       0.003328              25
+28      34.783012      9.025405         0.343696        0.239189  ...          0.695543        0.696616       0.005451              26
+63     168.956241     49.215570         0.262050        0.025820  ...          0.694661        0.696188       0.004471              27
+8        1.777289      0.302447         8.656369        0.668196  ...          0.700201        0.694626       0.005209              28
+4        1.198719      0.162783         9.954413        0.695015  ...          0.700201        0.694626       0.005209              28
+66     147.125057     36.364880         0.262145        0.031752  ...          0.695291        0.694500       0.004213              30
+57     171.308255     52.574434         0.238431        0.004481  ...          0.693528        0.694400       0.003022              31
+54     218.176805     54.663641         0.233953        0.013252  ...          0.687736        0.693191       0.005045              32
+60     155.436763     50.135038         0.255337        0.030324  ...          0.694535        0.692410       0.002987              33
+48     211.088181     58.099010         0.230629        0.013919  ...          0.695417        0.692285       0.003586              34
+45     192.921626     44.565090         0.222410        0.001992  ...          0.692899        0.690748       0.003531              35
+55     232.237430     58.904719         0.239278        0.027492  ...          0.693906        0.690471       0.004231              36
+51     188.137742     41.578304         0.276607        0.057504  ...          0.693528        0.689388       0.007174              37
+29      18.244966     10.930412         0.845519        0.238283  ...          0.688617        0.689162       0.006390              38
+52     173.071480     27.776611         0.251779        0.050214  ...          0.695039        0.688381       0.006047              39
+49     177.427313     62.705012         0.278475        0.061985  ...          0.694409        0.687978       0.005514              40
+46     171.504875     34.629623         0.235183        0.019939  ...          0.692143        0.686014       0.006982              41
+68     241.148469     47.305685         0.264682        0.027216  ...          0.680307        0.681607       0.004869              42
+65     271.954543     54.244106         0.263816        0.041743  ...          0.674012        0.678888       0.004057              43
+62     252.193265     20.968711         0.290730        0.035735  ...          0.674012        0.677629       0.003464              44
+59     239.078395     59.154196         0.245787        0.007283  ...          0.660413        0.675085       0.008018              45
+12       3.157630      0.360380         0.336648        0.216009  ...          0.664694        0.673247       0.005543              46
+16       1.372981      0.102760         0.147271        0.061117  ...          0.665198        0.672995       0.005441              47
+50     210.347895     69.787237         0.256814        0.047629  ...          0.658398        0.668865       0.008073              48
+47     223.460765     95.324640         0.227599        0.010835  ...          0.659280        0.668714       0.007798              49
+53     193.918863     35.089924         0.247673        0.021179  ...          0.659909        0.667682       0.006854              50
+19       0.601736      0.162597         0.084845        0.049870  ...          0.666331        0.665920       0.003734              51
+26       4.651078      1.093601         0.473429        0.331597  ...          0.663057        0.665491       0.002302              52
+24       0.540926      0.199440         0.068898        0.019798  ...          0.664946        0.665340       0.002892              53
+23       0.706056      0.118404         0.063444        0.022004  ...          0.664946        0.665340       0.002926              54
+17       0.665360      0.065587         0.173456        0.104749  ...          0.662679        0.665240       0.003214              55
+21       0.741992      0.198911         0.101337        0.042997  ...          0.664316        0.665214       0.002967              56
+22       0.427965      0.121030         0.108152        0.045395  ...          0.664316        0.665013       0.002711              57
+20       0.468025      0.158664         0.084664        0.037085  ...          0.663183        0.664912       0.003078              58
+27      24.568777      8.806049         0.988434        0.270860  ...          0.664316        0.664761       0.002282              59
+25      15.828156     13.846787         0.658928        0.365360  ...          0.665827        0.664434       0.003459              60
+18       0.549615      0.151070         0.083711        0.048989  ...          0.662176        0.664207       0.003251              61
+15       1.942532      0.469079         0.160045        0.085526  ...          0.659783        0.663427       0.004558              62
+56     161.002863     31.788831         0.229443        0.006524  ...          0.658147        0.661186       0.008634              63
+11       3.441661      0.445369         0.510183        0.123620  ...          0.653488        0.660934       0.006209              64
+14       2.333242      0.153131         0.104664        0.060190  ...          0.647444        0.644642       0.002043              65
+10       4.098349      0.237780         0.555038        0.151219  ...          0.630446        0.637263       0.005453              66
+0        0.234180      0.031329         0.054012        0.009481  ...          0.640141        0.634115       0.005572              67
+9        1.808510      0.318358         0.000000        0.000000  ...               NaN             NaN            NaN              68
+13       0.943374      0.092952         0.000000        0.000000  ...               NaN             NaN            NaN              69
+
+[69 rows x 43 columns]
+Object saved in file: ./runs/best_estimators/best_pipe-17-02-2023_15:00:43.joblib
+Object saved in file: ./runs/best_estimators/best_estimator-RandomForestClassifier-17-02-2023_15:00:45.joblib
+Best estimator: RandomForestClassifier(criterion='entropy', n_estimators=700, n_jobs=-1,
+                       random_state=42)
+Object saved in file: ./runs/encoders_scalers/column_transformer-17-02-2023_15:00:46.joblib
+Internal CV score obtained by the best set of parameters: 0.7352185251673398
+Best params: {'classifier__estimator': RandomForestClassifier(criterion='entropy', n_estimators=700, n_jobs=-1,
+                       random_state=42), 'classifier__estimator__criterion': 'entropy', 'classifier__estimator__n_estimators': 700, 'classifier__estimator__n_jobs': -1, 'classifier__estimator__random_state': 42}
+Scorer function: make_scorer(accuracy_score)
+The number of CV splits: 5
+Seconds used for refitting the best model on the whole dataset: 9.272486209869385
+Whether the scorers compute several metrics: False
+The number of features when fit is performed: 22
+Names of features seen during fit: ['Tipificacao' 'QTD_ANIMAIS_LOTE' 'Peso'
+ 'QuestionarioClassificacaoEstabel' 'ILP' 'IFP' 'ILPF'
+ 'QuestionarioPossuiOutrosIncentiv' 'QuestionarioFabricaRacao'
+ 'regua de manejo' 'identificacao individual' 'rastreamento SISBOV'
+ 'participa de aliancas mercadolog' 'QuestionarioPraticaRecuperacaoPa'
+ 'Confinamento' 'Suplementacao_a_campo' 'SemiConfinamento' 'tot3m_Chuva'
+ 'med3m_formITUinst' 'med3m_NDVI' 'med3m_preR_milho' 'med3m_preR_boi']
+
+!!!>> When you observe high training accuracy, but low test accuracy, it is likely that you encountered overfitting problem.
+Training set score: 1.0
+Test set score: 0.7416658273743579
+
+CSV gerado com sucesso em: ./runs/results/grid_search_results-17-02-2023_15:00:48.csv.
+Function generate_new_csv Took 0:00:00.006287
+
+*****INICIO CONFUSION MATRIX DISPLAY******
+Figure confusion_matrix_display-17-02-2023_15:00:51.png saved in ./plots/ directory.
+*****FIM CONFUSION MATRIX DISPLAY******
+
+Function confusion_matrix_display Took 0:00:00.571235
+
+
+--- Test data performance ---
+Test Acurácia: 0.7416658273743579
+Test Acurácia Balanceada: 0.741650456482045
+Test Revocação: 0.7438
+Test Micro Revocação: 0.7416658273743579
+Test Macro Revocação: 0.741650456482045
+Test Precisão: 0.7433539876074355
+Test Micro Precisão: 0.7416658273743579
+Test Macro Precisão: 0.741652633267786
+Test F1: 0.7435769269219235
+Test Micro F1: 0.7416658273743579
+Test Macro F1: 0.7416514771595919
+Test Coeficiente Kappa: 0.48330300149197236
+Test Coeficiente de Correlação de Matthews: 0.4833030897449289
+Test Log Loss: 0.5180291450482938
+Test ROC AUC Score: 0.8231595252586732
+
+CSV gerado com sucesso em: ./runs/results/performance_results-17-02-2023_15:00:51.csv.
+Function generate_new_csv Took 0:00:00.001319
+
+              precision    recall  f1-score   support
+
+           0       0.74      0.74      0.74      4929
+           1       0.74      0.74      0.74      5000
+
+    accuracy                           0.74      9929
+   macro avg       0.74      0.74      0.74      9929
+weighted avg       0.74      0.74      0.74      9929
+
+
+CSV gerado com sucesso em: ./runs/results/classification_report-17-02-2023_15:00:51.csv.
+Function generate_new_csv Took 0:00:00.000947
+
+Function run_grid_search Took 0:14:27.357035
+
