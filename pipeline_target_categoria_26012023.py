@@ -352,6 +352,7 @@ if __name__ == '__main__':
                 },
                 {
                     'classifier__estimator': [MLPClassifier()],
+                    'classifier__estimator__random_state': [settings.random_seed],
                     'classifier__estimator__max_iter': [1000],
                     'classifier__estimator__early_stopping': [True],
                     'classifier__estimator__hidden_layer_sizes': [(50, 100, 50), (100,), (200, 100)],
@@ -365,7 +366,7 @@ if __name__ == '__main__':
                 {
                     'classifier__estimator': [RandomForestClassifier()],
                     'classifier__estimator__random_state': [settings.random_seed],
-                    'classifier__estimator__n_jobs': [-1],
+                    # 'classifier__estimator__n_jobs': [-1],
                     'classifier__estimator__n_estimators': [120, 700, 1200],
                     'classifier__estimator__criterion': ['gini', 'entropy'],
                     'classifier__estimator__max_depth': list(np.arange(5, 30, 7)) + [None],
@@ -381,7 +382,7 @@ if __name__ == '__main__':
                     'classifier__estimator__random_state': [settings.random_seed],
                     'classifier__estimator__objective': [settings.objective],
                     'classifier__estimator__num_class': [class_number],
-                    'classifier__estimator__n_jobs': [-1],
+                    # 'classifier__estimator__n_jobs': [-1],
                     'classifier__estimator__n_estimators': [50, 100, 150, 200],
                     'classifier__estimator__learning_rate': list(np.arange(0.01, 0.03, 0.01)) + list(np.arange(0.1, 0.3, 0.1)),
                     'classifier__estimator__gamma': list(np.arange(0.05, 0.066, 0.01)) + [0.1, 1.0],
@@ -433,7 +434,8 @@ if __name__ == '__main__':
             print('Number of folds for cross validation: {}'.format(n_splits))
             cv = StratifiedKFold(
                 n_splits=n_splits,
-                shuffle=False
+                shuffle=False,
+                random_state=settings.random_seed
             )
 
             # Scoring strategy for grid search
