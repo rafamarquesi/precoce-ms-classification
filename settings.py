@@ -15,7 +15,7 @@ pd.set_option('display.max_rows', PANDAS_MAX_ROWS)
 # Set random seed
 random_seed = 42
 
-# Number of jobs to run in parallel, where -1 means using all processors. The -1 doesn't work for TabNet, instead use 1.
+# Number of jobs to run in parallel, where -1 means using all processors.
 n_jobs = 1
 
 ############################################ CSV SETTINGS ############################################
