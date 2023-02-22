@@ -437,8 +437,7 @@ if __name__ == '__main__':
             print('Number of folds for cross validation: {}'.format(n_splits))
             cv = StratifiedKFold(
                 n_splits=n_splits,
-                shuffle=False,
-                random_state=settings.random_seed
+                shuffle=False
             )
 
             # Scoring strategy for grid search
