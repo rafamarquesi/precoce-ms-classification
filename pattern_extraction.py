@@ -30,7 +30,8 @@ def run_grid_search(
     test_size: Union[float, int, None] = None,
     random_state: Union[int, np.random.RandomState, None] = None,
     verbose: int = 10,
-    error_score=np.nan
+    error_score=np.nan,
+    pre_dispatch: Union[str, int] = '2*n_jobs',
 ) -> dict:
     """
     Run Grid Search CV and save the results, best parameters, and best model.
@@ -47,6 +48,7 @@ def run_grid_search(
         random_state (int, optional): Random the class into the folds. Defaults to None.
         verbose (int, optional): Controls the verbosity: the higher, the more messages. Defaults to 10.
         error_score (optional): Value to assign to the score if an error occurs in estimator fitting. If set to 'raise', the error is raised. If a numeric value is given, FitFailedWarning is raised. This parameter does not affect the refit step, which will always raise the error. Defaults to np.nan.
+        pre_dispatch (Union[str, int], optional): Controls the number of jobs that get dispatched during parallel execution. Reducing this number can be useful to avoid an explosion of memory consumption when more jobs get dispatched than CPUs can process. This parameter can be: - None, in which case all the jobs are immediately created and spawned. Use this for lightweight and fast-running jobs, to avoid delays due to on-demand spawning of the jobs. - An int, giving the exact number of total jobs that are spawned. - A string, giving an expression as a function of n_jobs, as in '2*n_jobs'. Defaults to '2*n_jobs'.
     """
 
     # Split the data into test and train
@@ -73,7 +75,8 @@ def run_grid_search(
             scoring=score,
             n_jobs=n_jobs,
             verbose=verbose,
-            error_score=error_score
+            error_score=error_score,
+            pre_dispatch=pre_dispatch
         )
     else:
         grid_search = GridSearchCV(
@@ -83,7 +86,8 @@ def run_grid_search(
             scoring=score,
             n_jobs=n_jobs,
             verbose=verbose,
-            error_score=error_score
+            error_score=error_score,
+            pre_dispatch=pre_dispatch
         )
 
     # Save the representation of the GridSearchCV
