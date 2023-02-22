@@ -261,12 +261,19 @@ augmentations = None
 
 ############################################  PERSISTENCE OBJECTS DURING RUN OF PIPELINE ############################################
 
+# Flag to run the original scikit-learn Grid Search CV or the scikit-learn Tuner Grid Search CV (persisting the objects, results, during the execution of the pipeline).
+# Wheter True, the Grid Search CV Tuner will be used, otherwise the original scikit-learn Grid Search CV will be used.
+run_grid_search_cv_tuner = True
+
 # Flag to save the results of each split in the pipeline execution, to be used in a possible new execution,
-# in case the execution is interrupted. Default is True.
+# in case the execution is interrupted.
+# Used only if run_grid_search_cv_tuner = True and It works only if n_jobs = 1 (don't work in parallel).
+# If false, the results for already executed parameters will be loaded,
+# but the results for new executed parameters will not be saved.
 save_results_during_run = True
 
 # Whether True, the objects persisted in the path_objects_persisted_results_runs will be cleaned before the execution of the pipeline
-new_run = False
+new_run = True
 
 # Path to objects persisted with the results of executions of the pipeline
 PATH_OBJECTS_PERSISTED_RESULTS_RUNS = './runs/objects_persisted_results_runs'
