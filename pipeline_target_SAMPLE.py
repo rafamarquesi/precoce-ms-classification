@@ -51,7 +51,7 @@ if __name__ == '__main__':
         # Some settings are configured by default. If you want to change any settings,
         # just follow the instruction for the specific setting. For more information, view the settings.py file.
 
-        # Number of jobs to run in parallel, where -1 means using all processors. The -1 doesn't work for TabNet, instead use 1.
+        # Number of jobs to run in parallel, where -1 means using all processors.
         settings.n_jobs = -1
 
         # Folder path where the CSV file is located ex: /path/folder/dataset/
@@ -165,9 +165,16 @@ if __name__ == '__main__':
                 precoce_ms_data_frame[settings.class_column].value_counts())
 
             ##### Grid Search Settings #####
+            # Flag to run the original scikit-learn Grid Search CV or the scikit-learn Tuner Grid Search CV (persisting the objects, results, during the execution of the pipeline).
+            # Wheter True, the Grid Search CV Tuner will be used, otherwise the original scikit-learn Grid Search CV will be used.
+            settings.run_grid_search_cv_tuner = True
+
             # Flag to save the results of each split in the pipeline execution, to be used in a possible new execution,
-            # in case the execution is interrupted. Default is True.
-            # settings.save_results_during_run = False
+            # in case the execution is interrupted.
+            # Used only if run_grid_search_cv_tuner = True and It works only if n_jobs = 1 (don't work in parallel).
+            # If false, the results for already executed parameters will be loaded,
+            # but the results for new executed parameters will not be saved.
+            settings.save_results_during_run = True
 
             # Whether True, the objects persisted in the path_objects_persisted_results_runs will be cleaned before the execution of the pipeline
             settings.new_run = True
