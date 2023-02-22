@@ -352,7 +352,7 @@ if __name__ == '__main__':
                 },
                 {
                     'classifier__estimator': [MLPClassifier()],
-                    'classifier__estimator__random_state': [settings.random_seed],
+                    # 'classifier__estimator__random_state': [settings.random_seed],
                     'classifier__estimator__max_iter': [1000],
                     'classifier__estimator__early_stopping': [True],
                     'classifier__estimator__hidden_layer_sizes': [(50, 100, 50), (100,), (200, 100)],
