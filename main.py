@@ -61,7 +61,7 @@ if __name__ == '__main__':
         # just follow the instruction for the specific setting. For more information, view the settings.py file.
 
         # Number of jobs to run in parallel, where -1 means using all processors. The -1 doesn't work for TabNet, instead use 1.
-        # settings.n_jobs = -1
+        settings.n_jobs = -1
 
         # Folder path where the CSV file is located
         settings.dataset_folder_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/'
@@ -463,6 +463,9 @@ if __name__ == '__main__':
                 settings.objective = 'multi:softmax'
 
             ##### Tab Net Settings #####
+            # For parallelization of the training, set the number of workers to be used. If 0, the number of workers will be set to the number of available CPU cores.
+            # torch.multiprocessing.set_sharing_strategy('file_system')
+            # settings.num_workers = 40
             # If multi-class classification, the eval_metric 'auc' is removed from the list
             if class_number > 2:
                 settings.eval_metric.remove('auc')
@@ -682,7 +685,7 @@ if __name__ == '__main__':
                 {
                     'classifier__estimator': [RandomForestClassifier()],
                     'classifier__estimator__random_state': [settings.random_seed],
-                    'classifier__estimator__n_jobs': [-1],
+                    # 'classifier__estimator__n_jobs': [-1],
                     'classifier__estimator__n_estimators': [120, 700, 1200],
                     'classifier__estimator__criterion': ['gini', 'entropy'],
                     'classifier__estimator__max_depth': list(np.arange(5, 30, 7)) + [None],
@@ -701,7 +704,7 @@ if __name__ == '__main__':
                     'classifier__estimator__random_state': [settings.random_seed],
                     'classifier__estimator__objective': [settings.objective],
                     'classifier__estimator__num_class': [class_number],
-                    'classifier__estimator__n_jobs': [-1],
+                    # 'classifier__estimator__n_jobs': [-1],
                     'classifier__estimator__n_estimators': [50, 100, 150, 200],
                     'classifier__estimator__learning_rate': list(np.arange(0.01, 0.03, 0.01)) + list(np.arange(0.1, 0.3, 0.1)),
                     'classifier__estimator__gamma': list(np.arange(0.05, 0.066, 0.01)) + [0.1, 1.0],
@@ -756,7 +759,8 @@ if __name__ == '__main__':
             print('Number of folds for cross validation: {}'.format(n_splits))
             cv = StratifiedKFold(
                 n_splits=n_splits,
-                shuffle=False
+                shuffle=False,
+                random_state=settings.random_seed
             )
 
             # TODO: Another way to search for the best parameters https://www.kaggle.com/code/prashant111/a-guide-on-xgboost-hyperparameters-tuning/notebook
