@@ -759,8 +759,7 @@ if __name__ == '__main__':
             print('Number of folds for cross validation: {}'.format(n_splits))
             cv = StratifiedKFold(
                 n_splits=n_splits,
-                shuffle=False,
-                random_state=settings.random_seed
+                shuffle=False
             )
 
             # TODO: Another way to search for the best parameters https://www.kaggle.com/code/prashant111/a-guide-on-xgboost-hyperparameters-tuning/notebook
