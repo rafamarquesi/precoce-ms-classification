@@ -55,7 +55,7 @@ if __name__ == '__main__':
         # settings.n_jobs = 1
 
         # Folder path where the CSV file is located ex: /path/folder/dataset/
-        settings.dataset_folder_path = '/home/rafael_marquesi/base_dados/'
+        settings.dataset_folder_path = '/home/externo/rafaelrm/base_dados/'
 
         # Path to the dataset
         settings.csv_path = csv_treatments.choose_csv_path(
@@ -428,8 +428,7 @@ if __name__ == '__main__':
             print('Number of folds for cross validation: {}'.format(n_splits))
             cv = StratifiedKFold(
                 n_splits=n_splits,
-                shuffle=False,
-                random_state=settings.random_seed
+                shuffle=False
             )
 
             # Scoring strategy for grid search
