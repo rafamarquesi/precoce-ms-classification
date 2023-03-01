@@ -11,18 +11,11 @@ from sklearn.utils.multiclass import type_of_target
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, balanced_accuracy_score, roc_auc_score, classification_report, cohen_kappa_score, matthews_corrcoef, log_loss
 from sklearn.model_selection import GridSearchCV, StratifiedKFold, train_test_split
 
-from xgboost import XGBClassifier
-
 import settings
 import csv_treatments
 import utils
+import reports
 from sklearn_tuner.model_selection_tuner import GridSearchCVTuner
-from pytorch_tabnet_tuner.tab_model_tuner import TabNetClassifierTuner
-
-_ESTIMATORS_WITH_SAVE_LOAD_METHOD = [
-    XGBClassifier().__class__.__name__,
-    TabNetClassifierTuner().__class__.__name__
-]
 
 
 @utils.timeit
@@ -37,7 +30,8 @@ def run_grid_search(
     test_size: Union[float, int, None] = None,
     random_state: Union[int, np.random.RandomState, None] = None,
     verbose: int = 10,
-    error_score=np.nan
+    error_score=np.nan,
+    pre_dispatch: Union[str, int] = '2*n_jobs',
 ) -> dict:
     """
     Run Grid Search CV and save the results, best parameters, and best model.
@@ -54,6 +48,7 @@ def run_grid_search(
         random_state (int, optional): Random the class into the folds. Defaults to None.
         verbose (int, optional): Controls the verbosity: the higher, the more messages. Defaults to 10.
         error_score (optional): Value to assign to the score if an error occurs in estimator fitting. If set to 'raise', the error is raised. If a numeric value is given, FitFailedWarning is raised. This parameter does not affect the refit step, which will always raise the error. Defaults to np.nan.
+        pre_dispatch (Union[str, int], optional): Controls the number of jobs that get dispatched during parallel execution. Reducing this number can be useful to avoid an explosion of memory consumption when more jobs get dispatched than CPUs can process. This parameter can be: - None, in which case all the jobs are immediately created and spawned. Use this for lightweight and fast-running jobs, to avoid delays due to on-demand spawning of the jobs. - An int, giving the exact number of total jobs that are spawned. - A string, giving an expression as a function of n_jobs, as in '2*n_jobs'. Defaults to '2*n_jobs'.
     """
 
     # Split the data into test and train
@@ -67,7 +62,7 @@ def run_grid_search(
     print('x_test shape: {}'.format(x_test.shape))
     print('y_test shape: {}'.format(y_test.shape))
 
-    if settings.save_results_during_run:
+    if settings.run_grid_search_cv_tuner:
 
         if settings.new_run:
             utils.remove_all_files_in_directory(
@@ -80,7 +75,8 @@ def run_grid_search(
             scoring=score,
             n_jobs=n_jobs,
             verbose=verbose,
-            error_score=error_score
+            error_score=error_score,
+            pre_dispatch=pre_dispatch
         )
     else:
         grid_search = GridSearchCV(
@@ -90,7 +86,8 @@ def run_grid_search(
             scoring=score,
             n_jobs=n_jobs,
             verbose=verbose,
-            error_score=error_score
+            error_score=error_score,
+            pre_dispatch=pre_dispatch
         )
 
     # Save the representation of the GridSearchCV
@@ -138,7 +135,7 @@ def run_grid_search(
     best_estimator = best_pipe.steps[-1][-1].estimator
 
     # Save best estimator
-    __save_best_estimator(best_estimator=best_estimator)
+    utils.save_best_estimator(best_estimator=best_estimator)
     # utils.dump_joblib(
     #     object=best_estimator,
     #     file_name='best_estimator',
@@ -153,6 +150,13 @@ def run_grid_search(
     )
 
     print('Best estimator: {}'.format(best_estimator))
+
+    # Save the column transformer, for preprocessing data in prediction
+    utils.dump_joblib(
+        object=best_pipe.named_steps['preprocessor'],
+        file_name='column_transformer',
+        path_save_file=settings.PATH_SAVE_ENCODERS_SCALERS
+    )
 
     # Dict with the grid search results
     grid_search_results = dict()
@@ -222,6 +226,14 @@ def run_grid_search(
     except:
         y_pred_proba = None
 
+    # Save confusion matrix
+    reports.confusion_matrix_display(
+        y_true=y_test,
+        y_pred=y_pred,
+        display_figure=False,
+        path_save_fig=settings.PATH_SAVE_PLOTS
+    )
+
     print('\n--- Test data performance ---')
 
     # Get the number of classes in the target column
@@ -265,7 +277,8 @@ def run_grid_search(
     if y_pred_proba is not None:
         dict_results['Log Loss'] = log_loss(y_test, y_pred_proba)
         if class_number == 2:
-            dict_results['ROC AUC Score'] = roc_auc_score(y_test, y_pred_proba)
+            dict_results['ROC AUC Score'] = roc_auc_score(
+                y_test, y_pred_proba[:, 1])
         else:
             dict_results['ROC AUC Score Ponderado'] = roc_auc_score(
                 y_test, y_pred_proba, multi_class='ovr', average='weighted')
@@ -379,40 +392,6 @@ def run_models(x: np.array, y: np.array, models: dict, models_results: dict, n_s
 
 
 ############# PRIVATE METHODS #############
-
-def __save_best_estimator(best_estimator: object) -> None:
-    """
-    Save the best estimator of grid search.
-
-    Args:
-        best_estimator (object): Estimator will be saved.
-    """
-
-    file_name = 'best_estimator'
-
-    if best_estimator.__class__.__name__ not in _ESTIMATORS_WITH_SAVE_LOAD_METHOD:
-        utils.dump_joblib(
-            object=best_estimator,
-            file_name='-'.join([file_name, best_estimator.__class__.__name__]),
-            path_save_file=settings.PATH_SAVE_BEST_ESTIMATORS
-        )
-    else:
-        file = '{}{}-{}-{}'.format(
-            utils.define_path_save_file(
-                path_save_file=settings.PATH_SAVE_BEST_ESTIMATORS),
-            file_name,
-            best_estimator.__class__.__name__,
-            utils.get_current_datetime()
-        )
-        # If XGBoost
-        if best_estimator.__class__.__name__ == _ESTIMATORS_WITH_SAVE_LOAD_METHOD[0]:
-            file = ''.join([file, '.json'])
-            best_estimator.save_model(file)
-        # If TabNetClassifier
-        elif best_estimator.__class__.__name__ == _ESTIMATORS_WITH_SAVE_LOAD_METHOD[1]:
-            best_estimator.save_model(file)
-        print('Object saved in file: {}'.format(file))
-
 
 def __tunning_parameters(model_params: dict, x: np.array, y: np.array, train_size: float = 0.70, test_size: float = 0.30, n_splits: int = 3, shuffle: bool = True, random_state: int = 0) -> object:
     """

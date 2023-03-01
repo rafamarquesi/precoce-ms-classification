@@ -7,6 +7,8 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler, OneHotEncoder, OrdinalEncoder, LabelBinarizer
 from sklearn.feature_selection import VarianceThreshold
 from sklearn.feature_selection import SelectFromModel
+from sklearn.impute import SimpleImputer
+from sklearn.pipeline import Pipeline
 
 from sklearn.linear_model import SGDClassifier
 from sklearn.linear_model import LogisticRegression
@@ -504,7 +506,7 @@ def select_features_from_model(x_train: np.ndarray, y_train: np.ndarray, x_test:
     return x_train_fs, x_test_fs, select_from_model
 
 
-def create_ordinal_encoder_transformer(ordinal_encoder_columns_names: dict, data_frame_columns: list, dtype: type = np.uint8, with_categories: bool = True, handle_unknown: str = 'error', unknown_value=None) -> tuple:
+def create_ordinal_encoder_transformer(ordinal_encoder_columns_names: dict, data_frame_columns: list, dtype: type = np.uint8, with_categories: bool = True, handle_unknown: str = 'error', imputer: object = None, unknown_value=None) -> tuple:
     """Create an ordinal encoder transformer, for ColumnTransformer used in pipeline.
     More in: https://scikit-learn.org/stable/modules/compose.html
 
@@ -514,6 +516,7 @@ def create_ordinal_encoder_transformer(ordinal_encoder_columns_names: dict, data
         dtype (type, optional): Data type of the encoded columns. Defaults to np.uint8.
         with_categories (bool, optional): If True, the object OrdinalEncoder, with categories instancied, will be returned. Defaults to True.
         handle_unknown (str, optional): When set to 'error' an error will be raised in case an unknown categorical feature is present during transform. When set to 'use_encoded_value', the encoded value of unknown categories will be set to the value given for the parameter unknown_value. Defaults to 'error'.
+        imputer (object, optional): Imputer object to be used in the pipeline. Defaults to None.
         unknown_value (optional): Value to use for unknown categories. If handle_unknown is 'use_encoded_value', the value should be int or np.nan. See documentation for OrdinalEncoder for more: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OrdinalEncoder.html. Defaults to None.
 
     Returns:
@@ -538,45 +541,77 @@ def create_ordinal_encoder_transformer(ordinal_encoder_columns_names: dict, data
             columns_with_categories.update({column: categories})
 
     ordinal_encoder_transformer = tuple()
+    name_transformer = str()
+    transformer = None
+    columns_to_transformer = list()
 
     if with_categories:
         if columns_with_categories:
-            ordinal_encoder_transformer = tuple(
-                (
-                    'ordinal_encoder_with_categories',
-                    OrdinalEncoder(
-                        categories=list(columns_with_categories.values()),
-                        dtype=dtype,
-                        handle_unknown=handle_unknown,
-                        unknown_value=unknown_value
-                    ),
-                    list(columns_with_categories.keys())
+            name_transformer = 'ordinal_encoder_with_categories'
+
+            if imputer:
+                transformer = Pipeline(
+                    steps=[
+                        ('imputer', imputer),
+                        ('ordinal_encoder', OrdinalEncoder(
+                            categories=list(columns_with_categories.values()),
+                            dtype=dtype,
+                            handle_unknown=handle_unknown,
+                            unknown_value=unknown_value
+                        ))
+                    ]
                 )
-            )
+            else:
+                transformer = OrdinalEncoder(
+                    categories=list(columns_with_categories.values()),
+                    dtype=dtype,
+                    handle_unknown=handle_unknown,
+                    unknown_value=unknown_value
+                )
+
+            columns_to_transformer = list(columns_with_categories.keys())
         else:
             raise Exception(
                 '!!!> No columns with categories informed for ordinal encoder transformer.')
     else:
         if columns_without_categories:
-            ordinal_encoder_transformer = tuple(
-                (
-                    'ordinal_encoder_without_categories',
-                    OrdinalEncoder(
-                        dtype=dtype,
-                        handle_unknown=handle_unknown,
-                        unknown_value=unknown_value
-                    ),
-                    columns_without_categories
+            name_transformer = 'ordinal_encoder_without_categories'
+
+            if imputer:
+                transformer = Pipeline(
+                    steps=[
+                        ('imputer', imputer),
+                        ('ordinal_encoder', OrdinalEncoder(
+                            dtype=dtype,
+                            handle_unknown=handle_unknown,
+                            unknown_value=unknown_value
+                        ))
+                    ]
                 )
-            )
+            else:
+                transformer = OrdinalEncoder(
+                    dtype=dtype,
+                    handle_unknown=handle_unknown,
+                    unknown_value=unknown_value
+                )
+
+            columns_to_transformer = columns_without_categories
         else:
             raise Exception(
                 '!!!> No columns without categories informed for ordinal encoder transformer.')
 
+    ordinal_encoder_transformer = tuple(
+        (
+            name_transformer,
+            transformer,
+            columns_to_transformer
+        )
+    )
+
     return ordinal_encoder_transformer
 
 
-def create_one_hot_encoder_transformer(columns: list, data_frame_columns: list, sparse: bool = False, handle_unknown: str = 'infrequent_if_exist', drop: str = 'if_binary', dtype: type = np.uint8) -> tuple:
+def create_one_hot_encoder_transformer(columns: list, data_frame_columns: list, sparse: bool = False, handle_unknown: str = 'infrequent_if_exist', drop: str = 'if_binary', dtype: type = np.uint8, imputer: object = None) -> tuple:
     """Create a one hot encoder transformer, for ColumnTransformer used in pipeline.
     More in: https://scikit-learn.org/stable/modules/compose.html
 
@@ -587,6 +622,7 @@ def create_one_hot_encoder_transformer(columns: list, data_frame_columns: list, 
         handle_unknown (str, optional): Whether to raise an error or ignore if an unknown categorical feature is present during transform (default is to raise). Defaults to 'infrequent_if_exist'.
         drop (str, optional): Specifies a methodology to use to drop one of the categories per feature. Defaults to 'if_binary'.
         dtype (type, optional): Data type of the encoded columns. Defaults to np.uint8.
+        imputer (object, optional): Imputer object to be used in the pipeline. Defaults to None.
 
     Returns:
         tuple: A tuple with name for transformer, OneHotEncoder parametrized, and columns to be encoded.
@@ -601,18 +637,30 @@ def create_one_hot_encoder_transformer(columns: list, data_frame_columns: list, 
                 '!!!> Column {} not in dataframe. The column will not be considered in the one hot encoder.'.format(column))
             columns.remove(column)
 
-    one_hot_encoder = OneHotEncoder(
+    one_hot = OneHotEncoder(
         sparse=sparse, handle_unknown=handle_unknown, drop=drop, dtype=dtype)
-    return ('one_hot_encoder', one_hot_encoder, columns)
+
+    transformer = None
+    if imputer:
+        transformer = Pipeline(
+            steps=[
+                ('imputer', imputer),
+                ('one_hot', one_hot)
+            ]
+        )
+    else:
+        transformer = one_hot
+    return ('one_hot_encoder', transformer, columns)
 
 
-def create_min_max_scaler_transformer(columns: list, data_frame_columns: list) -> tuple:
+def create_min_max_scaler_transformer(columns: list, data_frame_columns: list, imputer: object = None) -> tuple:
     """Create a min max scaler transformer, for ColumnTransformer used in pipeline.
     More in: https://scikit-learn.org/stable/modules/compose.html
 
     Args:
         columns (list): Columns to be scaled.
         data_frame_columns (list): Columns of the data frame.
+        imputer (object, optional): Imputer object to be used in the pipeline. Defaults to None.
 
     Returns:
         tuple: A tuple with name for transformer, MinMaxScaler parametrized, and columns to be scaled.
@@ -628,4 +676,94 @@ def create_min_max_scaler_transformer(columns: list, data_frame_columns: list) -
             columns.remove(column)
 
     min_max_scaler = MinMaxScaler()
-    return ('min_max_scaler', min_max_scaler, columns)
+
+    transformer = None
+    if imputer:
+        transformer = Pipeline(
+            steps=[
+                ('imputer', imputer),
+                ('min_max', min_max_scaler)
+            ]
+        )
+    else:
+        transformer = min_max_scaler
+
+    return ('min_max_scaler', transformer, columns)
+
+
+@utils.timeit
+def simple_imputer_dataframe(data_frame: pd.DataFrame, columns: list, strategy: str = 'mean', fill_value: str = None, verbose: bool = False) -> pd.DataFrame:
+    """Simple imputer for data frame.
+
+    Args:
+        data_frame (pd.DataFrame): Data frame to be imputed.
+        columns (list): Columns to be imputed.
+        strategy (str, optional): Strategy to impute. Defaults to 'mean'.
+        fill_value (str, optional): If strategy is constant, fill_value is used to replace all occurrences of missing_values. Defaults to None.
+        verbose (bool, optional): If True, print the columns with missing values. Defaults to False.
+
+    Returns:
+        pd.DataFrame: Data frame with missing values imputed.
+    """
+    if not columns:
+        raise Exception('Columns must be informed, for simple impute.')
+
+    for column in columns:
+        if column not in data_frame.columns:
+            print(
+                '!!!> Column {} not in dataframe. The column will not be considered in the imputer.'.format(column))
+            columns.remove(column)
+
+    imputer = instance_simple_imputer(
+        missing_values=np.nan, strategy=strategy, fill_value=fill_value)
+    imputer.fit(data_frame[columns])
+
+    if verbose:
+        print('Statistics: {}'.format(
+            imputer.statistics_))
+
+    data_frame[columns] = imputer.transform(data_frame[columns])
+
+    return data_frame
+
+
+def create_simple_imputer_transformer(columns: list, data_frame_columns: list, strategy: str = 'mean', fill_value: str = None) -> tuple:
+    """Create a simple imputer transformer, for ColumnTransformer used in pipeline.
+    More in: https://scikit-learn.org/stable/modules/compose.html
+
+    Args:
+        columns (list): Columns to be imputed.
+        data_frame_columns (list): Columns of the data frame.
+        strategy (str, optional): Strategy to impute. Defaults to 'mean'.
+        fill_value (str, optional): If strategy is constant, fill_value is used to replace all occurrences of missing_values. Defaults to None.
+
+    Returns:
+        tuple: A tuple with name for transformer, SimpleImputer parametrized, and columns to be imputed.
+    """
+    if not columns:
+        raise Exception(
+            'Columns must be informed, for create simple imputer transformer.')
+
+    for column in columns:
+        if column not in data_frame_columns:
+            print(
+                '!!!> Column {} not in dataframe. The column will not be considered in the simple imputer.'.format(column))
+            columns.remove(column)
+
+    simple_imputer = instance_simple_imputer(
+        missing_values=np.nan, strategy=strategy, fill_value=fill_value)
+    return ('simple_imputer', simple_imputer, columns)
+
+
+def instance_simple_imputer(missing_values: object = np.nan, strategy: str = 'mean', fill_value: str = None) -> SimpleImputer:
+    """Instance a simple imputer.
+
+    Args:
+        missing_values (object, optional): The placeholder for the missing values. All occurrences of missing_values will be imputed. For missing values encoded as np.nan, use the string value "nan". Defaults to np.nan.
+        strategy (str, optional): The imputation strategy. Defaults to 'mean'.
+        fill_value (str, optional): If strategy is constant, fill_value is used to replace all occurrences of missing_values. Defaults to None.
+
+    Returns:
+        SimpleImputer: Simple imputer instance.
+    """
+    return SimpleImputer(missing_values=missing_values, strategy=strategy, fill_value=fill_value)
