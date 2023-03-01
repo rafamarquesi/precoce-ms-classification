@@ -98,6 +98,9 @@ class GridSearchCVTuner(GridSearchCV):
             return_parameters=False,
             error_score=self.error_score,
             verbose=self.verbose,
+            # --------------------- START code to persist results ---------------------
+            save_results_during_run=settings.save_results_during_run
+            # --------------------- END code to persist results ---------------------
         )
         results = {}
         with parallel:

@@ -62,7 +62,7 @@ def run_grid_search(
     print('x_test shape: {}'.format(x_test.shape))
     print('y_test shape: {}'.format(y_test.shape))
 
-    if settings.save_results_during_run:
+    if settings.run_grid_search_cv_tuner:
 
         if settings.new_run:
             utils.remove_all_files_in_directory(
