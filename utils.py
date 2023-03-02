@@ -257,7 +257,7 @@ def define_path_save_file(path_save_file: str) -> str:
     """
     if path_save_file is None:
         path_save_file = ''
-    else:
+    elif path_save_file[-1] != '/':
         path_save_file = path_save_file + '/'
     return path_save_file
 
