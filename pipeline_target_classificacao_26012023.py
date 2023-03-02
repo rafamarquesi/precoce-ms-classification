@@ -51,11 +51,11 @@ if __name__ == '__main__':
         # Some settings are configured by default. If you want to change any settings,
         # just follow the instruction for the specific setting. For more information, view the settings.py file.
 
-        # Number of jobs to run in parallel, where -1 means using all processors. The -1 doesn't work for TabNet, instead use 1.
-        # settings.n_jobs = 1
+        # Number of jobs to run in parallel, where -1 means using all processors.
+        settings.n_jobs = -1
 
         # Folder path where the CSV file is located
-        settings.dataset_folder_path = '/home/rafael_m/Documentos/base_dados/'
+        settings.dataset_folder_path = '/home/externo/rafaelrm/base_dados/'
 
         # Path to the dataset
         settings.csv_path = csv_treatments.choose_csv_path(
@@ -63,6 +63,11 @@ if __name__ == '__main__':
 
         # Class column name
         settings.class_column = 'classificacao'
+
+        # Checks if it is batch separated animals dataset
+        # It was necessary to create to do some validations while loading the dataset, as it was changed from the original.
+        is_batch_dataset = True if settings.csv_path.find(
+            'ANIMAIS-POR-LOTE') != -1 else False
 
         # List with columns to delete when loading dataset
         settings.delete_columns_names_on_load_data = [
@@ -120,6 +125,13 @@ if __name__ == '__main__':
             'tot12m_Chuva', 'med12m_formITUinst', 'med12m_NDVI', 'med12m_preR_milho', 'med12m_preR_boi'
         ]
 
+        # List with column names to apply the simple imputer
+        # settings.simple_imputer_columns_names = [
+        #     'rastreamento SISBOV', 'regua de manejo', 'identificacao individual',
+        #     'participa de aliancas mercadolog', 'Confinamento', 'Suplementacao_a_campo',
+        #     'SemiConfinamento'
+        # ]
+
         # List with column names to drop feature by correlation
         # I choise the features greater than or equal to threshold 0.95, because the spearman correlation
         # matrix showed that there are some features that are highly correlated
@@ -131,6 +143,9 @@ if __name__ == '__main__':
         execute_classifiers_pipeline = True
 
         ################################################## CSV TREATMENTS ##################################################
+
+        if is_batch_dataset:
+            settings.parse_dates = ['DataAbate']
 
         # Load the dataset
         precoce_ms_data_frame = csv_treatments.load_data(
@@ -147,9 +162,16 @@ if __name__ == '__main__':
                 precoce_ms_data_frame[settings.class_column].value_counts())
 
             ##### Grid Search Settings #####
+            # Flag to run the original scikit-learn Grid Search CV or the scikit-learn Tuner Grid Search CV (persisting the objects, results, during the execution of the pipeline).
+            # Wheter True, the Grid Search CV Tuner will be used, otherwise the original scikit-learn Grid Search CV will be used.
+            settings.run_grid_search_cv_tuner = False
+
             # Flag to save the results of each split in the pipeline execution, to be used in a possible new execution,
-            # in case the execution is interrupted. Default is True.
-            # settings.save_results_during_run = False
+            # in case the execution is interrupted.
+            # Used only if run_grid_search_cv_tuner = True and It works only if n_jobs = 1 (don't work in parallel).
+            # If false, the results for already executed parameters will be loaded,
+            # but the results for new executed parameters will not be saved.
+            settings.save_results_during_run = False
 
             # Whether True, the objects persisted in the path_objects_persisted_results_runs will be cleaned before the execution of the pipeline
             settings.new_run = False
@@ -191,13 +213,14 @@ if __name__ == '__main__':
             precoce_ms_data_frame = utils.delete_columns(
                 data_frame=precoce_ms_data_frame, delete_columns_names=['ID_ANIMAL'])
 
-            # Delete NaN rows
-            precoce_ms_data_frame = pre_processing.delete_nan_rows(
-                data_frame=precoce_ms_data_frame)
+            if not is_batch_dataset:
+                # Delete NaN rows
+                precoce_ms_data_frame = pre_processing.delete_nan_rows(
+                    data_frame=precoce_ms_data_frame)
 
-            # Convert pandas dtypes to numpy dtypes, some operations doesn't work with pandas dtype, for exemple, the XGBoost models
-            precoce_ms_data_frame = utils.convert_pandas_dtype_to_numpy_dtype(
-                data_frame=precoce_ms_data_frame, pandas_dtypes=[pd.UInt8Dtype()])
+                # Convert pandas dtypes to numpy dtypes, some operations doesn't work with pandas dtype, for exemple, the XGBoost models
+                precoce_ms_data_frame = utils.convert_pandas_dtype_to_numpy_dtype(
+                    data_frame=precoce_ms_data_frame, pandas_dtypes=[pd.UInt8Dtype()])
 
             # Identify columns that contain a single value, and delete them
             precoce_ms_data_frame = pre_processing.delete_columns_with_single_value(
@@ -231,20 +254,44 @@ if __name__ == '__main__':
             )
 
             # Create the fransformers for ColumnTransformer
-            transformers = [
-                pre_processing.create_ordinal_encoder_transformer(
-                    ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
-                    data_frame_columns=precoce_ms_data_frame.columns,
-                ),
-                pre_processing.create_one_hot_encoder_transformer(
-                    columns=settings.one_hot_encoder_columns_names,
-                    data_frame_columns=precoce_ms_data_frame.columns
-                ),
-                pre_processing.create_min_max_scaler_transformer(
-                    columns=settings.min_max_scaler_columns_names,
-                    data_frame_columns=precoce_ms_data_frame.columns
-                )
-            ]
+            transformers = list()
+            if is_batch_dataset:
+                transformers = [
+                    pre_processing.create_simple_imputer_transformer(
+                        columns=settings.simple_imputer_columns_names,
+                        data_frame_columns=precoce_ms_data_frame.columns,
+                        strategy='most_frequent'
+                    ),
+                    pre_processing.create_ordinal_encoder_transformer(
+                        ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
+                        data_frame_columns=precoce_ms_data_frame.columns,
+                    ),
+                    pre_processing.create_one_hot_encoder_transformer(
+                        columns=settings.one_hot_encoder_columns_names,
+                        data_frame_columns=precoce_ms_data_frame.columns
+                    ),
+                    pre_processing.create_min_max_scaler_transformer(
+                        columns=settings.min_max_scaler_columns_names,
+                        data_frame_columns=precoce_ms_data_frame.columns,
+                        imputer=pre_processing.instance_simple_imputer(
+                            strategy='mean')
+                    )
+                ]
+            else:
+                transformers = [
+                    pre_processing.create_ordinal_encoder_transformer(
+                        ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
+                        data_frame_columns=precoce_ms_data_frame.columns,
+                    ),
+                    pre_processing.create_one_hot_encoder_transformer(
+                        columns=settings.one_hot_encoder_columns_names,
+                        data_frame_columns=precoce_ms_data_frame.columns
+                    ),
+                    pre_processing.create_min_max_scaler_transformer(
+                        columns=settings.min_max_scaler_columns_names,
+                        data_frame_columns=precoce_ms_data_frame.columns
+                    )
+                ]
 
             # Create the ColumnTransformer, for preprocessing the data in pipeline
             preprocessor = ColumnTransformer(
@@ -312,6 +359,7 @@ if __name__ == '__main__':
                 },
                 {
                     'classifier__estimator': [MLPClassifier()],
+                    # 'classifier__estimator__random_state': [settings.random_seed],
                     'classifier__estimator__max_iter': [1000],
                     'classifier__estimator__early_stopping': [True],
                     'classifier__estimator__hidden_layer_sizes': [(50, 100, 50), (100,), (200, 100)],
@@ -325,7 +373,7 @@ if __name__ == '__main__':
                 {
                     'classifier__estimator': [RandomForestClassifier()],
                     'classifier__estimator__random_state': [settings.random_seed],
-                    'classifier__estimator__n_jobs': [-1],
+                    # 'classifier__estimator__n_jobs': [-1],
                     'classifier__estimator__n_estimators': [120, 700, 1200],
                     'classifier__estimator__criterion': ['gini', 'entropy'],
                     'classifier__estimator__max_depth': list(np.arange(5, 30, 7)) + [None],
@@ -341,7 +389,7 @@ if __name__ == '__main__':
                     'classifier__estimator__random_state': [settings.random_seed],
                     'classifier__estimator__objective': [settings.objective],
                     'classifier__estimator__num_class': [class_number],
-                    'classifier__estimator__n_jobs': [-1],
+                    # 'classifier__estimator__n_jobs': [-1],
                     'classifier__estimator__n_estimators': [50, 100, 150, 200],
                     'classifier__estimator__learning_rate': list(np.arange(0.01, 0.03, 0.01)) + list(np.arange(0.1, 0.3, 0.1)),
                     'classifier__estimator__gamma': list(np.arange(0.05, 0.066, 0.01)) + [0.1, 1.0],
