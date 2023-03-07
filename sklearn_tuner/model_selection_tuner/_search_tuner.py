@@ -87,9 +87,9 @@ class GridSearchCVTuner(GridSearchCV):
 
         base_estimator = clone(self.estimator)
 
-        # prefer='threads' is not in original code prefer='threads',
+        # prefer='threads' is not in original code prefer='threads', backend='multiprocessing'
         parallel = Parallel(n_jobs=self.n_jobs,
-                            pre_dispatch=self.pre_dispatch, backend='multiprocessing')
+                            pre_dispatch=self.pre_dispatch, max_nbytes=None)
 
         fit_and_score_kwargs = dict(
             scorer=scorers,
