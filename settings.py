@@ -251,7 +251,8 @@ cat_emb_dim = 1
 threshold_categorical_features = 100
 
 # Number of workers for the dataloader (parameter for fit method)
-num_workers = os.cpu_count() if torch.cuda.is_available() else 0
+# num_workers = os.cpu_count() if torch.cuda.is_available() else 0
+num_workers = os.cpu_count()
 
 # List of evaluation metrics. The last metric is used for early stopping (parameter for fit method)
 eval_metric = ['auc', 'balanced_accuracy', 'accuracy']
