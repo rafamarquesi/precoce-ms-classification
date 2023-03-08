@@ -259,6 +259,9 @@ eval_metric = ['auc', 'balanced_accuracy', 'accuracy']
 # Apply custom data augmentation pipeline during training, the default is None (parameter for fit method)
 augmentations = None
 
+# 0 for no balancing, 1 for automated balancing, dict for custom weights per class
+weights = 0
+
 ############################################  PERSISTENCE OBJECTS DURING RUN OF PIPELINE ############################################
 
 # Flag to run the original scikit-learn Grid Search CV or the scikit-learn Tuner Grid Search CV (persisting the objects, results, during the execution of the pipeline).

@@ -106,8 +106,7 @@ class TabNetClassifierTuner(TabNetClassifier):
             eval_name=['train', 'valid'],
             # If needed implement F1-score metric: https://github.com/dreamquark-ai/tabnet/issues/245#issuecomment-739745307
             eval_metric=settings.eval_metric,
-            # 0 for no balancing, 1 for automated balancing, dict for custom weights per class
-            # weights=1,
+            weights=settings.weights,
             max_epochs=1000,
             patience=20,
             # batch_size=1024,
