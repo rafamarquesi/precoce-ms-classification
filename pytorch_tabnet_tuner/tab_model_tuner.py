@@ -111,8 +111,7 @@ class TabNetClassifierTuner(TabNetClassifier):
             patience=20,
             batch_size=1024,
             virtual_batch_size=128,
-            # num_workers=settings.num_workers,
-            num_workers=settings.n_jobs,
+            num_workers=settings.num_workers,
             drop_last=False,
             augmentations=settings.augmentations
         )
