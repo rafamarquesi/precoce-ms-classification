@@ -457,7 +457,8 @@ if __name__ == '__main__':
             # Used only if run_grid_search_cv_tuner = True and It works only if n_jobs = 1 (don't work in parallel).
             # If false, the results for already executed parameters will be loaded,
             # but the results for new executed parameters will not be saved.
-            settings.save_results_during_run = True
+            if settings.n_jobs != 1:
+                settings.save_results_during_run = False
 
             # Whether True, the objects persisted in the path_objects_persisted_results_runs will be cleaned before the execution of the pipeline
             settings.new_run = True
@@ -490,6 +491,8 @@ if __name__ == '__main__':
             # Apply custom data augmentation pipeline during training (parameter for fit method)
             # settings.augmentations = ClassificationSMOTE(
             #     p=0.2, device_name=settings.device_name)  # aug, None
+            # 0 for no balancing, 1 for automated balancing, dict for custom weights per class, default 0 (parameter for fit method)
+            # settings.weights = 0
 
             # Show settings of the project
             reports.show_settings(settings=settings)
@@ -648,58 +651,58 @@ if __name__ == '__main__':
                 {
                     'classifier__estimator': [GaussianNB()]
                 },
-                {
-                    'classifier__estimator': [KNeighborsClassifier()],
-                    #     'classifier__estimator__n_jobs': [-1],
-                    'classifier__estimator__algorithm': ['kd_tree'],
-                    #     'classifier__estimator__metric': ['minkowski', 'euclidean'],
-                    #     'classifier__estimator__n_neighbors': list(np.arange(5, 17, 3)),
-                    #     'classifier__estimator__weights': ['uniform', 'distance'],
-                    #     'classifier__estimator__p': [1, 2, 3]
-                },
+                # {
+                #     'classifier__estimator': [KNeighborsClassifier()],
+                #     'classifier__estimator__n_jobs': [-1],
+                #     'classifier__estimator__algorithm': ['kd_tree'],
+                #     'classifier__estimator__metric': ['minkowski', 'euclidean'],
+                #     'classifier__estimator__n_neighbors': list(np.arange(5, 17, 3)),
+                #     'classifier__estimator__weights': ['uniform', 'distance'],
+                #     'classifier__estimator__p': [1, 2, 3]
+                # },
                 {
                     'classifier__estimator': [DecisionTreeClassifier()],
                     'classifier__estimator__splitter': ['best'],
                     'classifier__estimator__random_state': [settings.random_seed],
-                    # 'classifier__estimator__criterion': ['gini', 'entropy'],
-                    # 'classifier__estimator__min_samples_split': [1, 2, 50, 100],
-                    # 'classifier__estimator__min_samples_leaf': [1, 5, 10],
-                    # 'classifier__estimator__max_depth': list(np.arange(1, 11, 3)) + [None],
-                    # 'classifier__estimator__class_weight': ['balanced', None]
+                    'classifier__estimator__criterion': ['gini', 'entropy'],
+                    'classifier__estimator__min_samples_split': [1, 2, 50, 100],
+                    'classifier__estimator__min_samples_leaf': [1, 5, 10],
+                    'classifier__estimator__max_depth': list(np.arange(1, 11, 3)) + [None],
+                    'classifier__estimator__class_weight': ['balanced', None]
                 },
                 {
                     'classifier__estimator': [LinearSVC()],
                     'classifier__estimator__random_state': [settings.random_seed],
                     'classifier__estimator__dual': [False],
-                    # 'classifier__estimator__penalty': ['l1', 'l2'],
-                    # 'classifier__estimator__C': list(np.power(10, np.arange(-3, 1, dtype=np.float16))),
-                    # 'classifier__estimator__max_iter': [100, 1000, 10000],
-                    # 'classifier__estimator__class_weight': ['balanced', None]
+                    'classifier__estimator__penalty': ['l1', 'l2'],
+                    'classifier__estimator__C': list(np.power(10, np.arange(-3, 1, dtype=np.float16))),
+                    'classifier__estimator__max_iter': [100, 1000, 10000],
+                    'classifier__estimator__class_weight': ['balanced', None]
                 },
                 {
                     'classifier__estimator': [MLPClassifier()],
                     'classifier__estimator__random_state': [settings.random_seed],
                     'classifier__estimator__max_iter': [1000],
                     'classifier__estimator__early_stopping': [True],
-                    # 'classifier__estimator__hidden_layer_sizes': [(50, 100, 50), (100,), (200, 100)],
-                    # 'classifier__estimator__activation': ['logistic', 'relu'],
-                    # 'classifier__estimator__solver': ['adam', 'sgd'],
-                    # 'classifier__estimator__alpha': [0.0001, 0.05],
-                    # 'classifier__estimator__learning_rate': ['constant', 'adaptive'],
-                    # 'classifier__estimator__learning_rate_init': [0.0001, 0.001],
-                    # 'classifier__estimator__momentum': list(np.arange(0, 1, 0.3))
+                    'classifier__estimator__hidden_layer_sizes': [(50, 100, 50), (100,), (200, 100)],
+                    'classifier__estimator__activation': ['logistic', 'relu'],
+                    'classifier__estimator__solver': ['adam', 'sgd'],
+                    'classifier__estimator__alpha': [0.0001, 0.05],
+                    'classifier__estimator__learning_rate': ['constant', 'adaptive'],
+                    'classifier__estimator__learning_rate_init': [0.0001, 0.001],
+                    'classifier__estimator__momentum': list(np.arange(0, 1, 0.3))
                 },
                 {
                     'classifier__estimator': [RandomForestClassifier()],
                     'classifier__estimator__random_state': [settings.random_seed],
-                    # 'classifier__estimator__n_jobs': [-1],
-                    # 'classifier__estimator__n_estimators': [120, 700, 1200],
-                    # 'classifier__estimator__criterion': ['gini', 'entropy'],
-                    # 'classifier__estimator__max_depth': list(np.arange(5, 30, 7)) + [None],
-                    # 'classifier__estimator__min_samples_split': [1, 2, 50, 100],
-                    # 'classifier__estimator__min_samples_leaf': [1, 5, 10],
-                    # 'classifier__estimator__max_features': ['log2', 'sqrt', None],
-                    # 'classifier__estimator__class_weight': ['balanced', None]
+                    'classifier__estimator__n_jobs': [round(settings.n_jobs/2)],
+                    'classifier__estimator__n_estimators': [120, 700, 1200],
+                    'classifier__estimator__criterion': ['gini', 'entropy'],
+                    'classifier__estimator__max_depth': list(np.arange(5, 30, 7)) + [None],
+                    'classifier__estimator__min_samples_split': [1, 2, 50, 100],
+                    'classifier__estimator__min_samples_leaf': [1, 5, 10],
+                    'classifier__estimator__max_features': ['log2', 'sqrt', None],
+                    'classifier__estimator__class_weight': ['balanced', None]
                 },
                 {
                     # https://xgboost.readthedocs.io/en/stable/tutorials/param_tuning.html#control-overfitting
@@ -711,16 +714,16 @@ if __name__ == '__main__':
                     'classifier__estimator__random_state': [settings.random_seed],
                     'classifier__estimator__objective': [settings.objective],
                     'classifier__estimator__num_class': [class_number],
-                    # 'classifier__estimator__n_jobs': [-1],
-                    # 'classifier__estimator__n_estimators': [50, 100, 150, 200],
-                    # 'classifier__estimator__learning_rate': list(np.arange(0.01, 0.03, 0.01)) + list(np.arange(0.1, 0.3, 0.1)),
-                    # 'classifier__estimator__gamma': list(np.arange(0.05, 0.066, 0.01)) + [0.1, 1.0],
-                    # 'classifier__estimator__max_depth': [3, 7, 10, 17],
-                    # 'classifier__estimator__min_child_weight': [1, 7],
-                    # 'classifier__estimator__subsample': [0.5, 0.8, 1.0],
-                    # 'classifier__estimator__colsample_bytree': [0.5, 0.8, 1.0],
-                    # 'classifier__estimator__reg_lambda': list(np.arange(0.01, 0.1, 0.04)) + [1.0],
-                    # 'classifier__estimator__reg_alpha': [0, 0.1, 0.5, 1.0]
+                    'classifier__estimator__n_jobs': [-1],
+                    'classifier__estimator__n_estimators': [50, 100, 150, 200],
+                    'classifier__estimator__learning_rate': list(np.arange(0.01, 0.03, 0.01)) + list(np.arange(0.1, 0.3, 0.1)),
+                    'classifier__estimator__gamma': list(np.arange(0.05, 0.066, 0.01)) + [0.1, 1.0],
+                    'classifier__estimator__max_depth': [3, 7, 10, 17],
+                    'classifier__estimator__min_child_weight': [1, 7],
+                    'classifier__estimator__subsample': [0.5, 0.8, 1.0],
+                    'classifier__estimator__colsample_bytree': [0.5, 0.8, 1.0],
+                    'classifier__estimator__reg_lambda': list(np.arange(0.01, 0.1, 0.04)) + [1.0],
+                    'classifier__estimator__reg_alpha': [0, 0.1, 0.5, 1.0]
                 },
                 {
                     # https://www.kaggle.com/code/optimo/tabnetbaseline/notebook
@@ -731,26 +734,26 @@ if __name__ == '__main__':
                     'classifier__estimator__clip_value': [1],
                     'classifier__estimator__verbose': [1],
                     'classifier__estimator__optimizer_fn': [torch.optim.Adam],
-                    'classifier__estimator__optimizer_params': [dict(lr=2e-2)],
-                    # 'classifier__estimator__optimizer_params': [
-                    #     {'lr': 0.02},
-                    #     {'lr': 0.01},
-                    #     {'lr': 0.001}
-                    # ],
+                    # 'classifier__estimator__optimizer_params': [dict(lr=2e-2)],
+                    'classifier__estimator__optimizer_params': [
+                        {'lr': 0.02},
+                        {'lr': 0.01},
+                        {'lr': 0.001}
+                    ],
                     'classifier__estimator__scheduler_fn': [torch.optim.lr_scheduler.StepLR],
                     'classifier__estimator__scheduler_params': [{
                         'step_size': 10,  # how to use learning rate scheduler
                         'gamma': 0.95
                     }],
-                    # 'classifier__estimator__mask_type': ['sparsemax', 'entmax'],
-                    # 'classifier__estimator__n_a': [8, 21, 34, 64],
-                    # 'classifier__estimator__n_steps': [3, 7, 10],
-                    # 'classifier__estimator__gamma': [1.0, 1.5, 2.0],
-                    # 'classifier__estimator__cat_emb_dim': [10, 20],
-                    # 'classifier__estimator__n_independent': [1, 2, 5],
-                    # 'classifier__estimator__n_shared': [1, 2, 5],
-                    # 'classifier__estimator__momentum': [0.005, 0.01, 0.02, 0.4],
-                    # 'classifier__estimator__lambda_sparse': [0.1, 0.01, 0.001]
+                    'classifier__estimator__mask_type': ['sparsemax', 'entmax'],
+                    'classifier__estimator__n_a': [8, 21, 34, 64],
+                    'classifier__estimator__n_steps': [3, 7, 10],
+                    'classifier__estimator__gamma': [1.0, 1.5, 2.0],
+                    'classifier__estimator__cat_emb_dim': [10, 20],
+                    'classifier__estimator__n_independent': [1, 2, 5],
+                    'classifier__estimator__n_shared': [1, 2, 5],
+                    'classifier__estimator__momentum': [0.005, 0.01, 0.02, 0.4],
+                    'classifier__estimator__lambda_sparse': [0.1, 0.01, 0.001]
                 }
             ]
 
