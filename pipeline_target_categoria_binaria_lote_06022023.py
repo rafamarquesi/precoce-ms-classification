@@ -205,6 +205,10 @@ if __name__ == '__main__':
             # Apply custom data augmentation pipeline during training (parameter for fit method)
             # settings.augmentations = ClassificationSMOTE(
             #     p=0.2, device_name=settings.device_name)  # aug, None
+            # Number of examples per batch. For larger dataset set 16384 (parameter for fit method)
+            # settings.batch_size = 1024
+            # Size of the mini batches used for "Ghost Batch Normalization". /!\ virtual_batch_size should divide batch_size. For larger dataset set 2048 (parameter for fit method)
+            # settings.virtual_batch_size = 128
 
             # Show settings of the project
             reports.show_settings(settings=settings)
