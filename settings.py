@@ -262,6 +262,12 @@ augmentations = None
 # 0 for no balancing, 1 for automated balancing, dict for custom weights per class, default 0 (parameter for fit method)
 weights = 0
 
+# Number of examples per batch. (parameter for fit method)
+batch_size = 1024
+
+# Size of the mini batches used for "Ghost Batch Normalization". /!\ virtual_batch_size should divide batch_size (parameter for fit method)
+virtual_batch_size = 128
+
 ############################################  PERSISTENCE OBJECTS DURING RUN OF PIPELINE ############################################
 
 # Flag to run the original scikit-learn Grid Search CV or the scikit-learn Tuner Grid Search CV (persisting the objects, results, during the execution of the pipeline).
