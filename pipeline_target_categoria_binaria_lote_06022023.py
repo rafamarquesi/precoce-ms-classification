@@ -55,7 +55,7 @@ if __name__ == '__main__':
         # settings.n_jobs = 1
 
         # Folder path where the CSV file is located ex: /path/folder/dataset/
-        settings.dataset_folder_path = '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/'
+        settings.dataset_folder_path = '/home/externo/rafaelrm/base_dados/'
 
         # Path to the dataset
         settings.csv_path = csv_treatments.choose_csv_path(
