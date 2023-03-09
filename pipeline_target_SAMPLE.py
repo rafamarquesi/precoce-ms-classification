@@ -174,7 +174,8 @@ if __name__ == '__main__':
             # Used only if run_grid_search_cv_tuner = True and It works only if n_jobs = 1 (don't work in parallel).
             # If false, the results for already executed parameters will be loaded,
             # but the results for new executed parameters will not be saved.
-            settings.save_results_during_run = True
+            if settings.n_jobs != 1:
+                settings.save_results_during_run = False
 
             # Whether True, the objects persisted in the path_objects_persisted_results_runs will be cleaned before the execution of the pipeline
             settings.new_run = True
@@ -204,6 +205,8 @@ if __name__ == '__main__':
             # Apply custom data augmentation pipeline during training (parameter for fit method)
             # settings.augmentations = ClassificationSMOTE(
             #     p=0.2, device_name=settings.device_name)  # aug, None
+            # 0 for no balancing, 1 for automated balancing, dict for custom weights per class, default 0 (parameter for fit method)
+            # settings.weights = 0
 
             # Show settings of the project
             reports.show_settings(settings=settings)
@@ -376,7 +379,7 @@ if __name__ == '__main__':
                 {
                     'classifier__estimator': [RandomForestClassifier()],
                     'classifier__estimator__random_state': [settings.random_seed],
-                    # 'classifier__estimator__n_jobs': [-1],
+                    'classifier__estimator__n_jobs': [round(settings.n_jobs/2)],
                     'classifier__estimator__n_estimators': [120, 700, 1200],
                     'classifier__estimator__criterion': ['gini', 'entropy'],
                     'classifier__estimator__max_depth': list(np.arange(5, 30, 7)) + [None],
@@ -392,7 +395,7 @@ if __name__ == '__main__':
                     'classifier__estimator__random_state': [settings.random_seed],
                     'classifier__estimator__objective': [settings.objective],
                     'classifier__estimator__num_class': [class_number],
-                    # 'classifier__estimator__n_jobs': [-1],
+                    'classifier__estimator__n_jobs': [-1],
                     'classifier__estimator__n_estimators': [50, 100, 150, 200],
                     'classifier__estimator__learning_rate': list(np.arange(0.01, 0.03, 0.01)) + list(np.arange(0.1, 0.3, 0.1)),
                     'classifier__estimator__gamma': list(np.arange(0.05, 0.066, 0.01)) + [0.1, 1.0],
