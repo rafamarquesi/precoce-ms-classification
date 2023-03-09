@@ -109,10 +109,8 @@ class TabNetClassifierTuner(TabNetClassifier):
             weights=settings.weights,
             max_epochs=1000,
             patience=20,
-            # batch_size=1024,
-            # virtual_batch_size=128,
-            batch_size=16384,
-            virtual_batch_size=2048,
+            batch_size=settings.batch_size,
+            virtual_batch_size=settings.virtual_batch_size,
             num_workers=settings.num_workers,
             drop_last=False,
             augmentations=settings.augmentations
