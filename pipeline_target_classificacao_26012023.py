@@ -52,7 +52,7 @@ if __name__ == '__main__':
         # just follow the instruction for the specific setting. For more information, view the settings.py file.
 
         # Number of jobs to run in parallel, where -1 means using all processors.
-        settings.n_jobs = -1
+        settings.n_jobs = 1
 
         # Folder path where the CSV file is located
         settings.dataset_folder_path = '/home/externo/rafaelrm/base_dados/'
@@ -164,14 +164,14 @@ if __name__ == '__main__':
             ##### Grid Search Settings #####
             # Flag to run the original scikit-learn Grid Search CV or the scikit-learn Tuner Grid Search CV (persisting the objects, results, during the execution of the pipeline).
             # Wheter True, the Grid Search CV Tuner will be used, otherwise the original scikit-learn Grid Search CV will be used.
-            settings.run_grid_search_cv_tuner = False
+            settings.run_grid_search_cv_tuner = True
 
             # Flag to save the results of each split in the pipeline execution, to be used in a possible new execution,
             # in case the execution is interrupted.
             # Used only if run_grid_search_cv_tuner = True and It works only if n_jobs = 1 (don't work in parallel).
             # If false, the results for already executed parameters will be loaded,
             # but the results for new executed parameters will not be saved.
-            settings.save_results_during_run = False
+            settings.save_results_during_run = True
 
             # Whether True, the objects persisted in the path_objects_persisted_results_runs will be cleaned before the execution of the pipeline
             settings.new_run = False
@@ -373,7 +373,7 @@ if __name__ == '__main__':
                 {
                     'classifier__estimator': [RandomForestClassifier()],
                     'classifier__estimator__random_state': [settings.random_seed],
-                    # 'classifier__estimator__n_jobs': [-1],
+                    'classifier__estimator__n_jobs': [-1],
                     'classifier__estimator__n_estimators': [120, 700, 1200],
                     'classifier__estimator__criterion': ['gini', 'entropy'],
                     'classifier__estimator__max_depth': list(np.arange(5, 30, 7)) + [None],
@@ -389,7 +389,7 @@ if __name__ == '__main__':
                     'classifier__estimator__random_state': [settings.random_seed],
                     'classifier__estimator__objective': [settings.objective],
                     'classifier__estimator__num_class': [class_number],
-                    # 'classifier__estimator__n_jobs': [-1],
+                    'classifier__estimator__n_jobs': [-1],
                     'classifier__estimator__n_estimators': [50, 100, 150, 200],
                     'classifier__estimator__learning_rate': list(np.arange(0.01, 0.03, 0.01)) + list(np.arange(0.1, 0.3, 0.1)),
                     'classifier__estimator__gamma': list(np.arange(0.05, 0.066, 0.01)) + [0.1, 1.0],
