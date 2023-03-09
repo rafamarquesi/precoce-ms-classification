@@ -259,7 +259,7 @@ eval_metric = ['auc', 'balanced_accuracy', 'accuracy']
 # Apply custom data augmentation pipeline during training, the default is None (parameter for fit method)
 augmentations = None
 
-# 0 for no balancing, 1 for automated balancing, dict for custom weights per class
+# 0 for no balancing, 1 for automated balancing, dict for custom weights per class, default 0 (parameter for fit method)
 weights = 0
 
 ############################################  PERSISTENCE OBJECTS DURING RUN OF PIPELINE ############################################
