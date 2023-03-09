@@ -174,7 +174,8 @@ if __name__ == '__main__':
             # Used only if run_grid_search_cv_tuner = True and It works only if n_jobs = 1 (don't work in parallel).
             # If false, the results for already executed parameters will be loaded,
             # but the results for new executed parameters will not be saved.
-            settings.save_results_during_run = True
+            if settings.n_jobs != 1:
+                settings.save_results_during_run = False
 
             # Whether True, the objects persisted in the path_objects_persisted_results_runs will be cleaned before the execution of the pipeline
             settings.new_run = False
@@ -362,7 +363,7 @@ if __name__ == '__main__':
                 },
                 {
                     'classifier__estimator': [MLPClassifier()],
-                    #'classifier__estimator__random_state': [settings.random_seed],
+                    # 'classifier__estimator__random_state': [settings.random_seed],
                     'classifier__estimator__max_iter': [1000],
                     'classifier__estimator__early_stopping': [True],
                     'classifier__estimator__hidden_layer_sizes': [(50, 100, 50), (100,), (200, 100)],
