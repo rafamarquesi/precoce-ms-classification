@@ -52,7 +52,7 @@ if __name__ == '__main__':
         # just follow the instruction for the specific setting. For more information, view the settings.py file.
 
         # Number of jobs to run in parallel, where -1 means using all processors. The -1 doesn't work for TabNet, instead use 1.
-        # settings.n_jobs = 1
+        settings.n_jobs = -1
 
         # Folder path where the CSV file is located ex: /path/folder/dataset/
         settings.dataset_folder_path = '/home/externo/rafaelrm/base_dados/'
