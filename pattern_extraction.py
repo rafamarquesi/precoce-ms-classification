@@ -32,6 +32,7 @@ def run_grid_search(
     verbose: int = 10,
     error_score=np.nan,
     pre_dispatch: Union[str, int] = '2*n_jobs',
+    execution_name: str = 'GS1',
 ) -> dict:
     """
     Run Grid Search CV and save the results, best parameters, and best model.
@@ -49,6 +50,7 @@ def run_grid_search(
         verbose (int, optional): Controls the verbosity: the higher, the more messages. Defaults to 10.
         error_score (optional): Value to assign to the score if an error occurs in estimator fitting. If set to 'raise', the error is raised. If a numeric value is given, FitFailedWarning is raised. This parameter does not affect the refit step, which will always raise the error. Defaults to np.nan.
         pre_dispatch (Union[str, int], optional): Controls the number of jobs that get dispatched during parallel execution. Reducing this number can be useful to avoid an explosion of memory consumption when more jobs get dispatched than CPUs can process. This parameter can be: - None, in which case all the jobs are immediately created and spawned. Use this for lightweight and fast-running jobs, to avoid delays due to on-demand spawning of the jobs. - An int, giving the exact number of total jobs that are spawned. - A string, giving an expression as a function of n_jobs, as in '2*n_jobs'. Defaults to '2*n_jobs'.
+        execution_name (str, optional): Name of the execution. Defaults to 'GS1'.
     """
 
     # Split the data into test and train
@@ -93,13 +95,13 @@ def run_grid_search(
     # Save the representation of the GridSearchCV
     utils.save_estimator_repr(
         estimator=grid_search,
-        file_name='grid_search',
+        file_name='{}-grid_search'.format(execution_name),
         path_save_file=settings.PATH_SAVE_ESTIMATORS_REPR
     )
 
     grid_search.fit(x_train, y_train)
 
-    print('--------------------- RESULTS ---------------------')
+    print('--------------------- RESULTS {} ---------------------'.format(execution_name))
 
     # Cross validation results in a DataFrame
     cv_results = pd.DataFrame.from_dict(
@@ -109,7 +111,9 @@ def run_grid_search(
     csv_treatments.generate_new_csv(
         data_frame=cv_results,
         csv_path=settings.PATH_SAVE_RESULTS,
-        csv_name='cv_results-{}'.format(utils.get_current_datetime())
+        csv_name='{}-cv_results-{}'.format(
+            execution_name,
+            utils.get_current_datetime())
     )
     print('Cross validation results:')
     displayhook(cv_results)
@@ -120,14 +124,14 @@ def run_grid_search(
     # Save best pipe
     utils.dump_joblib(
         object=best_pipe,
-        file_name='best_pipe',
+        file_name='{}-best_pipe'.format(execution_name),
         path_save_file=settings.PATH_SAVE_BEST_ESTIMATORS
     )
 
     # Save the representation of the best pipe in grid search
     utils.save_estimator_repr(
         estimator=best_pipe,
-        file_name='best_pipe',
+        file_name='{}-best_pipe'.format(execution_name),
         path_save_file=settings.PATH_SAVE_ESTIMATORS_REPR
     )
 
@@ -145,7 +149,7 @@ def run_grid_search(
     # Save the representation of the best estimator in grid search
     utils.save_estimator_repr(
         estimator=best_estimator,
-        file_name='best_estimator',
+        file_name='{}-best_estimator'.format(execution_name),
         path_save_file=settings.PATH_SAVE_ESTIMATORS_REPR
     )
 
@@ -154,7 +158,7 @@ def run_grid_search(
     # Save the column transformer, for preprocessing data in prediction
     utils.dump_joblib(
         object=best_pipe.named_steps['preprocessor'],
-        file_name='column_transformer',
+        file_name='{}-column_transformer'.format(execution_name),
         path_save_file=settings.PATH_SAVE_ENCODERS_SCALERS
     )
 
@@ -215,7 +219,8 @@ def run_grid_search(
         data_frame=pd.DataFrame.from_dict(
             grid_search_results, orient='columns'),
         csv_path=settings.PATH_SAVE_RESULTS,
-        csv_name='grid_search_results-{}'.format(
+        csv_name='{}-grid_search_results-{}'.format(
+            execution_name,
             utils.get_current_datetime())
     )
 
@@ -290,7 +295,8 @@ def run_grid_search(
         data_frame=pd.DataFrame(
             dict_results, index=[0]),
         csv_path=settings.PATH_SAVE_RESULTS,
-        csv_name='performance_results-{}'.format(
+        csv_name='{}-performance_results-{}'.format(
+            execution_name,
             utils.get_current_datetime())
     )
 
@@ -306,7 +312,8 @@ def run_grid_search(
                 }
             ]),
         csv_path=settings.PATH_SAVE_RESULTS,
-        csv_name='classification_report-{}'.format(
+        csv_name='{}-classification_report-{}'.format(
+            execution_name,
             utils.get_current_datetime())
     )
 
