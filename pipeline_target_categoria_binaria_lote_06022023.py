@@ -205,6 +205,8 @@ if __name__ == '__main__':
             # Apply custom data augmentation pipeline during training (parameter for fit method)
             # settings.augmentations = ClassificationSMOTE(
             #     p=0.2, device_name=settings.device_name)  # aug, None
+            # 0 for no balancing, 1 for automated balancing, dict for custom weights per class, default 0 (parameter for fit method)
+            # settings.weights = 0
             # Number of examples per batch. For larger dataset set 16384 (parameter for fit method)
             # settings.batch_size = 1024
             # Size of the mini batches used for "Ghost Batch Normalization". /!\ virtual_batch_size should divide batch_size. For larger dataset set 2048 (parameter for fit method)
@@ -407,9 +409,61 @@ if __name__ == '__main__':
                     'classifier__estimator__colsample_bytree': [0.5, 0.8, 1.0],
                     'classifier__estimator__reg_lambda': list(np.arange(0.01, 0.1, 0.04)) + [1.0],
                     'classifier__estimator__reg_alpha': [0, 0.1, 0.5, 1.0]
-                },
+                }
+                # {
+                #     'classifier__estimator': [
+                #         TabNetClassifierTuner(
+                #             device_name=settings.device_name,
+                #             use_embeddings=settings.use_embeddings,
+                #             threshold_categorical_features=settings.threshold_categorical_features,
+                #             use_cat_emb_dim=settings.use_cat_emb_dim,
+                #             fit_eval_metric=settings.eval_metric,
+                #             fit_weights=settings.weights,
+                #             fit_batch_size=settings.batch_size,
+                #             fit_virtual_batch_size=settings.virtual_batch_size
+                #         )
+                #     ],
+                #     'classifier__estimator__seed': [settings.random_seed],
+                #     'classifier__estimator__clip_value': [1],
+                #     'classifier__estimator__verbose': [1],
+                #     'classifier__estimator__optimizer_fn': [torch.optim.Adam],
+                #     # 'classifier__estimator__optimizer_params': [dict(lr=2e-2)],
+                #     'classifier__estimator__optimizer_params': [
+                #         {'lr': 0.02},
+                #         {'lr': 0.01},
+                #         {'lr': 0.001}
+                #     ],
+                #     'classifier__estimator__scheduler_fn': [torch.optim.lr_scheduler.StepLR],
+                #     'classifier__estimator__scheduler_params': [{
+                #         'step_size': 10,  # how to use learning rate scheduler
+                #         'gamma': 0.95
+                #     }],
+                #     'classifier__estimator__mask_type': ['sparsemax', 'entmax'],
+                #     'classifier__estimator__n_a': [8, 21, 34, 64],
+                #     'classifier__estimator__n_steps': [3, 7, 10],
+                #     'classifier__estimator__gamma': [1.0, 1.5, 2.0],
+                #     'classifier__estimator__cat_emb_dim': [10, 20],
+                #     'classifier__estimator__n_independent': [1, 2, 5],
+                #     'classifier__estimator__n_shared': [1, 2, 5],
+                #     'classifier__estimator__momentum': [0.005, 0.01, 0.02, 0.4],
+                #     'classifier__estimator__lambda_sparse': [0.1, 0.01, 0.001]
+                # }
+            ]
+
+            param_grid_gs2 = [
                 {
-                    'classifier__estimator': [TabNetClassifierTuner(device_name=settings.device_name)],
+                    'classifier__estimator': [
+                        TabNetClassifierTuner(
+                            device_name=settings.device_name,
+                            use_embeddings=settings.use_embeddings,
+                            threshold_categorical_features=settings.threshold_categorical_features,
+                            use_cat_emb_dim=settings.use_cat_emb_dim,
+                            fit_eval_metric=settings.eval_metric,
+                            fit_weights=settings.weights,
+                            fit_batch_size=settings.batch_size,
+                            fit_virtual_batch_size=settings.virtual_batch_size
+                        )
+                    ],
                     'classifier__estimator__seed': [settings.random_seed],
                     'classifier__estimator__clip_value': [1],
                     'classifier__estimator__verbose': [1],
@@ -471,7 +525,24 @@ if __name__ == '__main__':
                 score=score,
                 n_jobs=settings.n_jobs,
                 test_size=0.2,
-                random_state=settings.random_seed
+                random_state=settings.random_seed,
+                execution_name='GS1'
+            )
+
+            settings.n_jobs = 18
+            print('\n-------Number of jobs for grid search 2: {}'.format(settings.n_jobs))
+            pattern_extraction.run_grid_search(
+                x=x,
+                y=y,
+                estimator=pipe,
+                param_grid=param_grid_gs2,
+                cv=cv,
+                score=score,
+                n_jobs=settings.n_jobs,
+                test_size=0.2,
+                random_state=settings.random_seed,
+                pre_dispatch=settings.n_jobs,
+                execution_name='GS2'
             )
 
         tee_log_file.close()
