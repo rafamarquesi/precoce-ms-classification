@@ -411,7 +411,18 @@ if __name__ == '__main__':
                     'classifier__estimator__reg_alpha': [0, 0.1, 0.5, 1.0]
                 },
                 {
-                    'classifier__estimator': [TabNetClassifierTuner(device_name=settings.device_name)],
+                    'classifier__estimator': [
+                        TabNetClassifierTuner(
+                            device_name=settings.device_name,
+                            use_embeddings=settings.use_embeddings,
+                            threshold_categorical_features=settings.threshold_categorical_features,
+                            use_cat_emb_dim=settings.use_cat_emb_dim,
+                            fit_eval_metric=settings.eval_metric,
+                            fit_weights=settings.weights,
+                            fit_batch_size=settings.batch_size,
+                            fit_virtual_batch_size=settings.virtual_batch_size
+                        )
+                    ],
                     'classifier__estimator__seed': [settings.random_seed],
                     'classifier__estimator__clip_value': [1],
                     'classifier__estimator__verbose': [1],

@@ -235,17 +235,8 @@ device_name = 'auto'
 # Flag to use embeddings in the tabnet model, default True (parameter for fit method)
 use_embeddings = True
 
-# List of categorical features indices
-cat_idxs = list()
-
-# List of categorical features number of modalities (number of unique values for a categorical feature) /!\ no new modalities can be predicted
-cat_dims = list()
-
 # Flag to use cat_emb_dim to define the embedding size for each categorical feature, with False the embedding size is 1 (parameter for fit method)
 use_cat_emb_dim = False
-
-# Embeddings size for each categorical features. (default =1)
-cat_emb_dim = 1
 
 # Threshold of the minimum of categorical features to use embeddings (parameter for fit method)
 threshold_categorical_features = 100
