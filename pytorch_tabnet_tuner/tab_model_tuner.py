@@ -1,3 +1,6 @@
+from dataclasses import dataclass, field
+from typing import List, Any, Dict
+
 import warnings
 import json
 from pathlib import Path
@@ -16,8 +19,51 @@ import settings
 from pytorch_tabnet_tuner.utils_tuner import ComplexEncoderTuner
 
 
+@dataclass
 class TabNetClassifierTuner(TabNetClassifier):
     """A custom TabNetClassifier that can be tuned with a parameter search algorithm, for example: Grid Search."""
+
+    # Flag to use embeddings in the tabnet model, default True (parameter for fit method)
+    use_embeddings: bool = True
+    # Threshold of the minimum of categorical features to use embeddings (parameter for fit method)
+    threshold_categorical_features: int = 100
+    # Flag to use cat_emb_dim to define the embedding size for each categorical feature, with False the embedding size is 1 (parameter for fit method)
+    use_cat_emb_dim: bool = False
+    # List of evaluation metrics. The last metric is used for early stopping (parameter for fit method)
+    fit_eval_metric: List[str] = field(default_factory=list)
+    # 0 for no balancing, 1 for automated balancing, dict for custom weights per class, default 0 (parameter for fit method)
+    fit_weights: int = 0
+    # Number of examples per batch. (parameter for fit method)
+    fit_batch_size: int = 1024
+    # Size of the mini batches used for "Ghost Batch Normalization". /!\ virtual_batch_size should divide batch_size (parameter for fit method)
+    fit_virtual_batch_size: int = 128
+    # The attributes below are from the original class (TabModel). It was not possible to extend the init method,
+    # passing the new attributes, because the base class of sklearn does not accept passing *args and **kwargs in the init.
+    n_d: int = 8
+    n_a: int = 8
+    n_steps: int = 3
+    gamma: float = 1.3
+    cat_idxs: List[int] = field(default_factory=list)
+    cat_dims: List[int] = field(default_factory=list)
+    cat_emb_dim: int = 1
+    n_independent: int = 2
+    n_shared: int = 2
+    epsilon: float = 1e-15
+    momentum: float = 0.02
+    lambda_sparse: float = 1e-3
+    seed: int = 0
+    clip_value: int = 1
+    verbose: int = 1
+    optimizer_fn: Any = torch.optim.Adam
+    optimizer_params: Dict = field(default_factory=lambda: dict(lr=2e-2))
+    scheduler_fn: Any = None
+    scheduler_params: Dict = field(default_factory=dict)
+    mask_type: str = "sparsemax"
+    input_dim: int = None
+    output_dim: int = None
+    device_name: str = "auto"
+    n_shared_decoder: int = 1
+    n_indep_decoder: int = 1
 
     def fit(self, X: np.ndarray, y: np.ndarray, *args, **kwargs):
         """Prepares X and y to be trained on the neural network, using a parameter search algorithm, for example: Grid Search
@@ -38,20 +84,23 @@ class TabNetClassifierTuner(TabNetClassifier):
             X, y, test_size=0.2, random_state=settings.random_seed, shuffle=True, stratify=y
         )
 
-        if settings.use_embeddings:
-            settings.cat_idxs = list()
-            settings.cat_dims = list()
-            settings.cat_emb_dim = 1
+        if self.use_embeddings:
+            # List of categorical features indices
+            cat_idxs = list()
+            # List of categorical features number of modalities (number of unique values for a categorical feature) /!\ no new modalities can be predicted
+            cat_dims = list()
+            # Embeddings size for each categorical features. (default =1)
+            cat_emb_dim_aux = 1
 
             for idxs, col in enumerate(X_train.T):
                 unique_counts = len(np.unique(col))
-                if unique_counts < settings.threshold_categorical_features:
-                    settings.cat_idxs.append(idxs)
-                    settings.cat_dims.append(unique_counts)
+                if unique_counts < self.threshold_categorical_features:
+                    cat_idxs.append(idxs)
+                    cat_dims.append(unique_counts)
 
-            if settings.use_cat_emb_dim:
-                settings.cat_emb_dim = [
-                    min(nb // 2, self.cat_emb_dim) for nb in settings.cat_dims
+            if self.use_cat_emb_dim:
+                cat_emb_dim_aux = [
+                    min(nb // 2, self.cat_emb_dim) for nb in cat_dims
                 ]
             elif self.cat_emb_dim != 1:
                 warnings.warn(
@@ -75,17 +124,17 @@ class TabNetClassifierTuner(TabNetClassifier):
 
             # for idxs, col in enumerate(X_train.T):
             #     unique_counts = len(np.unique(col, return_counts=True)[1])
-            #     if unique_counts < settings.threshold_categorical_features:
-            #         settings.cat_idxs.append(idxs)
-            #         settings.cat_dims.append(unique_counts)
+            #     if unique_counts < self.threshold_categorical_features:
+            #         cat_idxs.append(idxs)
+            #         cat_dims.append(unique_counts)
 
-            # if settings.use_cat_emb_dim:
-            #     settings.cat_emb_dim = [
-            #         min(nb // 2, settings.max_dim) for nb in settings.cat_dims
+            # if self.use_cat_emb_dim:
+            #     cat_emb_dim_aux = [
+            #         min(nb // 2, settings.max_dim) for nb in cat_dims
             #     ]
 
             # debug for the problem with split when has unique values differente in train and valid
-            # for idxs in settings.cat_idxs:
+            # for idxs in cat_idxs:
             #     print('X idx:{} - unique:{}'.format(idxs, np.unique(X[:,idxs], return_counts=True)))
             #     print('X_train idx:{} - unique:{}'.format(idxs, np.unique(X_train[:,idxs], return_counts=True)))
             #     print('X_valid idx:{} - unique:{}\n'.format(idxs, np.unique(X_valid[:,idxs], return_counts=True)))
@@ -93,9 +142,9 @@ class TabNetClassifierTuner(TabNetClassifier):
 
             self.__update__(
                 **{
-                    'cat_dims': settings.cat_dims,
-                    'cat_emb_dim': settings.cat_emb_dim,
-                    'cat_idxs': settings.cat_idxs
+                    'cat_dims': cat_dims,
+                    'cat_emb_dim': cat_emb_dim_aux,
+                    'cat_idxs': cat_idxs
                 }
             )
 
@@ -105,12 +154,12 @@ class TabNetClassifierTuner(TabNetClassifier):
             eval_set=[(X_train, y_train), (X_valid, y_valid)],
             eval_name=['train', 'valid'],
             # If needed implement F1-score metric: https://github.com/dreamquark-ai/tabnet/issues/245#issuecomment-739745307
-            eval_metric=settings.eval_metric,
-            weights=settings.weights,
+            eval_metric=self.fit_eval_metric,
+            weights=self.fit_weights,
             max_epochs=1000,
             patience=20,
-            batch_size=settings.batch_size,
-            virtual_batch_size=settings.virtual_batch_size,
+            batch_size=self.fit_batch_size,
+            virtual_batch_size=self.fit_virtual_batch_size,
             num_workers=settings.num_workers,
             drop_last=False,
             augmentations=settings.augmentations
