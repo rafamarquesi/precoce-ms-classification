@@ -493,6 +493,10 @@ if __name__ == '__main__':
             #     p=0.2, device_name=settings.device_name)  # aug, None
             # 0 for no balancing, 1 for automated balancing, dict for custom weights per class, default 0 (parameter for fit method)
             # settings.weights = 0
+            # Number of examples per batch. For larger dataset set 16384 (parameter for fit method)
+            # settings.batch_size = 1024
+            # Size of the mini batches used for "Ghost Batch Normalization". /!\ virtual_batch_size should divide batch_size. For larger dataset set 2048 (parameter for fit method)
+            # settings.virtual_batch_size = 128
 
             # Show settings of the project
             reports.show_settings(settings=settings)
@@ -729,7 +733,18 @@ if __name__ == '__main__':
                     # https://www.kaggle.com/code/optimo/tabnetbaseline/notebook
                     # Using TabNetClassifier: https://github.com/dreamquark-ai/tabnet/issues/238
                     # https://github.com/dreamquark-ai/tabnet/blob/develop/census_example.ipynb
-                    'classifier__estimator': [TabNetClassifierTuner(device_name=settings.device_name)],
+                    'classifier__estimator': [
+                        TabNetClassifierTuner(
+                            device_name=settings.device_name,
+                            use_embeddings=settings.use_embeddings,
+                            threshold_categorical_features=settings.threshold_categorical_features,
+                            use_cat_emb_dim=settings.use_cat_emb_dim,
+                            fit_eval_metric=settings.eval_metric,
+                            fit_weights=settings.weights,
+                            fit_batch_size=settings.batch_size,
+                            fit_virtual_batch_size=settings.virtual_batch_size
+                        )
+                    ],
                     'classifier__estimator__seed': [settings.random_seed],
                     'classifier__estimator__clip_value': [1],
                     'classifier__estimator__verbose': [1],
@@ -798,7 +813,8 @@ if __name__ == '__main__':
                 score=score,
                 n_jobs=settings.n_jobs,
                 test_size=0.2,
-                random_state=settings.random_seed
+                random_state=settings.random_seed,
+                error_score='raise'
             )
 
         ################################################## ANALYZE RESULTS #####################################
