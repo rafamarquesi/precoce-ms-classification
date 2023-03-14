@@ -235,17 +235,8 @@ device_name = 'auto'
 # Flag to use embeddings in the tabnet model, default True (parameter for fit method)
 use_embeddings = True
 
-# List of categorical features indices
-cat_idxs = list()
-
-# List of categorical features number of modalities (number of unique values for a categorical feature) /!\ no new modalities can be predicted
-cat_dims = list()
-
 # Flag to use cat_emb_dim to define the embedding size for each categorical feature, with False the embedding size is 1 (parameter for fit method)
 use_cat_emb_dim = False
-
-# Embeddings size for each categorical features. (default =1)
-cat_emb_dim = 1
 
 # Threshold of the minimum of categorical features to use embeddings (parameter for fit method)
 threshold_categorical_features = 100
@@ -261,6 +252,12 @@ augmentations = None
 
 # 0 for no balancing, 1 for automated balancing, dict for custom weights per class, default 0 (parameter for fit method)
 weights = 0
+
+# Number of examples per batch. (parameter for fit method)
+batch_size = 1024
+
+# Size of the mini batches used for "Ghost Batch Normalization". /!\ virtual_batch_size should divide batch_size (parameter for fit method)
+virtual_batch_size = 128
 
 ############################################  PERSISTENCE OBJECTS DURING RUN OF PIPELINE ############################################
 
