@@ -52,7 +52,7 @@ if __name__ == '__main__':
         # just follow the instruction for the specific setting. For more information, view the settings.py file.
 
         # Number of jobs to run in parallel, where -1 means using all processors.
-        settings.n_jobs = 9
+        settings.n_jobs = 120
 
         # Folder path where the CSV file is located
         settings.dataset_folder_path = '/home/externo/rafaelrm/base_dados/'
@@ -380,7 +380,7 @@ if __name__ == '__main__':
                 {
                     'classifier__estimator': [RandomForestClassifier()],
                     'classifier__estimator__random_state': [settings.random_seed],
-                    'classifier__estimator__n_jobs': [round(settings.n_jobs/2)],
+                    'classifier__estimator__n_jobs': [round(settings.n_jobs/4)],
                     'classifier__estimator__n_estimators': [120, 700, 1200],
                     'classifier__estimator__criterion': ['gini', 'entropy'],
                     'classifier__estimator__max_depth': list(np.arange(5, 30, 7)) + [None],
@@ -481,8 +481,48 @@ if __name__ == '__main__':
                 score=score,
                 n_jobs=settings.n_jobs,
                 test_size=0.2,
-                random_state=settings.random_seed
+                random_state=settings.random_seed,
+                pre_dispatch=59
             )
+
+            # Configuration run RandomForest
+            #pattern_extraction.run_grid_search(
+            #    x=x,
+            #    y=y,
+            #    estimator=pipe,
+            #    param_grid=param_grid,
+            #    cv=cv,
+            #    score=score,
+            #    n_jobs=19,
+            #    test_size=0.2,
+            #    random_state=settings.random_seed
+            #)
+
+            # Configuration run XGBoost
+            #pattern_extraction.run_grid_search(
+            #    x=x,
+            #    y=y,
+            #    estimator=pipe,
+            #    param_grid=param_grid,
+            #    cv=cv,
+            #    score=score,
+            #    n_jobs=10,
+            #    test_size=0.2,
+            #    random_state=settings.random_seed
+            #)
+
+            # Configuration run TabNet
+            #pattern_extraction.run_grid_search(
+            #    x=x,
+            #    y=y,
+            #    estimator=pipe,
+            #    param_grid=param_grid,
+            #    cv=cv,
+            #    score=score,
+            #    n_jobs=20,
+            #    test_size=0.2,
+            #    random_state=settings.random_seed
+            #)
 
         tee_log_file.close()
     except Exception as e:
