@@ -480,14 +480,14 @@ if __name__ == '__main__':
                         'gamma': 0.95
                     }],
                     'classifier__estimator__mask_type': ['sparsemax', 'entmax'],
-                    'classifier__estimator__n_a': [8, 21, 34, 64],
-                    'classifier__estimator__n_steps': [3, 7, 10],
-                    'classifier__estimator__gamma': [1.0, 1.5, 2.0],
+                    'classifier__estimator__n_a': [8, 64],
+                    'classifier__estimator__n_steps': [3, 10],
+                    'classifier__estimator__gamma': [1.0, 2.0],
                     'classifier__estimator__cat_emb_dim': [10, 20],
-                    'classifier__estimator__n_independent': [1, 2, 5],
-                    'classifier__estimator__n_shared': [1, 2, 5],
-                    'classifier__estimator__momentum': [0.005, 0.01, 0.02, 0.4],
-                    'classifier__estimator__lambda_sparse': [0.1, 0.01, 0.001]
+                    'classifier__estimator__n_independent': [1, 5],
+                    'classifier__estimator__n_shared': [1, 5],
+                    'classifier__estimator__momentum': [0.005, 0.4],
+                    'classifier__estimator__lambda_sparse': [0.001, 0.1]
                 }
             ]
 
