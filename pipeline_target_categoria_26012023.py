@@ -52,7 +52,7 @@ if __name__ == '__main__':
         # just follow the instruction for the specific setting. For more information, view the settings.py file.
 
         # Number of jobs to run in parallel, where -1 means using all processors. The -1 doesn't work for TabNet, instead use 1.
-        settings.n_jobs = 8
+        settings.n_jobs = 1
 
         # Folder path where the CSV file is located ex: /path/folder/dataset/
         settings.dataset_folder_path = '/home/externo/rafaelrm/base_dados/'
@@ -380,7 +380,7 @@ if __name__ == '__main__':
                 {
                     'classifier__estimator': [RandomForestClassifier()],
                     'classifier__estimator__random_state': [settings.random_seed],
-                    'classifier__estimator__n_jobs': [round(settings.n_jobs/2)],
+                    'classifier__estimator__n_jobs': [4],
                     'classifier__estimator__n_estimators': [120, 700, 1200],
                     'classifier__estimator__criterion': ['gini', 'entropy'],
                     'classifier__estimator__max_depth': list(np.arange(5, 30, 7)) + [None],
@@ -397,15 +397,15 @@ if __name__ == '__main__':
                     'classifier__estimator__objective': [settings.objective],
                     'classifier__estimator__num_class': [class_number],
                     'classifier__estimator__n_jobs': [-1],
-                    'classifier__estimator__n_estimators': [50, 100, 150, 200],
-                    'classifier__estimator__learning_rate': list(np.arange(0.01, 0.03, 0.01)) + list(np.arange(0.1, 0.3, 0.1)),
-                    'classifier__estimator__gamma': list(np.arange(0.05, 0.066, 0.01)) + [0.1, 1.0],
-                    'classifier__estimator__max_depth': [3, 7, 10, 17],
+                    'classifier__estimator__n_estimators': [50, 200],
+                    'classifier__estimator__learning_rate': [0.01, 0.1, 0.2],
+                    'classifier__estimator__gamma': [0.05, 0.1, 1.0],
+                    'classifier__estimator__max_depth': [3, 17],
                     'classifier__estimator__min_child_weight': [1, 7],
-                    'classifier__estimator__subsample': [0.5, 0.8, 1.0],
-                    'classifier__estimator__colsample_bytree': [0.5, 0.8, 1.0],
-                    'classifier__estimator__reg_lambda': list(np.arange(0.01, 0.1, 0.04)) + [1.0],
-                    'classifier__estimator__reg_alpha': [0, 0.1, 0.5, 1.0]
+                    'classifier__estimator__subsample': [0.5, 1.0],
+                    'classifier__estimator__colsample_bytree': [0.5, 1.0],
+                    'classifier__estimator__reg_lambda': [0.01, 1.0],
+                    'classifier__estimator__reg_alpha': [0, 1.0]
                 },
                 {
                     'classifier__estimator': [
@@ -436,14 +436,14 @@ if __name__ == '__main__':
                         'gamma': 0.95
                     }],
                     'classifier__estimator__mask_type': ['sparsemax', 'entmax'],
-                    'classifier__estimator__n_a': [8, 21, 34, 64],
-                    'classifier__estimator__n_steps': [3, 7, 10],
-                    'classifier__estimator__gamma': [1.0, 1.5, 2.0],
+                    'classifier__estimator__n_a': [8, 64],
+                    'classifier__estimator__n_steps': [3, 10],
+                    'classifier__estimator__gamma': [1.0, 2.0],
                     'classifier__estimator__cat_emb_dim': [10, 20],
-                    'classifier__estimator__n_independent': [1, 2, 5],
-                    'classifier__estimator__n_shared': [1, 2, 5],
-                    'classifier__estimator__momentum': [0.005, 0.01, 0.02, 0.4],
-                    'classifier__estimator__lambda_sparse': [0.1, 0.01, 0.001]
+                    'classifier__estimator__n_independent': [1, 5],
+                    'classifier__estimator__n_shared': [1, 5],
+                    'classifier__estimator__momentum': [0.005, 0.4],
+                    'classifier__estimator__lambda_sparse': [0.001, 0.1]
                 }
             ]
 
@@ -481,8 +481,138 @@ if __name__ == '__main__':
                 score=score,
                 n_jobs=settings.n_jobs,
                 test_size=0.2,
-                random_state=settings.random_seed
+                random_state=settings.random_seed,
+                pre_dispatch=2,
+                execution_name='GS1'
             )
+
+            # settings.n_jobs = 19
+            # print('\n-------Number of jobs for grid search 2: {}'.format(settings.n_jobs))
+
+            # param_grid_gs2 = [
+            #     {
+            #         'classifier__estimator': [RandomForestClassifier()],
+            #         'classifier__estimator__random_state': [settings.random_seed],
+            #         'classifier__estimator__n_jobs': [4],
+            #         'classifier__estimator__n_estimators': [120, 700, 1200],
+            #         'classifier__estimator__criterion': ['gini', 'entropy'],
+            #         'classifier__estimator__max_depth': list(np.arange(5, 30, 7)) + [None],
+            #         'classifier__estimator__min_samples_split': [1, 2, 50, 100],
+            #         'classifier__estimator__min_samples_leaf': [1, 5, 10],
+            #         'classifier__estimator__max_features': ['log2', 'sqrt', None],
+            #         'classifier__estimator__class_weight': ['balanced', None]
+            #     }
+            # ]
+
+            # # Configuration run RandomForest
+            # pattern_extraction.run_grid_search(
+            #     x=x,
+            #     y=y,
+            #     estimator=pipe,
+            #     param_grid=param_grid_gs2,
+            #     cv=cv,
+            #     score=score,
+            #     n_jobs=settings.n_jobs,
+            #     test_size=0.2,
+            #     random_state=settings.random_seed,
+            #     execution_name='GS2'
+            # )
+
+            # settings.n_jobs = 10
+            # print('\n-------Number of jobs for grid search 3: {}'.format(settings.n_jobs))
+
+            # param_grid_gs3 = [
+            #     {
+            #         'classifier__estimator': [XGBClassifier()],
+            #         'classifier__estimator__tree_method': [settings.tree_method],
+            #         'classifier__estimator__max_delta_step': [1.0],
+            #         'classifier__estimator__random_state': [settings.random_seed],
+            #         'classifier__estimator__objective': [settings.objective],
+            #         'classifier__estimator__num_class': [class_number],
+            #         'classifier__estimator__n_jobs': [-1],
+            #         'classifier__estimator__n_estimators': [50, 200],
+            #         'classifier__estimator__learning_rate': [0.01, 0.1, 0.2],
+            #         'classifier__estimator__gamma': [0.05, 0.1, 1.0],
+            #         'classifier__estimator__max_depth': [3, 17],
+            #         'classifier__estimator__min_child_weight': [1, 7],
+            #         'classifier__estimator__subsample': [0.5, 1.0],
+            #         'classifier__estimator__colsample_bytree': [0.5, 1.0],
+            #         'classifier__estimator__reg_lambda': [0.01, 1.0],
+            #         'classifier__estimator__reg_alpha': [0, 1.0]
+            #     }
+            # ]
+
+            # # Configuration run XGBoost
+            # pattern_extraction.run_grid_search(
+            #     x=x,
+            #     y=y,
+            #     estimator=pipe,
+            #     param_grid=param_grid_gs3,
+            #     cv=cv,
+            #     score=score,
+            #     n_jobs=settings.n_jobs,
+            #     test_size=0.2,
+            #     random_state=settings.random_seed,
+            #     execution_name='GS3'
+            # )
+
+            # settings.n_jobs = 20
+            # print('\n-------Number of jobs for grid search 4: {}'.format(settings.n_jobs))
+
+            # param_grid_gs4 = [
+            #     {
+            #         'classifier__estimator': [
+            #             TabNetClassifierTuner(
+            #                 device_name=settings.device_name,
+            #                 use_embeddings=settings.use_embeddings,
+            #                 threshold_categorical_features=settings.threshold_categorical_features,
+            #                 use_cat_emb_dim=settings.use_cat_emb_dim,
+            #                 fit_eval_metric=settings.eval_metric,
+            #                 fit_weights=settings.weights,
+            #                 fit_batch_size=settings.batch_size,
+            #                 fit_virtual_batch_size=settings.virtual_batch_size
+            #             )
+            #         ],
+            #         'classifier__estimator__seed': [settings.random_seed],
+            #         'classifier__estimator__clip_value': [1],
+            #         'classifier__estimator__verbose': [1],
+            #         'classifier__estimator__optimizer_fn': [torch.optim.Adam],
+            #         # 'classifier__estimator__optimizer_params': [dict(lr=2e-2)],
+            #         'classifier__estimator__optimizer_params': [
+            #             {'lr': 0.02},
+            #             {'lr': 0.01},
+            #             {'lr': 0.001}
+            #         ],
+            #         'classifier__estimator__scheduler_fn': [torch.optim.lr_scheduler.StepLR],
+            #         'classifier__estimator__scheduler_params': [{
+            #             'step_size': 10,  # how to use learning rate scheduler
+            #             'gamma': 0.95
+            #         }],
+            #         'classifier__estimator__mask_type': ['sparsemax', 'entmax'],
+            #         'classifier__estimator__n_a': [8, 64],
+            #         'classifier__estimator__n_steps': [3, 10],
+            #         'classifier__estimator__gamma': [1.0, 2.0],
+            #         'classifier__estimator__cat_emb_dim': [10, 20],
+            #         'classifier__estimator__n_independent': [1, 5],
+            #         'classifier__estimator__n_shared': [1, 5],
+            #         'classifier__estimator__momentum': [0.005, 0.4],
+            #         'classifier__estimator__lambda_sparse': [0.001, 0.1]
+            #     }
+            # ]
+
+            # # Configuration run TabNet
+            # pattern_extraction.run_grid_search(
+            #     x=x,
+            #     y=y,
+            #     estimator=pipe,
+            #     param_grid=param_grid_gs4,
+            #     cv=cv,
+            #     score=score,
+            #     n_jobs=settings.n_jobs,
+            #     test_size=0.2,
+            #     random_state=settings.random_seed,
+            #     execution_name='GS4'
+            # )
 
         tee_log_file.close()
     except Exception as e:
