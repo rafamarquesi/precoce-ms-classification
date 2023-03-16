@@ -379,6 +379,48 @@ if __name__ == '__main__':
                 }
             ]
 
+            # Remove num_class parameter from XGBClassifier when using binary classification
+            if class_number == 2:
+                for estimator in param_grid:
+                    if estimator['classifier__estimator'][0].__class__.__name__ == XGBClassifier().__class__.__name__:
+                        estimator.pop('classifier__estimator__num_class')
+                        break
+
+            # Cross validation for grid search
+            n_splits = 10
+            print('Number of folds for cross validation: {}'.format(n_splits))
+            cv = StratifiedKFold(
+                n_splits=n_splits,
+                shuffle=False
+            )
+
+            # Scoring strategy for grid search
+            if class_number == 2:
+                score = 'accuracy'
+            else:
+                score = 'f1_macro'
+            print('Scoring strategy for grid search: {}'.format(score))
+
+            # Delete unused variables
+            del precoce_ms_data_frame
+
+            pattern_extraction.run_grid_search(
+                x=x,
+                y=y,
+                estimator=pipe,
+                param_grid=param_grid,
+                cv=cv,
+                score=score,
+                n_jobs=settings.n_jobs,
+                test_size=0.2,
+                random_state=settings.random_seed,
+                pre_dispatch=59,
+                execution_name='GS1'
+            )
+
+            settings.n_jobs = 19
+            print('\n-------Number of jobs for grid search 2: {}'.format(settings.n_jobs))
+
             param_grid_gs2 = [
                 {
                     'classifier__estimator': [RandomForestClassifier()],
@@ -393,6 +435,23 @@ if __name__ == '__main__':
                     'classifier__estimator__class_weight': ['balanced', None]
                 }
             ]
+
+            # Configuration run RandomForest
+            pattern_extraction.run_grid_search(
+                x=x,
+                y=y,
+                estimator=pipe,
+                param_grid=param_grid_gs2,
+                cv=cv,
+                score=score,
+                n_jobs=settings.n_jobs,
+                test_size=0.2,
+                random_state=settings.random_seed,
+                execution_name='GS2'
+            )
+
+            settings.n_jobs = 10
+            print('\n-------Number of jobs for grid search 3: {}'.format(settings.n_jobs))
 
             param_grid_gs3 = [
                 {
@@ -414,6 +473,23 @@ if __name__ == '__main__':
                     'classifier__estimator__reg_alpha': [0, 1.0]
                 }
             ]
+
+            # Configuration run XGBoost
+            pattern_extraction.run_grid_search(
+                x=x,
+                y=y,
+                estimator=pipe,
+                param_grid=param_grid_gs3,
+                cv=cv,
+                score=score,
+                n_jobs=settings.n_jobs,
+                test_size=0.2,
+                random_state=settings.random_seed,
+                execution_name='GS3'
+            )
+
+            settings.n_jobs = 20
+            print('\n-------Number of jobs for grid search 4: {}'.format(settings.n_jobs))
 
             param_grid_gs4 = [
                 {
@@ -456,85 +532,12 @@ if __name__ == '__main__':
                 }
             ]
 
-            # Remove num_class parameter from XGBClassifier when using binary classification
-            if class_number == 2:
-                for estimator in param_grid:
-                    if estimator['classifier__estimator'][0].__class__.__name__ == XGBClassifier().__class__.__name__:
-                        estimator.pop('classifier__estimator__num_class')
-                        break
-
-            # Cross validation for grid search
-            n_splits = 10
-            print('Number of folds for cross validation: {}'.format(n_splits))
-            cv = StratifiedKFold(
-                n_splits=n_splits,
-                shuffle=False
-            )
-
-            # Scoring strategy for grid search
-            if class_number == 2:
-                score = 'accuracy'
-            else:
-                score = 'f1_macro'
-            print('Scoring strategy for grid search: {}'.format(score))
-
-            # Delete unused variables
-            del precoce_ms_data_frame
-
-            pattern_extraction.run_grid_search(
-                x=x,
-                y=y,
-                estimator=pipe,
-                param_grid=param_grid,
-                cv=cv,
-                score=score,
-                n_jobs=settings.n_jobs,
-                test_size=0.2,
-                random_state=settings.random_seed,
-                pre_dispatch=59,
-                execution_name='GS1'
-            )
-
-            settings.n_jobs = 19
-            print('\n-------Number of jobs for grid search 2: {}'.format(settings.n_jobs))
-            # Configuration run RandomForest
-            pattern_extraction.run_grid_search(
-                x=x,
-                y=y,
-                estimator=pipe,
-                param_grid=param_grid_gs2,
-                cv=cv,
-                score=score,
-                n_jobs=settings.n_jobs,
-                test_size=0.2,
-                random_state=settings.random_seed,
-                execution_name='GS2'
-            )
-
-            settings.n_jobs = 10
-            print('\n-------Number of jobs for grid search 3: {}'.format(settings.n_jobs))
-            # Configuration run XGBoost
-            pattern_extraction.run_grid_search(
-                x=x,
-                y=y,
-                estimator=pipe,
-                param_grid=param_grid,
-                cv=cv,
-                score=score,
-                n_jobs=settings.n_jobs,
-                test_size=0.2,
-                random_state=settings.random_seed,
-                execution_name='GS3'
-            )
-
-            settings.n_jobs = 20
-            print('\n-------Number of jobs for grid search 4: {}'.format(settings.n_jobs))
             # Configuration run TabNet
             pattern_extraction.run_grid_search(
                 x=x,
                 y=y,
                 estimator=pipe,
-                param_grid=param_grid,
+                param_grid=param_grid_gs4,
                 cv=cv,
                 score=score,
                 n_jobs=settings.n_jobs,
