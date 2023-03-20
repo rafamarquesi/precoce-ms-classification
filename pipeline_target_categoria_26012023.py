@@ -482,7 +482,7 @@ if __name__ == '__main__':
                 n_jobs=settings.n_jobs,
                 test_size=0.2,
                 random_state=settings.random_seed,
-                pre_dispatch=2,
+                #pre_dispatch=1,
                 execution_name='GS1'
             )
 
