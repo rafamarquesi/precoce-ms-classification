@@ -8,7 +8,7 @@ staticfiles
 tests.py
 tests.ipynb
 #/runs/objects_persisted_results_runs
-
+results/run_pipeline_target_categoria_binaria_lote_06022023/runs/best_estimators/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

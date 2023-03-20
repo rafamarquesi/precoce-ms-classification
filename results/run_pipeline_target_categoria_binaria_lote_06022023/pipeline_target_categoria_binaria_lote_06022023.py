@@ -178,7 +178,7 @@ if __name__ == '__main__':
                 settings.save_results_during_run = False
 
             # Whether True, the objects persisted in the path_objects_persisted_results_runs will be cleaned before the execution of the pipeline
-            settings.new_run = False
+            settings.new_run = True
 
             ##### XGBoost Settings #####
             # The tree method to use for training the model. 'gpu_hist' is recommended for GPU training. 'hist' is recommended for CPU training.
@@ -516,20 +516,21 @@ if __name__ == '__main__':
             # Delete unused variables
             del precoce_ms_data_frame
 
-            pattern_extraction.run_grid_search(
-                x=x,
-                y=y,
-                estimator=pipe,
-                param_grid=param_grid,
-                cv=cv,
-                score=score,
-                n_jobs=settings.n_jobs,
-                test_size=0.2,
-                random_state=settings.random_seed,
-                execution_name='GS1'
-            )
+            # Finished on the day 15/03/2023 03:31 BSB
+            #pattern_extraction.run_grid_search(
+            #    x=x,
+            #    y=y,
+            #    estimator=pipe,
+            #    param_grid=param_grid,
+            #    cv=cv,
+            #    score=score,
+            #    n_jobs=settings.n_jobs,
+            #    test_size=0.2,
+            #    random_state=settings.random_seed,
+            #    execution_name='GS1'
+            #)
 
-            settings.n_jobs = 18
+            settings.n_jobs = 37
             print('\n-------Number of jobs for grid search 2: {}'.format(settings.n_jobs))
             pattern_extraction.run_grid_search(
                 x=x,
