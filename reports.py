@@ -117,7 +117,7 @@ def duplicate_rows_by_attribute(data_frame: pd.DataFrame, rows_duplicated: pd.Da
         rows_duplicated = data_frame.loc[data_frame[attribute] == id]
         for column_name, column_data in rows_duplicated.iteritems():
             comparison = column_data.ne(
-                column_data.shift().bfill().astype(column_data.dtype.name)).astype('uint8').values
+                column_data.shift().bfill().astype(column_data.dtype.name)).values
             if not np.all(comparison == comparison[0]):
                 print('Nome coluna que diverge: {}'.format(column_name))
                 print('Index das linhas e valor na coluna que diverge:\n{}'.format(
