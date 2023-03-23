@@ -660,9 +660,9 @@ def histogram(data_frame: pd.DataFrame, save_fig: bool = False, path_save_fig: s
     for column in data_frame.columns:
         plt.figure(figsize=(10, 8))
         plt.hist(data_frame[column])
-        plt.xticks(rotation='vertical')
+        plt.xticks(rotation=80, fontsize=7)
         plt.tight_layout()
-        plt.title('Histogram of {}'.format(column))
+        plt.title('Histograma de {}'.format(column))
         if save_fig:
             path_save_fig = utils.define_path_save_file(
                 path_save_file=path_save_fig)
@@ -716,7 +716,7 @@ def histogram_grouped_by_target(data_frame: pd.DataFrame, target: str, save_fig:
 
             plt.hist(x, **kwargs, color=colors[i], label=target_attr_unique[i])
 
-        plt.gca().set(title='Histogram of {} grouped by {}'.format(
+        plt.gca().set(title='Histograma de {} agrupado por {}'.format(
             column, target), ylabel='Frequency')
         plt.xticks(rotation=80, fontsize=7)
         plt.tight_layout()
@@ -755,7 +755,7 @@ def boxplot(data_frame: pd.DataFrame, save_fig: bool = False, path_save_fig: str
         plt.boxplot(data_frame[column], labels=[column])
         plt.xticks(rotation='horizontal')
         plt.tight_layout()
-        plt.title('Boxplot of {}'.format(column))
+        plt.title('Boxplot de {}'.format(column))
         if save_fig:
             path_save_fig = utils.define_path_save_file(
                 path_save_file=path_save_fig)
@@ -806,7 +806,7 @@ def boxplot_grouped_by_target(data_frame: pd.DataFrame, target: str, save_fig: b
 
         plt.xticks(rotation='horizontal')
         plt.tight_layout()
-        plt.title('Boxplot of {} grouped by {}'.format(column, target))
+        plt.title('Boxplot de {} agrupado por {}'.format(column, target))
         if save_fig:
             path_save_fig = utils.define_path_save_file(
                 path_save_file=path_save_fig)
