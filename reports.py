@@ -208,8 +208,7 @@ def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = N
         correlation_matrix = data_frame.corr(
             method=method).astype('float32')[attribute]
 
-        correlation_matrix = correlation_matrix.apply(
-            lambda x: round(x*100, 2)).sort_values(ascending=False)
+        correlation_matrix = correlation_matrix.sort_values(ascending=False)
 
         if to_latex:
             print('Correlantion matrix in latex format:')
@@ -1110,7 +1109,7 @@ def __print_correlation_matrix_summarized(correlation_matrix: pd.DataFrame, lowe
 
     correlation_summarized_tmp = pd.DataFrame(columns=['Corr_Between'])
     correlation_summarized = pd.DataFrame(
-        columns=['Atributo 1', 'Atributo 2', 'Porcentagem de Correlação'])
+        columns=['Atributo 1', 'Atributo 2', 'Correlação'])
 
     keyword = '-and-'
     for column in columns:
@@ -1129,12 +1128,12 @@ def __print_correlation_matrix_summarized(correlation_matrix: pd.DataFrame, lowe
                             {
                                 'Atributo 1': index,
                                 'Atributo 2': column,
-                                'Porcentagem de Correlação': value*100
+                                'Correlação': value
                             }
                         ])])
 
     correlation_summarized = correlation_summarized.sort_values(
-        by=['Porcentagem de Correlação'], ascending=False)
+        by=['Correlação'], ascending=False)
 
     print('Correlation summarized:')
     displayhook(correlation_summarized)
