@@ -383,13 +383,13 @@ if __name__ == '__main__':
                 {
                     'classifier__estimator': [RandomForestClassifier()],
                     'classifier__estimator__random_state': [settings.random_seed],
-                    'classifier__estimator__n_jobs': [round(settings.n_jobs/2)],
-                    'classifier__estimator__n_estimators': [120, 700, 1200],
-                    'classifier__estimator__criterion': ['gini', 'entropy'],
-                    'classifier__estimator__max_depth': list(np.arange(5, 30, 7)) + [None],
-                    'classifier__estimator__min_samples_split': [1, 2, 50, 100],
-                    'classifier__estimator__min_samples_leaf': [1, 5, 10],
-                    'classifier__estimator__max_features': ['log2', 'sqrt', None],
+                    'classifier__estimator__n_jobs': [4],
+                    'classifier__estimator__criterion': ['entropy'],
+                    'classifier__estimator__max_features': [0.75],
+                    'classifier__estimator__n_estimators': [100, 1000],
+                    'classifier__estimator__max_depth': [2, 7, None],
+                    # 'classifier__estimator__min_samples_split': [2],
+                    # 'classifier__estimator__min_samples_leaf': [1, 5, 10],
                     'classifier__estimator__class_weight': ['balanced', None]
                 },
                 {
@@ -400,13 +400,13 @@ if __name__ == '__main__':
                     'classifier__estimator__objective': [settings.objective],
                     'classifier__estimator__num_class': [class_number],
                     'classifier__estimator__n_jobs': [-1],
-                    'classifier__estimator__n_estimators': [50, 200],
+                    'classifier__estimator__subsample': [0.75],
+                    'classifier__estimator__colsample_bytree': [0.75],
+                    'classifier__estimator__n_estimators': [100, 1000],
                     'classifier__estimator__learning_rate': [0.01, 0.1, 0.2],
                     'classifier__estimator__gamma': [0.05, 0.1, 1.0],
-                    'classifier__estimator__max_depth': [3, 17],
-                    'classifier__estimator__min_child_weight': [1, 7],
-                    'classifier__estimator__subsample': [0.5, 1.0],
-                    'classifier__estimator__colsample_bytree': [0.5, 1.0],
+                    'classifier__estimator__max_depth': [2, 7, None],
+                    # 'classifier__estimator__min_child_weight': [1, 7],
                     'classifier__estimator__reg_lambda': [0.01, 1.0],
                     'classifier__estimator__reg_alpha': [0, 1.0]
                 },
@@ -438,14 +438,14 @@ if __name__ == '__main__':
                         'step_size': 10,  # how to use learning rate scheduler
                         'gamma': 0.95
                     }],
-                    'classifier__estimator__mask_type': ['sparsemax', 'entmax'],
+                    'classifier__estimator__mask_type': ['sparsemax'],
                     'classifier__estimator__n_a': [8, 64],
                     'classifier__estimator__n_steps': [3, 10],
-                    'classifier__estimator__gamma': [1.0, 2.0],
+                    'classifier__estimator__gamma': [1.3, 2.0],
                     'classifier__estimator__cat_emb_dim': [10, 20],
-                    'classifier__estimator__n_independent': [1, 5],
-                    'classifier__estimator__n_shared': [1, 5],
-                    'classifier__estimator__momentum': [0.005, 0.4],
+                    'classifier__estimator__n_independent': [2, 5],
+                    'classifier__estimator__n_shared': [2, 5],
+                    'classifier__estimator__momentum': [0.02, 0.4],
                     'classifier__estimator__lambda_sparse': [0.001, 0.1]
                 }
             ]
