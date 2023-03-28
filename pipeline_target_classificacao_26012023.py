@@ -404,28 +404,28 @@ if __name__ == '__main__':
             # Delete unused variables
             del precoce_ms_data_frame
 
-            pattern_extraction.run_grid_search(
-                x=x,
-                y=y,
-                estimator=pipe,
-                param_grid=param_grid,
-                cv=cv,
-                score=score,
-                n_jobs=settings.n_jobs,
-                test_size=0.2,
-                random_state=settings.random_seed,
-                pre_dispatch=59,
-                execution_name='GS1'
-            )
+            #pattern_extraction.run_grid_search(
+            #    x=x,
+            #    y=y,
+            #    estimator=pipe,
+            #    param_grid=param_grid,
+            #    cv=cv,
+            #    score=score,
+            #    n_jobs=settings.n_jobs,
+            #    test_size=0.2,
+            #    random_state=settings.random_seed,
+            #    pre_dispatch=59,
+            #    execution_name='GS1'
+            #)
 
-            settings.n_jobs = 19
+            settings.n_jobs = 18
             print('\n-------Number of jobs for grid search 2: {}'.format(settings.n_jobs))
 
             param_grid_gs2 = [
                 {
                     'classifier__estimator': [RandomForestClassifier()],
                     'classifier__estimator__random_state': [settings.random_seed],
-                    'classifier__estimator__n_jobs': [round(settings.n_jobs/4)],
+                    'classifier__estimator__n_jobs': [3],
                     'classifier__estimator__n_estimators': [120, 700, 1200],
                     'classifier__estimator__criterion': ['gini', 'entropy'],
                     'classifier__estimator__max_depth': list(np.arange(5, 30, 7)) + [None],
