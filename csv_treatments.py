@@ -198,6 +198,7 @@ def generate_batch_dataset(precoce_ms_data_frame: pd.DataFrame, attrs_groupby: l
     df_grouped_agg.rename(
         columns={
             'ID_ANIMAL': 'QTD_ANIMAIS_LOTE',
+            'Peso': 'PESO_MEDIO_LOTE',
             'CATEGORIA': 'CATEGORIA_BINARIA'
         },
         inplace=True
@@ -240,7 +241,7 @@ def __categorize_batch_into_two_categories(attr_categoria: pd.Series) -> int:
     if categories_aaa_aa_sum >= others_categories_sum:
         return 1  # Acima da qualidade, o lote majoritariamente é composto por AAA e AA
     else:
-        return 0  # Abaixo da qualidade, o lote majoritariamente não é composto pelas outras categorias
+        return 0  # Abaixo da qualidade, o lote majoritariamente é composto pelas outras categorias
 
 
 def __get_most_frequent_value(attr: pd.Series) -> Union[int, str, None]:
