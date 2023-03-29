@@ -72,6 +72,7 @@ if __name__ == '__main__':
         # List with columns to delete when loading dataset
         settings.delete_columns_names_on_load_data = [
             'EstabelecimentoMunicipio', 'Frigorifico_ID', 'Frigorifico_CNPJ', 'Frigorifico_RazaoSocial', 'Municipio_Frigorifico',
+            'Peso',
             'Maturidade', 'Acabamento',
             'EstabelecimentoIdentificador',
             'Questionario_ID', 'FERTIIRRIGACAO', 'CONCEN_VOLUM', 'CREEPFEEDING', 'FORN_ESTRAT_SILAGEM',
@@ -124,24 +125,16 @@ if __name__ == '__main__':
         # List with column names to apply the min max scaler
         settings.min_max_scaler_columns_names = [
             'QTD_ANIMAIS_LOTE',
-            'Peso',
+            'PESO_MEDIO_LOTE',
             'tot3m_Chuva', 'med3m_formITUinst', 'med3m_NDVI', 'med3m_preR_milho', 'med3m_preR_boi'
         ]
 
         # List with column names to apply the simple imputer
-        settings.simple_imputer_columns_names = [
-            'rastreamento SISBOV', 'regua de manejo', 'identificacao individual',
-            'participa de aliancas mercadolog', 'Confinamento', 'Suplementacao_a_campo',
-            'SemiConfinamento'
-        ]
-
-        # List with column names to drop feature by correlation
-        # I choise the features greater than or equal to threshold 0.95, because the spearman correlation
-        # matrix showed that there are some features that are highly correlated
-        settings.columns_names_drop_feature_by_correlation = [
-            'med3m_formITUinst', 'med3m_preR_boi',
-            settings.class_column
-        ]
+        # settings.simple_imputer_columns_names = [
+        #     'rastreamento SISBOV', 'regua de manejo', 'identificacao individual',
+        #     'participa de aliancas mercadolog', 'Confinamento', 'Suplementacao_a_campo',
+        #     'SemiConfinamento'
+        # ]
 
         execute_classifiers_pipeline = True
 
@@ -223,14 +216,14 @@ if __name__ == '__main__':
             precoce_ms_data_frame = utils.delete_columns(
                 data_frame=precoce_ms_data_frame, delete_columns_names=['ID_ANIMAL'])
 
-            if not is_batch_dataset:
-                # Delete NaN rows
-                precoce_ms_data_frame = pre_processing.delete_nan_rows(
-                    data_frame=precoce_ms_data_frame)
+            # if not is_batch_dataset:
+            # Delete NaN rows
+            precoce_ms_data_frame = pre_processing.delete_nan_rows(
+                data_frame=precoce_ms_data_frame)
 
-                # Convert pandas dtypes to numpy dtypes, some operations doesn't work with pandas dtype, for exemple, the XGBoost models
-                precoce_ms_data_frame = utils.convert_pandas_dtype_to_numpy_dtype(
-                    data_frame=precoce_ms_data_frame, pandas_dtypes=[pd.UInt8Dtype()])
+            # Convert pandas dtypes to numpy dtypes, some operations doesn't work with pandas dtype, for exemple, the XGBoost models
+            precoce_ms_data_frame = utils.convert_pandas_dtype_to_numpy_dtype(
+                data_frame=precoce_ms_data_frame, pandas_dtypes=[pd.UInt8Dtype()])
 
             # Identify columns that contain a single value, and delete them
             precoce_ms_data_frame = pre_processing.delete_columns_with_single_value(
@@ -264,44 +257,44 @@ if __name__ == '__main__':
             )
 
             # Create the fransformers for ColumnTransformer
-            transformers = list()
-            if is_batch_dataset:
-                transformers = [
-                    pre_processing.create_simple_imputer_transformer(
-                        columns=settings.simple_imputer_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns,
-                        strategy='most_frequent'
-                    ),
-                    pre_processing.create_ordinal_encoder_transformer(
-                        ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns,
-                    ),
-                    pre_processing.create_one_hot_encoder_transformer(
-                        columns=settings.one_hot_encoder_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns
-                    ),
-                    pre_processing.create_min_max_scaler_transformer(
-                        columns=settings.min_max_scaler_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns,
-                        imputer=pre_processing.instance_simple_imputer(
-                            strategy='mean')
-                    )
-                ]
-            else:
-                transformers = [
-                    pre_processing.create_ordinal_encoder_transformer(
-                        ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns,
-                    ),
-                    pre_processing.create_one_hot_encoder_transformer(
-                        columns=settings.one_hot_encoder_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns
-                    ),
-                    pre_processing.create_min_max_scaler_transformer(
-                        columns=settings.min_max_scaler_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns
-                    )
-                ]
+            # transformers = list()
+            # if is_batch_dataset:
+            #     transformers = [
+            #         pre_processing.create_simple_imputer_transformer(
+            #             columns=settings.simple_imputer_columns_names,
+            #             data_frame_columns=precoce_ms_data_frame.columns,
+            #             strategy='most_frequent'
+            #         ),
+            #         pre_processing.create_ordinal_encoder_transformer(
+            #             ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
+            #             data_frame_columns=precoce_ms_data_frame.columns,
+            #         ),
+            #         pre_processing.create_one_hot_encoder_transformer(
+            #             columns=settings.one_hot_encoder_columns_names,
+            #             data_frame_columns=precoce_ms_data_frame.columns
+            #         ),
+            #         pre_processing.create_min_max_scaler_transformer(
+            #             columns=settings.min_max_scaler_columns_names,
+            #             data_frame_columns=precoce_ms_data_frame.columns,
+            #             imputer=pre_processing.instance_simple_imputer(
+            #                 strategy='mean')
+            #         )
+            #     ]
+            # else:
+            transformers = [
+                pre_processing.create_ordinal_encoder_transformer(
+                    ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
+                    data_frame_columns=precoce_ms_data_frame.columns,
+                ),
+                pre_processing.create_one_hot_encoder_transformer(
+                    columns=settings.one_hot_encoder_columns_names,
+                    data_frame_columns=precoce_ms_data_frame.columns
+                ),
+                pre_processing.create_min_max_scaler_transformer(
+                    columns=settings.min_max_scaler_columns_names,
+                    data_frame_columns=precoce_ms_data_frame.columns
+                )
+            ]
 
             # Create the ColumnTransformer, for preprocessing the data in pipeline
             preprocessor = ColumnTransformer(
@@ -383,13 +376,13 @@ if __name__ == '__main__':
                 {
                     'classifier__estimator': [RandomForestClassifier()],
                     'classifier__estimator__random_state': [settings.random_seed],
-                    'classifier__estimator__n_jobs': [round(settings.n_jobs/2)],
-                    'classifier__estimator__n_estimators': [120, 700, 1200],
-                    'classifier__estimator__criterion': ['gini', 'entropy'],
-                    'classifier__estimator__max_depth': list(np.arange(5, 30, 7)) + [None],
-                    'classifier__estimator__min_samples_split': [1, 2, 50, 100],
-                    'classifier__estimator__min_samples_leaf': [1, 5, 10],
-                    'classifier__estimator__max_features': ['log2', 'sqrt', None],
+                    'classifier__estimator__n_jobs': [4],
+                    'classifier__estimator__criterion': ['entropy'],
+                    'classifier__estimator__max_features': [0.75],
+                    'classifier__estimator__n_estimators': [100, 1000],
+                    'classifier__estimator__max_depth': [2, 7, None],
+                    # 'classifier__estimator__min_samples_split': [2],
+                    # 'classifier__estimator__min_samples_leaf': [1, 5, 10],
                     'classifier__estimator__class_weight': ['balanced', None]
                 },
                 {
@@ -400,13 +393,13 @@ if __name__ == '__main__':
                     'classifier__estimator__objective': [settings.objective],
                     'classifier__estimator__num_class': [class_number],
                     'classifier__estimator__n_jobs': [-1],
-                    'classifier__estimator__n_estimators': [50, 200],
+                    'classifier__estimator__subsample': [0.75],
+                    'classifier__estimator__colsample_bytree': [0.75],
+                    'classifier__estimator__n_estimators': [100, 1000],
                     'classifier__estimator__learning_rate': [0.01, 0.1, 0.2],
                     'classifier__estimator__gamma': [0.05, 0.1, 1.0],
-                    'classifier__estimator__max_depth': [3, 17],
-                    'classifier__estimator__min_child_weight': [1, 7],
-                    'classifier__estimator__subsample': [0.5, 1.0],
-                    'classifier__estimator__colsample_bytree': [0.5, 1.0],
+                    'classifier__estimator__max_depth': [2, 7, None],
+                    # 'classifier__estimator__min_child_weight': [1, 7],
                     'classifier__estimator__reg_lambda': [0.01, 1.0],
                     'classifier__estimator__reg_alpha': [0, 1.0]
                 },
@@ -438,14 +431,14 @@ if __name__ == '__main__':
                         'step_size': 10,  # how to use learning rate scheduler
                         'gamma': 0.95
                     }],
-                    'classifier__estimator__mask_type': ['sparsemax', 'entmax'],
+                    'classifier__estimator__mask_type': ['sparsemax'],
                     'classifier__estimator__n_a': [8, 64],
                     'classifier__estimator__n_steps': [3, 10],
-                    'classifier__estimator__gamma': [1.0, 2.0],
+                    'classifier__estimator__gamma': [1.3, 2.0],
                     'classifier__estimator__cat_emb_dim': [10, 20],
-                    'classifier__estimator__n_independent': [1, 5],
-                    'classifier__estimator__n_shared': [1, 5],
-                    'classifier__estimator__momentum': [0.005, 0.4],
+                    'classifier__estimator__n_independent': [2, 5],
+                    'classifier__estimator__n_shared': [2, 5],
+                    'classifier__estimator__momentum': [0.02, 0.4],
                     'classifier__estimator__lambda_sparse': [0.001, 0.1]
                 }
             ]
