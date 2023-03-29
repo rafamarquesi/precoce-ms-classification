@@ -1,0 +1,26 @@
+
+*****INICIO LOAD DATA******
+Error:  Error tokenizing data. C error: Calling read(nbytes) on source failed. Try engine='python'.
+Traceback (most recent call last):
+  File "pipeline_target_categoria_26012023.py", line 151, in <module>
+    precoce_ms_data_frame = csv_treatments.load_data(
+  File "/home/externo/rafaelrm/algoritmos/run_pipeline_target_categoria_26012023/precoce-ms-classification/utils.py", line 413, in timeit_wrapper
+    result = func(*args, **kwargs)
+  File "/home/externo/rafaelrm/algoritmos/run_pipeline_target_categoria_26012023/precoce-ms-classification/csv_treatments.py", line 38, in load_data
+    temp_data = pd.read_csv(
+  File "/home/externo/rafaelrm/algoritmos/run_pipeline_target_categoria_26012023/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pandas/util/_decorators.py", line 311, in wrapper
+    return func(*args, **kwargs)
+  File "/home/externo/rafaelrm/algoritmos/run_pipeline_target_categoria_26012023/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pandas/io/parsers/readers.py", line 680, in read_csv
+    return _read(filepath_or_buffer, kwds)
+  File "/home/externo/rafaelrm/algoritmos/run_pipeline_target_categoria_26012023/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pandas/io/parsers/readers.py", line 581, in _read
+    return parser.read(nrows)
+  File "/home/externo/rafaelrm/algoritmos/run_pipeline_target_categoria_26012023/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pandas/io/parsers/readers.py", line 1255, in read
+    index, columns, col_dict = self._engine.read(nrows)
+  File "/home/externo/rafaelrm/algoritmos/run_pipeline_target_categoria_26012023/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pandas/io/parsers/c_parser_wrapper.py", line 225, in read
+    chunks = self._reader.read_low_memory(nrows)
+  File "pandas/_libs/parsers.pyx", line 805, in pandas._libs.parsers.TextReader.read_low_memory
+  File "pandas/_libs/parsers.pyx", line 861, in pandas._libs.parsers.TextReader._read_rows
+  File "pandas/_libs/parsers.pyx", line 847, in pandas._libs.parsers.TextReader._tokenize_rows
+  File "pandas/_libs/parsers.pyx", line 1960, in pandas._libs.parsers.raise_parser_error
+pandas.errors.ParserError: Error tokenizing data. C error: Calling read(nbytes) on source failed. Try engine='python'.
+
