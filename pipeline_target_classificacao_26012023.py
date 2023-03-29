@@ -175,7 +175,7 @@ if __name__ == '__main__':
                 settings.save_results_during_run = False
 
             # Whether True, the objects persisted in the path_objects_persisted_results_runs will be cleaned before the execution of the pipeline
-            settings.new_run = False
+            settings.new_run = True
 
             ##### XGBoost Settings #####
             # The tree method to use for training the model. 'gpu_hist' is recommended for GPU training. 'hist' is recommended for CPU training.
@@ -437,18 +437,18 @@ if __name__ == '__main__':
             ]
 
             # Configuration run RandomForest
-            pattern_extraction.run_grid_search(
-                x=x,
-                y=y,
-                estimator=pipe,
-                param_grid=param_grid_gs2,
-                cv=cv,
-                score=score,
-                n_jobs=settings.n_jobs,
-                test_size=0.2,
-                random_state=settings.random_seed,
-                execution_name='GS2'
-            )
+            #pattern_extraction.run_grid_search(
+            #    x=x,
+            #    y=y,
+            #    estimator=pipe,
+            #    param_grid=param_grid_gs2,
+            #    cv=cv,
+            #    score=score,
+            #    n_jobs=settings.n_jobs,
+            #    test_size=0.2,
+            #    random_state=settings.random_seed,
+            #    execution_name='GS2'
+            #)
 
             settings.n_jobs = 10
             print('\n-------Number of jobs for grid search 3: {}'.format(settings.n_jobs))
@@ -485,7 +485,8 @@ if __name__ == '__main__':
                 n_jobs=settings.n_jobs,
                 test_size=0.2,
                 random_state=settings.random_seed,
-                execution_name='GS3'
+                execution_name='GS3',
+                error_score='raise'
             )
 
             settings.n_jobs = 20
