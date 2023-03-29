@@ -135,6 +135,7 @@ dtype_dict = {
     'classificacao': 'category',
     'Motivo': 'category',
     'QTD_ANIMAIS_LOTE': 'uint16',
+    'PESO_MEDIO_LOTE': 'float32',
     'CATEGORIA_BINARIA': 'category'
 }
 
