@@ -84,6 +84,7 @@ if __name__ == '__main__':
         # List with columns to delete when loading dataset
         settings.delete_columns_names_on_load_data = [
             'EstabelecimentoMunicipio', 'Frigorifico_ID', 'Frigorifico_CNPJ', 'Frigorifico_RazaoSocial', 'Municipio_Frigorifico',
+            'Peso',
             'Maturidade', 'Acabamento',
             'EstabelecimentoIdentificador',
             'Questionario_ID', 'FERTIIRRIGACAO', 'CONCEN_VOLUM', 'CREEPFEEDING', 'FORN_ESTRAT_SILAGEM',
@@ -136,16 +137,16 @@ if __name__ == '__main__':
         # List with column names to apply the min max scaler
         settings.min_max_scaler_columns_names = [
             'QTD_ANIMAIS_LOTE',
-            'Peso',
+            'PESO_MEDIO_LOTE',
             'tot3m_Chuva', 'med3m_formITUinst', 'med3m_NDVI', 'med3m_preR_milho', 'med3m_preR_boi'
         ]
 
         # List with column names to apply the simple imputer
-        settings.simple_imputer_columns_names = [
-            'rastreamento SISBOV', 'regua de manejo', 'identificacao individual',
-            'participa de aliancas mercadolog', 'Confinamento', 'Suplementacao_a_campo',
-            'SemiConfinamento'
-        ]
+        # settings.simple_imputer_columns_names = [
+        #     'rastreamento SISBOV', 'regua de manejo', 'identificacao individual',
+        #     'participa de aliancas mercadolog', 'Confinamento', 'Suplementacao_a_campo',
+        #     'SemiConfinamento'
+        # ]
 
         # List with column names to drop feature by correlation
         # I choise the features greater than or equal to threshold 0.95, because the spearman correlation
@@ -221,32 +222,32 @@ if __name__ == '__main__':
                 data_frame=precoce_ms_data_frame, delete_columns_names=['ID_ANIMAL'])
 
             # Strategies for NaN rows
-            if is_batch_dataset:
+            # if is_batch_dataset:
 
-                # Show report for NaN rows
-                reports.nan_attributes(
-                    data_frame=precoce_ms_data_frame, total_nan=precoce_ms_data_frame.isna().sum().sum())
+            #     # Show report for NaN rows
+            #     reports.nan_attributes(
+            #         data_frame=precoce_ms_data_frame, total_nan=precoce_ms_data_frame.isna().sum().sum())
 
-                # Simple imputer for NaN rows, strategy mean
-                precoce_ms_data_frame = pre_processing.simple_imputer_dataframe(
-                    data_frame=precoce_ms_data_frame,
-                    strategy='mean',
-                    columns=settings.min_max_scaler_columns_names,
-                    verbose=True
-                )
+            #     # Simple imputer for NaN rows, strategy mean
+            #     precoce_ms_data_frame = pre_processing.simple_imputer_dataframe(
+            #         data_frame=precoce_ms_data_frame,
+            #         strategy='mean',
+            #         columns=settings.min_max_scaler_columns_names,
+            #         verbose=True
+            #     )
 
-                # Simple imputer for NaN rows, strategy most_frequent
-                precoce_ms_data_frame = pre_processing.simple_imputer_dataframe(
-                    data_frame=precoce_ms_data_frame,
-                    columns=settings.simple_imputer_columns_names,
-                    strategy='most_frequent',
-                    verbose=True
-                )
+            #     # Simple imputer for NaN rows, strategy most_frequent
+            #     precoce_ms_data_frame = pre_processing.simple_imputer_dataframe(
+            #         data_frame=precoce_ms_data_frame,
+            #         columns=settings.simple_imputer_columns_names,
+            #         strategy='most_frequent',
+            #         verbose=True
+            #     )
 
-            else:
-                # Delete NaN rows
-                precoce_ms_data_frame = pre_processing.delete_nan_rows(
-                    data_frame=precoce_ms_data_frame, print_report=True)
+            # else:
+            # Delete NaN rows
+            precoce_ms_data_frame = pre_processing.delete_nan_rows(
+                data_frame=precoce_ms_data_frame, print_report=True)
 
             # Convert pandas dtypes to numpy dtypes, some operations doesn't work with pandas dtype, for exemple, the XGBoost models
             precoce_ms_data_frame = utils.convert_pandas_dtype_to_numpy_dtype(
@@ -270,8 +271,12 @@ if __name__ == '__main__':
             #     data_frame=precoce_ms_data_frame, target=settings.class_column)
 
             # Print an attribute's outiliers
+            if is_batch_dataset:
+                attr_name = 'PESO_MEDIO_LOTE'
+            else:
+                attr_name = 'Peso'
             reports.detect_outiliers_from_attribute(
-                data_frame=precoce_ms_data_frame, attribute_name='Peso')
+                data_frame=precoce_ms_data_frame, attribute_name=attr_name)
 
             # Print the unique values for each column
             reports.unique_values_for_each_column(
@@ -509,14 +514,14 @@ if __name__ == '__main__':
             precoce_ms_data_frame = utils.delete_columns(
                 data_frame=precoce_ms_data_frame, delete_columns_names=['ID_ANIMAL'])
 
-            if not is_batch_dataset:
-                # Delete NaN rows
-                precoce_ms_data_frame = pre_processing.delete_nan_rows(
-                    data_frame=precoce_ms_data_frame)
+            # if not is_batch_dataset:
+            # Delete NaN rows
+            precoce_ms_data_frame = pre_processing.delete_nan_rows(
+                data_frame=precoce_ms_data_frame)
 
-                # Convert pandas dtypes to numpy dtypes, some operations doesn't work with pandas dtype, for exemple, the XGBoost models
-                precoce_ms_data_frame = utils.convert_pandas_dtype_to_numpy_dtype(
-                    data_frame=precoce_ms_data_frame, pandas_dtypes=[pd.UInt8Dtype()])
+            # Convert pandas dtypes to numpy dtypes, some operations doesn't work with pandas dtype, for exemple, the XGBoost models
+            precoce_ms_data_frame = utils.convert_pandas_dtype_to_numpy_dtype(
+                data_frame=precoce_ms_data_frame, pandas_dtypes=[pd.UInt8Dtype()])
 
             # TODO: Maybe implement remove outliers. To detect outliers, use pre_processing.detect_outliers
 
@@ -561,58 +566,58 @@ if __name__ == '__main__':
             #     )
 
             # Create the fransformers for ColumnTransformer
-            transformers = list()
-            if is_batch_dataset:
-                transformers = [
-                    pre_processing.create_simple_imputer_transformer(
-                        columns=settings.simple_imputer_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns,
-                        strategy='most_frequent'
-                    ),
-                    pre_processing.create_ordinal_encoder_transformer(
-                        ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns,
-                    ),
-                    # pre_processing.create_ordinal_encoder_transformer(
-                    #     ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
-                    #     data_frame_columns=precoce_ms_data_frame.columns,
-                    #     handle_unknown='use_encoded_value',
-                    #     unknown_value=-1,
-                    #     with_categories=False
-                    # ),
-                    pre_processing.create_one_hot_encoder_transformer(
-                        columns=settings.one_hot_encoder_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns
-                    ),
-                    pre_processing.create_min_max_scaler_transformer(
-                        columns=settings.min_max_scaler_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns,
-                        imputer=pre_processing.instance_simple_imputer(
-                            strategy='mean')
-                    )
-                ]
-            else:
-                transformers = [
-                    pre_processing.create_ordinal_encoder_transformer(
-                        ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns,
-                    ),
-                    # pre_processing.create_ordinal_encoder_transformer(
-                    #     ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
-                    #     data_frame_columns=precoce_ms_data_frame.columns,
-                    #     handle_unknown='use_encoded_value',
-                    #     unknown_value=-1,
-                    #     with_categories=False
-                    # ),
-                    pre_processing.create_one_hot_encoder_transformer(
-                        columns=settings.one_hot_encoder_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns
-                    ),
-                    pre_processing.create_min_max_scaler_transformer(
-                        columns=settings.min_max_scaler_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns
-                    )
-                ]
+            # transformers = list()
+            # if is_batch_dataset:
+            #     transformers = [
+            #         pre_processing.create_simple_imputer_transformer(
+            #             columns=settings.simple_imputer_columns_names,
+            #             data_frame_columns=precoce_ms_data_frame.columns,
+            #             strategy='most_frequent'
+            #         ),
+            #         pre_processing.create_ordinal_encoder_transformer(
+            #             ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
+            #             data_frame_columns=precoce_ms_data_frame.columns,
+            #         ),
+            #         # pre_processing.create_ordinal_encoder_transformer(
+            #         #     ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
+            #         #     data_frame_columns=precoce_ms_data_frame.columns,
+            #         #     handle_unknown='use_encoded_value',
+            #         #     unknown_value=-1,
+            #         #     with_categories=False
+            #         # ),
+            #         pre_processing.create_one_hot_encoder_transformer(
+            #             columns=settings.one_hot_encoder_columns_names,
+            #             data_frame_columns=precoce_ms_data_frame.columns
+            #         ),
+            #         pre_processing.create_min_max_scaler_transformer(
+            #             columns=settings.min_max_scaler_columns_names,
+            #             data_frame_columns=precoce_ms_data_frame.columns,
+            #             imputer=pre_processing.instance_simple_imputer(
+            #                 strategy='mean')
+            #         )
+            #     ]
+            # else:
+            transformers = [
+                pre_processing.create_ordinal_encoder_transformer(
+                    ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
+                    data_frame_columns=precoce_ms_data_frame.columns,
+                ),
+                # pre_processing.create_ordinal_encoder_transformer(
+                #     ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
+                #     data_frame_columns=precoce_ms_data_frame.columns,
+                #     handle_unknown='use_encoded_value',
+                #     unknown_value=-1,
+                #     with_categories=False
+                # ),
+                pre_processing.create_one_hot_encoder_transformer(
+                    columns=settings.one_hot_encoder_columns_names,
+                    data_frame_columns=precoce_ms_data_frame.columns
+                ),
+                pre_processing.create_min_max_scaler_transformer(
+                    columns=settings.min_max_scaler_columns_names,
+                    data_frame_columns=precoce_ms_data_frame.columns
+                )
+            ]
 
             # Create the ColumnTransformer, for preprocessing the data in pipeline
             preprocessor = ColumnTransformer(
@@ -814,7 +819,7 @@ if __name__ == '__main__':
                 n_jobs=settings.n_jobs,
                 test_size=0.2,
                 random_state=settings.random_seed,
-                error_score='raise'
+                # error_score='raise'
             )
 
         ################################################## ANALYZE RESULTS #####################################
