@@ -51,7 +51,7 @@ if __name__ == '__main__':
         # Some settings are configured by default. If you want to change any settings,
         # just follow the instruction for the specific setting. For more information, view the settings.py file.
 
-        # Number of jobs to run in parallel, where -1 means using all processors. The -1 doesn't work for TabNet, instead use 1.
+        # Number of jobs to run in parallel, where -1 means using all processors.
         settings.n_jobs = 1
 
         # Folder path where the CSV file is located ex: /path/folder/dataset/
@@ -131,14 +131,6 @@ if __name__ == '__main__':
         #     'participa de aliancas mercadolog', 'Confinamento', 'Suplementacao_a_campo',
         #     'SemiConfinamento'
         # ]
-
-        # List with column names to drop feature by correlation
-        # I choise the features greater than or equal to threshold 0.95, because the spearman correlation
-        # matrix showed that there are some features that are highly correlated
-        settings.columns_names_drop_feature_by_correlation = [
-            'med3m_formITUinst', 'med3m_preR_boi', 'med6m_preR_boi',
-            settings.class_column
-        ]
 
         execute_classifiers_pipeline = True
 
@@ -220,14 +212,14 @@ if __name__ == '__main__':
             precoce_ms_data_frame = utils.delete_columns(
                 data_frame=precoce_ms_data_frame, delete_columns_names=['ID_ANIMAL'])
 
-            if not is_batch_dataset:
-                # Delete NaN rows
-                precoce_ms_data_frame = pre_processing.delete_nan_rows(
-                    data_frame=precoce_ms_data_frame)
+            # if not is_batch_dataset:
+            # Delete NaN rows
+            precoce_ms_data_frame = pre_processing.delete_nan_rows(
+                data_frame=precoce_ms_data_frame)
 
-                # Convert pandas dtypes to numpy dtypes, some operations doesn't work with pandas dtype, for exemple, the XGBoost models
-                precoce_ms_data_frame = utils.convert_pandas_dtype_to_numpy_dtype(
-                    data_frame=precoce_ms_data_frame, pandas_dtypes=[pd.UInt8Dtype()])
+            # Convert pandas dtypes to numpy dtypes, some operations doesn't work with pandas dtype, for exemple, the XGBoost models
+            precoce_ms_data_frame = utils.convert_pandas_dtype_to_numpy_dtype(
+                data_frame=precoce_ms_data_frame, pandas_dtypes=[pd.UInt8Dtype()])
 
             # Identify columns that contain a single value, and delete them
             precoce_ms_data_frame = pre_processing.delete_columns_with_single_value(
@@ -261,44 +253,44 @@ if __name__ == '__main__':
             )
 
             # Create the fransformers for ColumnTransformer
-            transformers = list()
-            if is_batch_dataset:
-                transformers = [
-                    pre_processing.create_simple_imputer_transformer(
-                        columns=settings.simple_imputer_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns,
-                        strategy='most_frequent'
-                    ),
-                    pre_processing.create_ordinal_encoder_transformer(
-                        ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns,
-                    ),
-                    pre_processing.create_one_hot_encoder_transformer(
-                        columns=settings.one_hot_encoder_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns
-                    ),
-                    pre_processing.create_min_max_scaler_transformer(
-                        columns=settings.min_max_scaler_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns,
-                        imputer=pre_processing.instance_simple_imputer(
-                            strategy='mean')
-                    )
-                ]
-            else:
-                transformers = [
-                    pre_processing.create_ordinal_encoder_transformer(
-                        ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns,
-                    ),
-                    pre_processing.create_one_hot_encoder_transformer(
-                        columns=settings.one_hot_encoder_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns
-                    ),
-                    pre_processing.create_min_max_scaler_transformer(
-                        columns=settings.min_max_scaler_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns
-                    )
-                ]
+            # transformers = list()
+            # if is_batch_dataset:
+            #     transformers = [
+            #         pre_processing.create_simple_imputer_transformer(
+            #             columns=settings.simple_imputer_columns_names,
+            #             data_frame_columns=precoce_ms_data_frame.columns,
+            #             strategy='most_frequent'
+            #         ),
+            #         pre_processing.create_ordinal_encoder_transformer(
+            #             ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
+            #             data_frame_columns=precoce_ms_data_frame.columns,
+            #         ),
+            #         pre_processing.create_one_hot_encoder_transformer(
+            #             columns=settings.one_hot_encoder_columns_names,
+            #             data_frame_columns=precoce_ms_data_frame.columns
+            #         ),
+            #         pre_processing.create_min_max_scaler_transformer(
+            #             columns=settings.min_max_scaler_columns_names,
+            #             data_frame_columns=precoce_ms_data_frame.columns,
+            #             imputer=pre_processing.instance_simple_imputer(
+            #                 strategy='mean')
+            #         )
+            #     ]
+            # else:
+            transformers = [
+                pre_processing.create_ordinal_encoder_transformer(
+                    ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
+                    data_frame_columns=precoce_ms_data_frame.columns,
+                ),
+                pre_processing.create_one_hot_encoder_transformer(
+                    columns=settings.one_hot_encoder_columns_names,
+                    data_frame_columns=precoce_ms_data_frame.columns
+                ),
+                pre_processing.create_min_max_scaler_transformer(
+                    columns=settings.min_max_scaler_columns_names,
+                    data_frame_columns=precoce_ms_data_frame.columns
+                )
+            ]
 
             # Create the ColumnTransformer, for preprocessing the data in pipeline
             preprocessor = ColumnTransformer(
@@ -482,10 +474,11 @@ if __name__ == '__main__':
                 n_jobs=settings.n_jobs,
                 test_size=0.2,
                 random_state=settings.random_seed,
-                # pre_dispatch=1,
+                # pre_dispatch=59,
                 execution_name='GS1'
             )
 
+            # Configuration run RandomForest
             # settings.n_jobs = 15
             # print('\n-------Number of jobs for grid search 2: {}'.format(settings.n_jobs))
 
@@ -504,20 +497,20 @@ if __name__ == '__main__':
             #     }
             # ]
 
-            # # Configuration run RandomForest
             # pattern_extraction.run_grid_search(
-            #     x=x,
-            #     y=y,
-            #     estimator=pipe,
-            #     param_grid=param_grid_gs2,
-            #     cv=cv,
-            #     score=score,
-            #     n_jobs=settings.n_jobs,
-            #     test_size=0.2,
-            #     random_state=settings.random_seed,
-            #     execution_name='GS2'
+            #    x=x,
+            #    y=y,
+            #    estimator=pipe,
+            #    param_grid=param_grid_gs2,
+            #    cv=cv,
+            #    score=score,
+            #    n_jobs=settings.n_jobs,
+            #    test_size=0.2,
+            #    random_state=settings.random_seed,
+            #    execution_name='GS2'
             # )
 
+            # Configuration run XGBoost
             # settings.n_jobs = 10
             # print('\n-------Number of jobs for grid search 3: {}'.format(settings.n_jobs))
 
@@ -542,7 +535,13 @@ if __name__ == '__main__':
             #     }
             # ]
 
-            # # Configuration run XGBoost
+            # # Remove num_class parameter from XGBClassifier when using binary classification
+            # if class_number == 2:
+            #     for estimator in param_grid_gs3:
+            #         if estimator['classifier__estimator'][0].__class__.__name__ == XGBClassifier().__class__.__name__:
+            #             estimator.pop('classifier__estimator__num_class')
+            #             break
+
             # pattern_extraction.run_grid_search(
             #     x=x,
             #     y=y,
@@ -556,6 +555,7 @@ if __name__ == '__main__':
             #     execution_name='GS3'
             # )
 
+            # Configuration run TabNet
             # settings.n_jobs = 20
             # print('\n-------Number of jobs for grid search 4: {}'.format(settings.n_jobs))
 
@@ -600,7 +600,6 @@ if __name__ == '__main__':
             #     }
             # ]
 
-            # # Configuration run TabNet
             # pattern_extraction.run_grid_search(
             #     x=x,
             #     y=y,
