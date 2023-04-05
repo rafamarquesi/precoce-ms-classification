@@ -67,10 +67,10 @@ def merge_cv_results():
                     utils.get_current_datetime())
             )
         else:
-            raise warnings.warn(
+            warnings.warn(
                 'Found only one file to merge CV RESULTS, not merged!')
     else:
-        raise warnings.warn('Path to merge CV RESULTS does not exist!')
+        warnings.warn('Path to merge CV RESULTS does not exist!')
 
 
 if __name__ == '__main__':
@@ -115,5 +115,5 @@ if __name__ == '__main__':
                 print('Directory already exists {}'.format(destination_path))
             move_files(source_path, destination_path)
         else:
-            raise Exception(
+            warnings.warn(
                 'Source path {} does not exist'.format(source_path))
