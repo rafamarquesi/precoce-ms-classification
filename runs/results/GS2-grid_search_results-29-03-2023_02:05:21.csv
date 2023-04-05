@@ -1,0 +1,11 @@
+best_score_;best_params_;scorer_;n_splits_;refit_time_;multimetric_;n_features_in_;feature_names_in_;training_set_score;test_set_score
+0,8521513920772265;"{'classifier__estimator': RandomForestClassifier(criterion='entropy', max_features=0.75,
+                       n_estimators=1000, n_jobs=4, random_state=42), 'classifier__estimator__class_weight': None, 'classifier__estimator__criterion': 'entropy', 'classifier__estimator__max_depth': None, 'classifier__estimator__max_features': 0.75, 'classifier__estimator__n_estimators': 1000, 'classifier__estimator__n_jobs': 4, 'classifier__estimator__random_state': 42}";make_scorer(accuracy_score);10;10324,522397994995;False;30;"['Tipificacao' 'QuestionarioClassificacaoEstabel' 'ILP' 'IFP' 'ILPF'
+ 'QuestionarioPossuiOutrosIncentiv' 'QuestionarioFabricaRacao'
+ 'regua de manejo' 'identificacao individual' 'rastreamento SISBOV'
+ 'participa de aliancas mercadolog' 'QuestionarioPraticaRecuperacaoPa'
+ 'Confinamento' 'Suplementacao_a_campo' 'SemiConfinamento' 'tot3m_Chuva'
+ 'med3m_formITUinst' 'med3m_NDVI' 'med3m_preR_milho' 'med3m_preR_boi'
+ 'tot6m_Chuva' 'med6m_formITUinst' 'med6m_NDVI' 'med6m_preR_milho'
+ 'med6m_preR_boi' 'tot12m_Chuva' 'med12m_formITUinst' 'med12m_NDVI'
+ 'med12m_preR_milho' 'med12m_preR_boi']";0,856701815460424;0,8519111493804404

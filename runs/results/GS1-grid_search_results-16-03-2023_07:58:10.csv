@@ -1,0 +1,10 @@
+best_score_;best_params_;scorer_;n_splits_;refit_time_;multimetric_;n_features_in_;feature_names_in_;training_set_score;test_set_score
+0,8518730607199616;{'classifier__estimator': DecisionTreeClassifier(random_state=42), 'classifier__estimator__class_weight': None, 'classifier__estimator__criterion': 'gini', 'classifier__estimator__max_depth': None, 'classifier__estimator__min_samples_leaf': 1, 'classifier__estimator__min_samples_split': 2, 'classifier__estimator__random_state': 42, 'classifier__estimator__splitter': 'best'};make_scorer(accuracy_score);10;48,82976770401001;False;30;"['Tipificacao' 'QuestionarioClassificacaoEstabel' 'ILP' 'IFP' 'ILPF'
+ 'QuestionarioPossuiOutrosIncentiv' 'QuestionarioFabricaRacao'
+ 'regua de manejo' 'identificacao individual' 'rastreamento SISBOV'
+ 'participa de aliancas mercadolog' 'QuestionarioPraticaRecuperacaoPa'
+ 'Confinamento' 'Suplementacao_a_campo' 'SemiConfinamento' 'tot3m_Chuva'
+ 'med3m_formITUinst' 'med3m_NDVI' 'med3m_preR_milho' 'med3m_preR_boi'
+ 'tot6m_Chuva' 'med6m_formITUinst' 'med6m_NDVI' 'med6m_preR_milho'
+ 'med6m_preR_boi' 'tot12m_Chuva' 'med12m_formITUinst' 'med12m_NDVI'
+ 'med12m_preR_milho' 'med12m_preR_boi']";0,856701815460424;0,8516471134311892
