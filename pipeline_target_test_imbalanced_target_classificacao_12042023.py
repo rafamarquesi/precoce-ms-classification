@@ -52,7 +52,7 @@ if __name__ == '__main__':
         # just follow the instruction for the specific setting. For more information, view the settings.py file.
 
         # Number of jobs to run in parallel, where -1 means using all processors.
-        settings.n_jobs = 9
+        settings.n_jobs = 1
 
         # Folder path where the CSV file is located ex: /path/folder/dataset/
         settings.dataset_folder_path = '/home/externo/rafaelrm/base_dados/'
@@ -162,7 +162,7 @@ if __name__ == '__main__':
                 settings.save_results_during_run = False
 
             # Whether True, the objects persisted in the path_objects_persisted_results_runs will be cleaned before the execution of the pipeline
-            settings.new_run = True
+            settings.new_run = False
 
             ##### XGBoost Settings #####
             # The tree method to use for training the model. 'gpu_hist' is recommended for GPU training. 'hist' is recommended for CPU training.
@@ -368,14 +368,17 @@ if __name__ == '__main__':
                 {
                     'classifier__estimator': [RandomForestClassifier()],
                     'classifier__estimator__random_state': [settings.random_seed],
-                    'classifier__estimator__n_jobs': [2],
+                    'classifier__estimator__n_jobs': [36],
                     'classifier__estimator__criterion': ['entropy'],
                     'classifier__estimator__max_features': [0.75],
-                    'classifier__estimator__n_estimators': [100, 1000],
+                    #'classifier__estimator__n_estimators': [100, 1000],
+                    'classifier__estimator__n_estimators': [100, 300],
                     'classifier__estimator__max_depth': [2, 7, None],
+                    #'classifier__estimator__max_depth': [None],
                     # 'classifier__estimator__min_samples_split': [2],
                     # 'classifier__estimator__min_samples_leaf': [1, 5, 10],
                     'classifier__estimator__class_weight': ['balanced', None]
+                    #'classifier__estimator__class_weight': [None]
                 }
                 # {
                 #     'classifier__estimator': [XGBClassifier()],
@@ -469,7 +472,8 @@ if __name__ == '__main__':
                 score=score,
                 n_jobs=settings.n_jobs,
                 test_size=0.2,
-                random_state=settings.random_seed
+                random_state=settings.random_seed,
+                pre_dispatch=settings.n_jobs
             )
 
         tee_log_file.close()
