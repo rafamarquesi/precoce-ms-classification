@@ -1,0 +1,1160 @@
+
+*****INICIO LOAD DATA******
+
+*****INICIO PRINT INFOS******
+Número total de linhas do DataFrame: 63072
+Número de colunas: 112
+Informações do DataFrame:
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 63072 entries, 0 to 63071
+Data columns (total 112 columns):
+ #    Column                            Dtype         
+---   ------                            -----         
+ 0    ID_ANIMAL                         uint32        
+ 1    EstabelecimentoMunicipio          category      
+ 2    DataAbate                         datetime64[ns]
+ 3    Frigorifico_ID                    uint8         
+ 4    Frigorifico_CNPJ                  uint64        
+ 5    Frigorifico_RazaoSocial           category      
+ 6    Municipio_Frigorifico             category      
+ 7    Tipificacao                       category      
+ 8    Maturidade                        category      
+ 9    Acabamento                        category      
+ 10   Peso                              float32       
+ 11   EstabelecimentoIdentificador      uint16        
+ 12   Data_homol                        datetime64[ns]
+ 13   Questionario_ID                   uint16        
+ 14   QuestionarioClassificacaoEstabel  uint8         
+ 15   FERTIIRRIGACAO                    uint8         
+ 16   ILP                               uint8         
+ 17   IFP                               uint8         
+ 18   ILPF                              uint8         
+ 19   CONCEN_VOLUM                      UInt8         
+ 20   CREEPFEEDING                      UInt8         
+ 21   FORN_ESTRAT_SILAGEM               UInt8         
+ 22   PROTEICO                          UInt8         
+ 23   PROTEICO_ENERGETICO               UInt8         
+ 24   RACAO_BAL_CONS_INFERIOR           UInt8         
+ 25   SAL_MINERAL                       UInt8         
+ 26   SALMINERAL_UREIA                  UInt8         
+ 27   RACAOO_BAL_CONSUMO_IG             UInt8         
+ 28   GRAO_INTEIRO                      UInt8         
+ 29   ALTO_CONCENTR_VOLUM               UInt8         
+ 30   ALTO_CONCENTRADO                  UInt8         
+ 31   QuestionarioPossuiOutrosIncentiv  uint8         
+ 32   QuestionarioFabricaRacao          uint8         
+ 33   area so confinamento              UInt8         
+ 34   regua de manejo                   UInt8         
+ 35   boa cobertura vegetal, com baixa  UInt8         
+ 36   erosaoo laminar ou em sulco igua  UInt8         
+ 37   identificacao individual          UInt8         
+ 38   rastreamento SISBOV               UInt8         
+ 39   Lista Trace                       UInt8         
+ 40   BPA                               UInt8         
+ 41   participa de aliancas mercadolog  UInt8         
+ 42   QuestionarioPraticaRecuperacaoPa  uint8         
+ 43   Confinamento                      UInt8         
+ 44   Suplementacao_a_campo             UInt8         
+ 45   SemiConfinamento                  UInt8         
+ 46   dif_datas                         uint16        
+ 47   DataAbate_6m_ANT                  datetime64[ns]
+ 48   data_homol_select                 datetime64[ns]
+ 49   data12m                           datetime64[ns]
+ 50   data6m                            datetime64[ns]
+ 51   data3m                            datetime64[ns]
+ 52   data1m                            datetime64[ns]
+ 53   data7d                            datetime64[ns]
+ 54   tot7d_Chuva                       float32       
+ 55   med7d_TempInst                    float32       
+ 56   med7d_TempMin                     float32       
+ 57   med7d_UmidInst                    float32       
+ 58   med7d_formITUinst                 float32       
+ 59   med7d_formITUmax                  float32       
+ 60   med7d_NDVI                        float32       
+ 61   med7d_EVI                         float32       
+ 62   med7d_preR_soja                   float32       
+ 63   med7d_preR_milho                  float32       
+ 64   med7d_preR_boi                    float32       
+ 65   tot1m_Chuva                       float32       
+ 66   med1m_TempInst                    float32       
+ 67   med1m_UmidInst                    float32       
+ 68   med1m_formITUinst                 float32       
+ 69   med1m_NDVI                        float32       
+ 70   med1m_EVI                         float32       
+ 71   med1m_preR_soja                   float32       
+ 72   med1m_preR_milho                  float32       
+ 73   med1m_preR_boi                    float32       
+ 74   tot3m_Chuva                       float32       
+ 75   med3m_TempInst                    float32       
+ 76   med3m_UmidInst                    float32       
+ 77   med3m_formITUinst                 float32       
+ 78   med3m_formITUmax                  float32       
+ 79   med3m_NDVI                        float32       
+ 80   med3m_EVI                         float32       
+ 81   med3m_preR_soja                   float32       
+ 82   med3m_preR_milho                  float32       
+ 83   med3m_preR_boi                    float32       
+ 84   tot6m_Chuva                       float32       
+ 85   med6m_TempInst                    float32       
+ 86   med6m_UmidInst                    float32       
+ 87   med6m_formITUinst                 float32       
+ 88   med6m_NDVI                        float32       
+ 89   med6m_EVI                         float32       
+ 90   med6m_preR_soja                   float32       
+ 91   med6m_preR_milho                  float32       
+ 92   med6m_preR_boi                    float32       
+ 93   tot12m_Chuva                      float32       
+ 94   med12m_TempInst                   float32       
+ 95   med12m_TempMin                    float32       
+ 96   med12m_UmidInst                   float32       
+ 97   med12m_formITUinst                float32       
+ 98   med12m_NDVI                       float32       
+ 99   med12m_EVI                        float32       
+ 100  med12m_preR_soja                  float32       
+ 101  med12m_preR_milho                 float32       
+ 102  med12m_preR_boi                   float32       
+ 103  cnt7d_CL_ITUinst                  float32       
+ 104  cnt1m_CL_ITUinst                  float32       
+ 105  cnt3m_CL_ITUinst                  float32       
+ 106  cnt6m_CL_ITUinst                  float32       
+ 107  cnt12m_CL_ITUinst                 float32       
+ 108  ANO                               uint16        
+ 109  CATEGORIA                         category      
+ 110  classificacao                     category      
+ 111  Motivo                            category      
+dtypes: UInt8(24), category(9), datetime64[ns](9), float32(55), uint16(4), uint32(1), uint64(1), uint8(9)
+memory usage: 22.7 MB
+*****FIM PRINT INFOS*********
+Function informations Took 0:00:00.016996
+
+*****INICIO DELETE COLUNAS******
+Coluna EstabelecimentoMunicipio excluída.
+Coluna Frigorifico_ID excluída.
+Coluna Frigorifico_CNPJ excluída.
+Coluna Frigorifico_RazaoSocial excluída.
+Coluna Municipio_Frigorifico excluída.
+Coluna Maturidade excluída.
+Coluna Acabamento excluída.
+Coluna EstabelecimentoIdentificador excluída.
+Coluna Questionario_ID excluída.
+Coluna FERTIIRRIGACAO excluída.
+Coluna CONCEN_VOLUM excluída.
+Coluna CREEPFEEDING excluída.
+Coluna FORN_ESTRAT_SILAGEM excluída.
+Coluna PROTEICO excluída.
+Coluna PROTEICO_ENERGETICO excluída.
+Coluna RACAO_BAL_CONS_INFERIOR excluída.
+Coluna SAL_MINERAL excluída.
+Coluna SALMINERAL_UREIA excluída.
+Coluna RACAOO_BAL_CONSUMO_IG excluída.
+Coluna GRAO_INTEIRO excluída.
+Coluna ALTO_CONCENTR_VOLUM excluída.
+Coluna ALTO_CONCENTRADO excluída.
+Coluna area so confinamento excluída.
+Coluna boa cobertura vegetal, com baixa excluída.
+Coluna erosaoo laminar ou em sulco igua excluída.
+Coluna Lista Trace excluída.
+Coluna BPA excluída.
+Coluna dif_datas excluída.
+Coluna tot7d_Chuva excluída.
+Coluna med7d_TempInst excluída.
+Coluna med7d_TempMin excluída.
+Coluna med7d_UmidInst excluída.
+Coluna med7d_formITUinst excluída.
+Coluna med7d_formITUmax excluída.
+Coluna med7d_NDVI excluída.
+Coluna med7d_EVI excluída.
+Coluna med7d_preR_soja excluída.
+Coluna med7d_preR_milho excluída.
+Coluna med7d_preR_boi excluída.
+Coluna tot1m_Chuva excluída.
+Coluna med1m_TempInst excluída.
+Coluna med1m_UmidInst excluída.
+Coluna med1m_formITUinst excluída.
+Coluna med1m_NDVI excluída.
+Coluna med1m_EVI excluída.
+Coluna med1m_preR_soja excluída.
+Coluna med1m_preR_milho excluída.
+Coluna med1m_preR_boi excluída.
+Coluna med3m_TempInst excluída.
+Coluna med3m_UmidInst excluída.
+Coluna med3m_formITUmax excluída.
+Coluna med3m_EVI excluída.
+Coluna med3m_preR_soja excluída.
+Coluna tot6m_Chuva excluída.
+Coluna med6m_TempInst excluída.
+Coluna med6m_UmidInst excluída.
+Coluna med6m_formITUinst excluída.
+Coluna med6m_NDVI excluída.
+Coluna med6m_EVI excluída.
+Coluna med6m_preR_soja excluída.
+Coluna med6m_preR_milho excluída.
+Coluna med6m_preR_boi excluída.
+Coluna tot12m_Chuva excluída.
+Coluna med12m_TempInst excluída.
+Coluna med12m_TempMin excluída.
+Coluna med12m_UmidInst excluída.
+Coluna med12m_formITUinst excluída.
+Coluna med12m_NDVI excluída.
+Coluna med12m_EVI excluída.
+Coluna med12m_preR_soja excluída.
+Coluna med12m_preR_milho excluída.
+Coluna med12m_preR_boi excluída.
+Coluna cnt7d_CL_ITUinst excluída.
+Coluna cnt1m_CL_ITUinst excluída.
+Coluna cnt3m_CL_ITUinst excluída.
+Coluna cnt6m_CL_ITUinst excluída.
+Coluna cnt12m_CL_ITUinst excluída.
+Coluna ANO excluída.
+Coluna Motivo excluída.
+Coluna DataAbate excluída.
+Coluna Data_homol excluída.
+Coluna DataAbate_6m_ANT excluída.
+Coluna data_homol_select excluída.
+Coluna data12m excluída.
+Coluna data6m excluída.
+Coluna data3m excluída.
+Coluna data1m excluída.
+Coluna data7d excluída.
+Coluna classificacao excluída.
+*****FIM DELETE COLUNAS*********
+
+*****INICIO PRINT INFOS******
+Número total de linhas do DataFrame: 63072
+Número de colunas: 23
+Informações do DataFrame:
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 63072 entries, 0 to 63071
+Data columns (total 23 columns):
+ #   Column                            Non-Null Count  Dtype   
+---  ------                            --------------  -----   
+ 0   ID_ANIMAL                         63072 non-null  uint32  
+ 1   Tipificacao                       63072 non-null  category
+ 2   Peso                              63072 non-null  float32 
+ 3   QuestionarioClassificacaoEstabel  63072 non-null  uint8   
+ 4   ILP                               63072 non-null  uint8   
+ 5   IFP                               63072 non-null  uint8   
+ 6   ILPF                              63072 non-null  uint8   
+ 7   QuestionarioPossuiOutrosIncentiv  63072 non-null  uint8   
+ 8   QuestionarioFabricaRacao          63072 non-null  uint8   
+ 9   regua de manejo                   63062 non-null  UInt8   
+ 10  identificacao individual          63062 non-null  UInt8   
+ 11  rastreamento SISBOV               63050 non-null  UInt8   
+ 12  participa de aliancas mercadolog  63062 non-null  UInt8   
+ 13  QuestionarioPraticaRecuperacaoPa  63072 non-null  uint8   
+ 14  Confinamento                      63062 non-null  UInt8   
+ 15  Suplementacao_a_campo             63062 non-null  UInt8   
+ 16  SemiConfinamento                  63062 non-null  UInt8   
+ 17  tot3m_Chuva                       61719 non-null  float32 
+ 18  med3m_formITUinst                 63063 non-null  float32 
+ 19  med3m_NDVI                        60906 non-null  float32 
+ 20  med3m_preR_milho                  63063 non-null  float32 
+ 21  med3m_preR_boi                    63063 non-null  float32 
+ 22  CATEGORIA                         63072 non-null  category
+dtypes: UInt8(7), category(2), float32(6), uint32(1), uint8(7)
+memory usage: 3.1 MB
+*****FIM PRINT INFOS*********
+Function informations Took 0:00:00.013077
+
+*****FIM LOAD DATA******
+Function load_data Took 0:00:40.314516
+
+*****INICIO SHOW SETTINGS******
+os = <module 'os' from '/usr/lib/python3.8/os.py'>
+pd = <module 'pandas' from '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pandas/__init__.py'>
+torch = <module 'torch' from '/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/torch/__init__.py'>
+PANDAS_MAX_ROWS = 5000
+random_seed = 42
+n_jobs = 1
+dataset_folder_path = /mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/
+csv_path = /mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/base_dados/TAB_MODELAGEM_RAFAEL_2020_1-2.0-percentage-sampling.csv
+number_csv_lines = None
+dtype_dict = {'ID_ANIMAL': 'uint32', 'EstabelecimentoMunicipio': 'category', 'Frigorifico_ID': 'uint8', 'Frigorifico_CNPJ': 'uint64', 'Frigorifico_RazaoSocial': 'category', 'Municipio_Frigorifico': 'category', 'Tipificacao': 'category', 'Maturidade': 'category', 'Acabamento': 'category', 'Peso': 'float32', 'EstabelecimentoIdentificador': 'uint16', 'Questionario_ID': 'uint16', 'QuestionarioClassificacaoEstabel': 'uint8', 'FERTIIRRIGACAO': 'uint8', 'ILP': 'uint8', 'IFP': 'uint8', 'ILPF': 'uint8', 'CONCEN_VOLUM': 'UInt8', 'CREEPFEEDING': 'UInt8', 'FORN_ESTRAT_SILAGEM': 'UInt8', 'PROTEICO': 'UInt8', 'PROTEICO_ENERGETICO': 'UInt8', 'RACAO_BAL_CONS_INFERIOR': 'UInt8', 'SAL_MINERAL': 'UInt8', 'SALMINERAL_UREIA': 'UInt8', 'RACAOO_BAL_CONSUMO_IG': 'UInt8', 'GRAO_INTEIRO': 'UInt8', 'ALTO_CONCENTR_VOLUM': 'UInt8', 'ALTO_CONCENTRADO': 'UInt8', 'QuestionarioPossuiOutrosIncentiv': 'uint8', 'QuestionarioFabricaRacao': 'uint8', 'area so confinamento': 'UInt8', 'regua de manejo': 'UInt8', 'boa cobertura vegetal, com baixa': 'UInt8', 'erosaoo laminar ou em sulco igua': 'UInt8', 'identificacao individual': 'UInt8', 'rastreamento SISBOV': 'UInt8', 'Lista Trace': 'UInt8', 'BPA': 'UInt8', 'participa de aliancas mercadolog': 'UInt8', 'QuestionarioPraticaRecuperacaoPa': 'uint8', 'Confinamento': 'UInt8', 'Suplementacao_a_campo': 'UInt8', 'SemiConfinamento': 'UInt8', 'dif_datas': 'uint16', 'tot7d_Chuva': 'float32', 'med7d_TempInst': 'float32', 'med7d_TempMin': 'float32', 'med7d_UmidInst': 'float32', 'med7d_formITUinst': 'float32', 'med7d_formITUmax': 'float32', 'med7d_NDVI': 'float32', 'med7d_EVI': 'float32', 'med7d_preR_soja': 'float32', 'med7d_preR_milho': 'float32', 'med7d_preR_boi': 'float32', 'tot1m_Chuva': 'float32', 'med1m_TempInst': 'float32', 'med1m_UmidInst': 'float32', 'med1m_formITUinst': 'float32', 'med1m_NDVI': 'float32', 'med1m_EVI': 'float32', 'med1m_preR_soja': 'float32', 'med1m_preR_milho': 'float32', 'med1m_preR_boi': 'float32', 'tot3m_Chuva': 'float32', 'med3m_TempInst': 'float32', 'med3m_UmidInst': 'float32', 'med3m_formITUinst': 'float32', 'med3m_formITUmax': 'float32', 'med3m_NDVI': 'float32', 'med3m_EVI': 'float32', 'med3m_preR_soja': 'float32', 'med3m_preR_milho': 'float32', 'med3m_preR_boi': 'float32', 'tot6m_Chuva': 'float32', 'med6m_TempInst': 'float32', 'med6m_UmidInst': 'float32', 'med6m_formITUinst': 'float32', 'med6m_NDVI': 'float32', 'med6m_EVI': 'float32', 'med6m_preR_soja': 'float32', 'med6m_preR_milho': 'float32', 'med6m_preR_boi': 'float32', 'tot12m_Chuva': 'float32', 'med12m_TempInst': 'float32', 'med12m_TempMin': 'float32', 'med12m_UmidInst': 'float32', 'med12m_formITUinst': 'float32', 'med12m_NDVI': 'float32', 'med12m_EVI': 'float32', 'med12m_preR_soja': 'float32', 'med12m_preR_milho': 'float32', 'med12m_preR_boi': 'float32', 'cnt7d_CL_ITUinst': 'float32', 'cnt1m_CL_ITUinst': 'float32', 'cnt3m_CL_ITUinst': 'float32', 'cnt6m_CL_ITUinst': 'float32', 'cnt12m_CL_ITUinst': 'float32', 'ANO': 'uint16', 'CATEGORIA': 'category', 'classificacao': 'category', 'Motivo': 'category', 'QTD_ANIMAIS_LOTE': 'uint16', 'PESO_MEDIO_LOTE': 'float32', 'CATEGORIA_BINARIA': 'category'}
+parse_dates = ['DataAbate', 'Data_homol', 'DataAbate_6m_ANT', 'data_homol_select', 'data12m', 'data6m', 'data3m', 'data1m', 'data7d']
+delete_columns_names_on_load_data = ['EstabelecimentoMunicipio', 'Frigorifico_ID', 'Frigorifico_CNPJ', 'Frigorifico_RazaoSocial', 'Municipio_Frigorifico', 'Maturidade', 'Acabamento', 'EstabelecimentoIdentificador', 'Questionario_ID', 'FERTIIRRIGACAO', 'CONCEN_VOLUM', 'CREEPFEEDING', 'FORN_ESTRAT_SILAGEM', 'PROTEICO', 'PROTEICO_ENERGETICO', 'RACAO_BAL_CONS_INFERIOR', 'SAL_MINERAL', 'SALMINERAL_UREIA', 'RACAOO_BAL_CONSUMO_IG', 'GRAO_INTEIRO', 'ALTO_CONCENTR_VOLUM', 'ALTO_CONCENTRADO', 'area so confinamento', 'boa cobertura vegetal, com baixa', 'erosaoo laminar ou em sulco igua', 'Lista Trace', 'BPA', 'dif_datas', 'tot7d_Chuva', 'med7d_TempInst', 'med7d_TempMin', 'med7d_UmidInst', 'med7d_formITUinst', 'med7d_formITUmax', 'med7d_NDVI', 'med7d_EVI', 'med7d_preR_soja', 'med7d_preR_milho', 'med7d_preR_boi', 'tot1m_Chuva', 'med1m_TempInst', 'med1m_UmidInst', 'med1m_formITUinst', 'med1m_NDVI', 'med1m_EVI', 'med1m_preR_soja', 'med1m_preR_milho', 'med1m_preR_boi', 'med3m_TempInst', 'med3m_UmidInst', 'med3m_formITUmax', 'med3m_EVI', 'med3m_preR_soja', 'tot6m_Chuva', 'med6m_TempInst', 'med6m_UmidInst', 'med6m_formITUinst', 'med6m_NDVI', 'med6m_EVI', 'med6m_preR_soja', 'med6m_preR_milho', 'med6m_preR_boi', 'tot12m_Chuva', 'med12m_TempInst', 'med12m_TempMin', 'med12m_UmidInst', 'med12m_formITUinst', 'med12m_NDVI', 'med12m_EVI', 'med12m_preR_soja', 'med12m_preR_milho', 'med12m_preR_boi', 'cnt7d_CL_ITUinst', 'cnt1m_CL_ITUinst', 'cnt3m_CL_ITUinst', 'cnt6m_CL_ITUinst', 'cnt12m_CL_ITUinst', 'ANO', 'Motivo', 'DataAbate', 'Data_homol', 'DataAbate_6m_ANT', 'data_homol_select', 'data12m', 'data6m', 'data3m', 'data1m', 'data7d', 'classificacao']
+PATH_SAVE_PLOTS = ./plots
+PATH_SAVE_ESTIMATORS_REPR = ./runs/estimators_repr
+PATH_SAVE_BEST_ESTIMATORS = ./runs/best_estimators
+PATH_SAVE_RESULTS = ./runs/results
+PATH_SAVE_LOGS = ./logs
+PATH_SAVE_ENCODERS_SCALERS = ./runs/encoders_scalers
+ordinal_encoder_columns_names = {'QuestionarioClassificacaoEstabel': ['0', '21', '26', '30']}
+columns_ordinal_encoded = {}
+label_encoder_columns_names = ['CATEGORIA']
+columns_label_encoded = {}
+one_hot_encoder_columns_names = ['Tipificacao']
+columns_one_hot_encoded = {}
+min_max_scaler_columns_names = ['Peso', 'tot3m_Chuva', 'med3m_formITUinst', 'med3m_NDVI', 'med3m_preR_milho', 'med3m_preR_boi']
+columns_min_max_scaled = {}
+columns_label_binarized = {}
+simple_imputer_columns_names = []
+columns_names_drop_feature_by_correlation = ['med3m_formITUinst', 'med3m_preR_boi', 'CATEGORIA']
+class_column = CATEGORIA
+classifiers = {}
+models_results = {}
+device_name = cpu
+use_embeddings = True
+use_cat_emb_dim = True
+threshold_categorical_features = 150
+num_workers = 4
+eval_metric = ['balanced_accuracy', 'logloss', <class 'pytorch_tabnet_tuner.tab_model_tuner.F1ScoreMacro'>]
+augmentations = None
+weights = 0
+batch_size = 1024
+virtual_batch_size = 128
+run_grid_search_cv_tuner = True
+save_results_during_run = True
+new_run = True
+PATH_OBJECTS_PERSISTED_RESULTS_RUNS = ./runs/objects_persisted_results_runs
+PARAMETERS_PERSIST_FILENAME = ./runs/objects_persisted_results_runs/parameters_persist
+RESULTS_PERSIST_FILENAME = ./runs/objects_persisted_results_runs/results_persist
+SPLIT_PERSIST_FILENAME = ./runs/objects_persisted_results_runs/split_persist
+tree_method = hist
+objective = multi:softmax
+*****FIM SHOW SETTINGS******
+
+
+*****INICIO DELETE DUPLICATE ROWS BY ATTRIBUTE******
+Nenhuma linha duplicada encontrada para o atributo ID_ANIMAL.
+*****FIM DELETE DUPLICATE ROWS BY ATTRIBUTE*********
+Function delete_duplicate_rows_by_attribute Took 0:00:00.012084
+
+*****INICIO DELETE COLUNAS******
+Coluna ID_ANIMAL excluída.
+*****FIM DELETE COLUNAS*********
+
+*****INICIO DELETE NAN ROWS******
+Linhas com valores NaN encontradas.
+*****FIM DELETE NAN ROWS*********
+Function delete_nan_rows Took 0:00:00.020957
+
+
+*****INICIO DELETE COLUMNS WITH SINGLE VALUE******
+>>> Nenhuma coluna com valor único encontrada.
+*****FIM DELETE COLUMNS WITH SINGLE VALUE*********
+Function delete_columns_with_single_value Took 0:00:00.023276
+
+
+*****INICIO LABEL ENCODER******
+*****FIM LABEL ENCODER*********
+Function label_encoder_columns Took 0:00:00.032888
+
+Object saved in file: ./runs/encoders_scalers/target_encoded-15-04-2023_13:21:47.joblib
+
+*****INICIO RELATÓRIO DISTRIBUIÇÃO DE CLASSES******
+Distribuição da classe 0: 35%
+Distribuição da classe 1: 21%
+Distribuição da classe 2: 16%
+Distribuição da classe 3: 8%
+Distribuição da classe 4: 4%
+Distribuição da classe 5: 17%
+*****FIM RELATÓRIO DISTRIBUIÇÃO DE CLASSES******
+Function class_distribution Took 0:00:00.021489
+
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:75: UserWarning: Device used : cpu
+  warnings.warn(f"Device used : {self.device}")
+Number of folds for cross validation: 5
+Scoring strategy for grid search: f1_macro
+Test Size: 0.2
+
+x_train shape: (47635, 21)
+y_train shape: (47635,)
+x_test shape: (11909, 21)
+y_test shape: (11909,)
+Removing all files in directory: ./runs/objects_persisted_results_runs
+Do you want to continue? (y/n): 
+All files in directory ./runs/objects_persisted_results_runs were removed.
+Fitting 5 folds for each of 7 candidates, totalling 35 fits
+[CV 1/5; 1/7] START classifier__estimator=GaussianNB()..........................
+[CV 1/5; 1/7] END classifier__estimator=GaussianNB();, score=0.219 total time=   3.3s
+[CV 2/5; 1/7] START classifier__estimator=GaussianNB()..........................
+[CV 2/5; 1/7] END classifier__estimator=GaussianNB();, score=0.218 total time=   1.7s
+[CV 3/5; 1/7] START classifier__estimator=GaussianNB()..........................
+[CV 3/5; 1/7] END classifier__estimator=GaussianNB();, score=0.214 total time=   1.6s
+[CV 4/5; 1/7] START classifier__estimator=GaussianNB()..........................
+[CV 4/5; 1/7] END classifier__estimator=GaussianNB();, score=0.212 total time=   2.0s
+[CV 5/5; 1/7] START classifier__estimator=GaussianNB()..........................
+[CV 5/5; 1/7] END classifier__estimator=GaussianNB();, score=0.213 total time=   1.7s
+[CV 1/5; 2/7] START classifier__estimator=DecisionTreeClassifier(), classifier__estimator__class_weight=None, classifier__estimator__criterion=gini, classifier__estimator__max_depth=None, classifier__estimator__min_samples_leaf=10, classifier__estimator__min_samples_split=100, classifier__estimator__random_state=42, classifier__estimator__splitter=best
+[CV 1/5; 2/7] END classifier__estimator=DecisionTreeClassifier(), classifier__estimator__class_weight=None, classifier__estimator__criterion=gini, classifier__estimator__max_depth=None, classifier__estimator__min_samples_leaf=10, classifier__estimator__min_samples_split=100, classifier__estimator__random_state=42, classifier__estimator__splitter=best;, score=0.316 total time=   2.8s
+[CV 2/5; 2/7] START classifier__estimator=DecisionTreeClassifier(), classifier__estimator__class_weight=None, classifier__estimator__criterion=gini, classifier__estimator__max_depth=None, classifier__estimator__min_samples_leaf=10, classifier__estimator__min_samples_split=100, classifier__estimator__random_state=42, classifier__estimator__splitter=best
+[CV 2/5; 2/7] END classifier__estimator=DecisionTreeClassifier(), classifier__estimator__class_weight=None, classifier__estimator__criterion=gini, classifier__estimator__max_depth=None, classifier__estimator__min_samples_leaf=10, classifier__estimator__min_samples_split=100, classifier__estimator__random_state=42, classifier__estimator__splitter=best;, score=0.314 total time=   2.7s
+[CV 3/5; 2/7] START classifier__estimator=DecisionTreeClassifier(), classifier__estimator__class_weight=None, classifier__estimator__criterion=gini, classifier__estimator__max_depth=None, classifier__estimator__min_samples_leaf=10, classifier__estimator__min_samples_split=100, classifier__estimator__random_state=42, classifier__estimator__splitter=best
+[CV 3/5; 2/7] END classifier__estimator=DecisionTreeClassifier(), classifier__estimator__class_weight=None, classifier__estimator__criterion=gini, classifier__estimator__max_depth=None, classifier__estimator__min_samples_leaf=10, classifier__estimator__min_samples_split=100, classifier__estimator__random_state=42, classifier__estimator__splitter=best;, score=0.308 total time=   2.6s
+[CV 4/5; 2/7] START classifier__estimator=DecisionTreeClassifier(), classifier__estimator__class_weight=None, classifier__estimator__criterion=gini, classifier__estimator__max_depth=None, classifier__estimator__min_samples_leaf=10, classifier__estimator__min_samples_split=100, classifier__estimator__random_state=42, classifier__estimator__splitter=best
+[CV 4/5; 2/7] END classifier__estimator=DecisionTreeClassifier(), classifier__estimator__class_weight=None, classifier__estimator__criterion=gini, classifier__estimator__max_depth=None, classifier__estimator__min_samples_leaf=10, classifier__estimator__min_samples_split=100, classifier__estimator__random_state=42, classifier__estimator__splitter=best;, score=0.310 total time=   2.6s
+[CV 5/5; 2/7] START classifier__estimator=DecisionTreeClassifier(), classifier__estimator__class_weight=None, classifier__estimator__criterion=gini, classifier__estimator__max_depth=None, classifier__estimator__min_samples_leaf=10, classifier__estimator__min_samples_split=100, classifier__estimator__random_state=42, classifier__estimator__splitter=best
+[CV 5/5; 2/7] END classifier__estimator=DecisionTreeClassifier(), classifier__estimator__class_weight=None, classifier__estimator__criterion=gini, classifier__estimator__max_depth=None, classifier__estimator__min_samples_leaf=10, classifier__estimator__min_samples_split=100, classifier__estimator__random_state=42, classifier__estimator__splitter=best;, score=0.309 total time=   3.0s
+[CV 1/5; 3/7] START classifier__estimator=LinearSVC(), classifier__estimator__C=0.001, classifier__estimator__class_weight=None, classifier__estimator__dual=False, classifier__estimator__max_iter=10000, classifier__estimator__penalty=l2, classifier__estimator__random_state=42
+[CV 1/5; 3/7] END classifier__estimator=LinearSVC(), classifier__estimator__C=0.001, classifier__estimator__class_weight=None, classifier__estimator__dual=False, classifier__estimator__max_iter=10000, classifier__estimator__penalty=l2, classifier__estimator__random_state=42;, score=0.215 total time=   4.2s
+[CV 2/5; 3/7] START classifier__estimator=LinearSVC(), classifier__estimator__C=0.001, classifier__estimator__class_weight=None, classifier__estimator__dual=False, classifier__estimator__max_iter=10000, classifier__estimator__penalty=l2, classifier__estimator__random_state=42
+[CV 2/5; 3/7] END classifier__estimator=LinearSVC(), classifier__estimator__C=0.001, classifier__estimator__class_weight=None, classifier__estimator__dual=False, classifier__estimator__max_iter=10000, classifier__estimator__penalty=l2, classifier__estimator__random_state=42;, score=0.211 total time=   4.0s
+[CV 3/5; 3/7] START classifier__estimator=LinearSVC(), classifier__estimator__C=0.001, classifier__estimator__class_weight=None, classifier__estimator__dual=False, classifier__estimator__max_iter=10000, classifier__estimator__penalty=l2, classifier__estimator__random_state=42
+[CV 3/5; 3/7] END classifier__estimator=LinearSVC(), classifier__estimator__C=0.001, classifier__estimator__class_weight=None, classifier__estimator__dual=False, classifier__estimator__max_iter=10000, classifier__estimator__penalty=l2, classifier__estimator__random_state=42;, score=0.211 total time=   4.0s
+[CV 4/5; 3/7] START classifier__estimator=LinearSVC(), classifier__estimator__C=0.001, classifier__estimator__class_weight=None, classifier__estimator__dual=False, classifier__estimator__max_iter=10000, classifier__estimator__penalty=l2, classifier__estimator__random_state=42
+[CV 4/5; 3/7] END classifier__estimator=LinearSVC(), classifier__estimator__C=0.001, classifier__estimator__class_weight=None, classifier__estimator__dual=False, classifier__estimator__max_iter=10000, classifier__estimator__penalty=l2, classifier__estimator__random_state=42;, score=0.211 total time=   4.0s
+[CV 5/5; 3/7] START classifier__estimator=LinearSVC(), classifier__estimator__C=0.001, classifier__estimator__class_weight=None, classifier__estimator__dual=False, classifier__estimator__max_iter=10000, classifier__estimator__penalty=l2, classifier__estimator__random_state=42
+[CV 5/5; 3/7] END classifier__estimator=LinearSVC(), classifier__estimator__C=0.001, classifier__estimator__class_weight=None, classifier__estimator__dual=False, classifier__estimator__max_iter=10000, classifier__estimator__penalty=l2, classifier__estimator__random_state=42;, score=0.214 total time=   4.3s
+[CV 1/5; 4/7] START classifier__estimator=MLPClassifier(), classifier__estimator__activation=relu, classifier__estimator__alpha=0.0001, classifier__estimator__early_stopping=True, classifier__estimator__hidden_layer_sizes=(50, 100, 50), classifier__estimator__learning_rate=adaptive, classifier__estimator__learning_rate_init=0.0001, classifier__estimator__max_iter=1000, classifier__estimator__momentum=0.0, classifier__estimator__random_state=42, classifier__estimator__solver=adam
+[CV 1/5; 4/7] END classifier__estimator=MLPClassifier(), classifier__estimator__activation=relu, classifier__estimator__alpha=0.0001, classifier__estimator__early_stopping=True, classifier__estimator__hidden_layer_sizes=(50, 100, 50), classifier__estimator__learning_rate=adaptive, classifier__estimator__learning_rate_init=0.0001, classifier__estimator__max_iter=1000, classifier__estimator__momentum=0.0, classifier__estimator__random_state=42, classifier__estimator__solver=adam;, score=0.290 total time= 3.5min
+[CV 2/5; 4/7] START classifier__estimator=MLPClassifier(), classifier__estimator__activation=relu, classifier__estimator__alpha=0.0001, classifier__estimator__early_stopping=True, classifier__estimator__hidden_layer_sizes=(50, 100, 50), classifier__estimator__learning_rate=adaptive, classifier__estimator__learning_rate_init=0.0001, classifier__estimator__max_iter=1000, classifier__estimator__momentum=0.0, classifier__estimator__random_state=42, classifier__estimator__solver=adam
+[CV 2/5; 4/7] END classifier__estimator=MLPClassifier(), classifier__estimator__activation=relu, classifier__estimator__alpha=0.0001, classifier__estimator__early_stopping=True, classifier__estimator__hidden_layer_sizes=(50, 100, 50), classifier__estimator__learning_rate=adaptive, classifier__estimator__learning_rate_init=0.0001, classifier__estimator__max_iter=1000, classifier__estimator__momentum=0.0, classifier__estimator__random_state=42, classifier__estimator__solver=adam;, score=0.293 total time= 4.1min
+[CV 3/5; 4/7] START classifier__estimator=MLPClassifier(), classifier__estimator__activation=relu, classifier__estimator__alpha=0.0001, classifier__estimator__early_stopping=True, classifier__estimator__hidden_layer_sizes=(50, 100, 50), classifier__estimator__learning_rate=adaptive, classifier__estimator__learning_rate_init=0.0001, classifier__estimator__max_iter=1000, classifier__estimator__momentum=0.0, classifier__estimator__random_state=42, classifier__estimator__solver=adam
+[CV 3/5; 4/7] END classifier__estimator=MLPClassifier(), classifier__estimator__activation=relu, classifier__estimator__alpha=0.0001, classifier__estimator__early_stopping=True, classifier__estimator__hidden_layer_sizes=(50, 100, 50), classifier__estimator__learning_rate=adaptive, classifier__estimator__learning_rate_init=0.0001, classifier__estimator__max_iter=1000, classifier__estimator__momentum=0.0, classifier__estimator__random_state=42, classifier__estimator__solver=adam;, score=0.303 total time= 3.1min
+[CV 4/5; 4/7] START classifier__estimator=MLPClassifier(), classifier__estimator__activation=relu, classifier__estimator__alpha=0.0001, classifier__estimator__early_stopping=True, classifier__estimator__hidden_layer_sizes=(50, 100, 50), classifier__estimator__learning_rate=adaptive, classifier__estimator__learning_rate_init=0.0001, classifier__estimator__max_iter=1000, classifier__estimator__momentum=0.0, classifier__estimator__random_state=42, classifier__estimator__solver=adam
+[CV 4/5; 4/7] END classifier__estimator=MLPClassifier(), classifier__estimator__activation=relu, classifier__estimator__alpha=0.0001, classifier__estimator__early_stopping=True, classifier__estimator__hidden_layer_sizes=(50, 100, 50), classifier__estimator__learning_rate=adaptive, classifier__estimator__learning_rate_init=0.0001, classifier__estimator__max_iter=1000, classifier__estimator__momentum=0.0, classifier__estimator__random_state=42, classifier__estimator__solver=adam;, score=0.301 total time= 4.4min
+[CV 5/5; 4/7] START classifier__estimator=MLPClassifier(), classifier__estimator__activation=relu, classifier__estimator__alpha=0.0001, classifier__estimator__early_stopping=True, classifier__estimator__hidden_layer_sizes=(50, 100, 50), classifier__estimator__learning_rate=adaptive, classifier__estimator__learning_rate_init=0.0001, classifier__estimator__max_iter=1000, classifier__estimator__momentum=0.0, classifier__estimator__random_state=42, classifier__estimator__solver=adam
+[CV 5/5; 4/7] END classifier__estimator=MLPClassifier(), classifier__estimator__activation=relu, classifier__estimator__alpha=0.0001, classifier__estimator__early_stopping=True, classifier__estimator__hidden_layer_sizes=(50, 100, 50), classifier__estimator__learning_rate=adaptive, classifier__estimator__learning_rate_init=0.0001, classifier__estimator__max_iter=1000, classifier__estimator__momentum=0.0, classifier__estimator__random_state=42, classifier__estimator__solver=adam;, score=0.315 total time= 3.6min
+[CV 1/5; 5/7] START classifier__estimator=RandomForestClassifier(), classifier__estimator__class_weight=None, classifier__estimator__criterion=entropy, classifier__estimator__max_depth=None, classifier__estimator__max_features=0.75, classifier__estimator__n_estimators=1000, classifier__estimator__n_jobs=-1, classifier__estimator__random_state=42
+[CV 1/5; 5/7] END classifier__estimator=RandomForestClassifier(), classifier__estimator__class_weight=None, classifier__estimator__criterion=entropy, classifier__estimator__max_depth=None, classifier__estimator__max_features=0.75, classifier__estimator__n_estimators=1000, classifier__estimator__n_jobs=-1, classifier__estimator__random_state=42;, score=0.353 total time= 6.5min
+[CV 2/5; 5/7] START classifier__estimator=RandomForestClassifier(), classifier__estimator__class_weight=None, classifier__estimator__criterion=entropy, classifier__estimator__max_depth=None, classifier__estimator__max_features=0.75, classifier__estimator__n_estimators=1000, classifier__estimator__n_jobs=-1, classifier__estimator__random_state=42
+[CV 2/5; 5/7] END classifier__estimator=RandomForestClassifier(), classifier__estimator__class_weight=None, classifier__estimator__criterion=entropy, classifier__estimator__max_depth=None, classifier__estimator__max_features=0.75, classifier__estimator__n_estimators=1000, classifier__estimator__n_jobs=-1, classifier__estimator__random_state=42;, score=0.362 total time= 6.4min
+[CV 3/5; 5/7] START classifier__estimator=RandomForestClassifier(), classifier__estimator__class_weight=None, classifier__estimator__criterion=entropy, classifier__estimator__max_depth=None, classifier__estimator__max_features=0.75, classifier__estimator__n_estimators=1000, classifier__estimator__n_jobs=-1, classifier__estimator__random_state=42
+[CV 3/5; 5/7] END classifier__estimator=RandomForestClassifier(), classifier__estimator__class_weight=None, classifier__estimator__criterion=entropy, classifier__estimator__max_depth=None, classifier__estimator__max_features=0.75, classifier__estimator__n_estimators=1000, classifier__estimator__n_jobs=-1, classifier__estimator__random_state=42;, score=0.364 total time= 6.4min
+[CV 4/5; 5/7] START classifier__estimator=RandomForestClassifier(), classifier__estimator__class_weight=None, classifier__estimator__criterion=entropy, classifier__estimator__max_depth=None, classifier__estimator__max_features=0.75, classifier__estimator__n_estimators=1000, classifier__estimator__n_jobs=-1, classifier__estimator__random_state=42
+[CV 4/5; 5/7] END classifier__estimator=RandomForestClassifier(), classifier__estimator__class_weight=None, classifier__estimator__criterion=entropy, classifier__estimator__max_depth=None, classifier__estimator__max_features=0.75, classifier__estimator__n_estimators=1000, classifier__estimator__n_jobs=-1, classifier__estimator__random_state=42;, score=0.366 total time= 7.1min
+[CV 5/5; 5/7] START classifier__estimator=RandomForestClassifier(), classifier__estimator__class_weight=None, classifier__estimator__criterion=entropy, classifier__estimator__max_depth=None, classifier__estimator__max_features=0.75, classifier__estimator__n_estimators=1000, classifier__estimator__n_jobs=-1, classifier__estimator__random_state=42
+[CV 5/5; 5/7] END classifier__estimator=RandomForestClassifier(), classifier__estimator__class_weight=None, classifier__estimator__criterion=entropy, classifier__estimator__max_depth=None, classifier__estimator__max_features=0.75, classifier__estimator__n_estimators=1000, classifier__estimator__n_jobs=-1, classifier__estimator__random_state=42;, score=0.355 total time= 7.2min
+[CV 1/5; 6/7] START classifier__estimator=XGBClassifier(base_score=None, booster=None, callbacks=None,
+              colsample_bylevel=None, colsample_bynode=None,
+              colsample_bytree=None, early_stopping_rounds=None,
+              enable_categorical=False, eval_metric=None, gamma=None,
+              gpu_id=None, grow_policy=None, importance_type=None,
+              interaction_constraints=None, learning_rate=None, max_bin=None,
+              max_cat_to_onehot=None, max_delta_step=None, max_depth=None,
+              max_leaves=None, min_child_weight=None, missing=nan,
+              monotone_constraints=None, n_estimators=100, n_jobs=None,
+              num_parallel_tree=None, predictor=None, random_state=None,
+              reg_alpha=None, reg_lambda=None, ...), classifier__estimator__colsample_bytree=0.75, classifier__estimator__gamma=0.05, classifier__estimator__learning_rate=0.01, classifier__estimator__max_delta_step=1.0, classifier__estimator__max_depth=None, classifier__estimator__n_estimators=1000, classifier__estimator__n_jobs=-1, classifier__estimator__num_class=6, classifier__estimator__objective=multi:softmax, classifier__estimator__random_state=42, classifier__estimator__reg_alpha=0, classifier__estimator__reg_lambda=0.01, classifier__estimator__subsample=0.75, classifier__estimator__tree_method=hist
+[CV 1/5; 6/7] END classifier__estimator=XGBClassifier(base_score=None, booster=None, callbacks=None,
+              colsample_bylevel=None, colsample_bynode=None,
+              colsample_bytree=None, early_stopping_rounds=None,
+              enable_categorical=False, eval_metric=None, gamma=None,
+              gpu_id=None, grow_policy=None, importance_type=None,
+              interaction_constraints=None, learning_rate=None, max_bin=None,
+              max_cat_to_onehot=None, max_delta_step=None, max_depth=None,
+              max_leaves=None, min_child_weight=None, missing=nan,
+              monotone_constraints=None, n_estimators=100, n_jobs=None,
+              num_parallel_tree=None, predictor=None, random_state=None,
+              reg_alpha=None, reg_lambda=None, ...), classifier__estimator__colsample_bytree=0.75, classifier__estimator__gamma=0.05, classifier__estimator__learning_rate=0.01, classifier__estimator__max_delta_step=1.0, classifier__estimator__max_depth=None, classifier__estimator__n_estimators=1000, classifier__estimator__n_jobs=-1, classifier__estimator__num_class=6, classifier__estimator__objective=multi:softmax, classifier__estimator__random_state=42, classifier__estimator__reg_alpha=0, classifier__estimator__reg_lambda=0.01, classifier__estimator__subsample=0.75, classifier__estimator__tree_method=hist;, score=0.342 total time= 1.7min
+[CV 2/5; 6/7] START classifier__estimator=XGBClassifier(base_score=None, booster=None, callbacks=None,
+              colsample_bylevel=None, colsample_bynode=None,
+              colsample_bytree=None, early_stopping_rounds=None,
+              enable_categorical=False, eval_metric=None, gamma=None,
+              gpu_id=None, grow_policy=None, importance_type=None,
+              interaction_constraints=None, learning_rate=None, max_bin=None,
+              max_cat_to_onehot=None, max_delta_step=None, max_depth=None,
+              max_leaves=None, min_child_weight=None, missing=nan,
+              monotone_constraints=None, n_estimators=100, n_jobs=None,
+              num_parallel_tree=None, predictor=None, random_state=None,
+              reg_alpha=None, reg_lambda=None, ...), classifier__estimator__colsample_bytree=0.75, classifier__estimator__gamma=0.05, classifier__estimator__learning_rate=0.01, classifier__estimator__max_delta_step=1.0, classifier__estimator__max_depth=None, classifier__estimator__n_estimators=1000, classifier__estimator__n_jobs=-1, classifier__estimator__num_class=6, classifier__estimator__objective=multi:softmax, classifier__estimator__random_state=42, classifier__estimator__reg_alpha=0, classifier__estimator__reg_lambda=0.01, classifier__estimator__subsample=0.75, classifier__estimator__tree_method=hist
+[CV 2/5; 6/7] END classifier__estimator=XGBClassifier(base_score=None, booster=None, callbacks=None,
+              colsample_bylevel=None, colsample_bynode=None,
+              colsample_bytree=None, early_stopping_rounds=None,
+              enable_categorical=False, eval_metric=None, gamma=None,
+              gpu_id=None, grow_policy=None, importance_type=None,
+              interaction_constraints=None, learning_rate=None, max_bin=None,
+              max_cat_to_onehot=None, max_delta_step=None, max_depth=None,
+              max_leaves=None, min_child_weight=None, missing=nan,
+              monotone_constraints=None, n_estimators=100, n_jobs=None,
+              num_parallel_tree=None, predictor=None, random_state=None,
+              reg_alpha=None, reg_lambda=None, ...), classifier__estimator__colsample_bytree=0.75, classifier__estimator__gamma=0.05, classifier__estimator__learning_rate=0.01, classifier__estimator__max_delta_step=1.0, classifier__estimator__max_depth=None, classifier__estimator__n_estimators=1000, classifier__estimator__n_jobs=-1, classifier__estimator__num_class=6, classifier__estimator__objective=multi:softmax, classifier__estimator__random_state=42, classifier__estimator__reg_alpha=0, classifier__estimator__reg_lambda=0.01, classifier__estimator__subsample=0.75, classifier__estimator__tree_method=hist;, score=0.342 total time= 1.4min
+[CV 3/5; 6/7] START classifier__estimator=XGBClassifier(base_score=None, booster=None, callbacks=None,
+              colsample_bylevel=None, colsample_bynode=None,
+              colsample_bytree=None, early_stopping_rounds=None,
+              enable_categorical=False, eval_metric=None, gamma=None,
+              gpu_id=None, grow_policy=None, importance_type=None,
+              interaction_constraints=None, learning_rate=None, max_bin=None,
+              max_cat_to_onehot=None, max_delta_step=None, max_depth=None,
+              max_leaves=None, min_child_weight=None, missing=nan,
+              monotone_constraints=None, n_estimators=100, n_jobs=None,
+              num_parallel_tree=None, predictor=None, random_state=None,
+              reg_alpha=None, reg_lambda=None, ...), classifier__estimator__colsample_bytree=0.75, classifier__estimator__gamma=0.05, classifier__estimator__learning_rate=0.01, classifier__estimator__max_delta_step=1.0, classifier__estimator__max_depth=None, classifier__estimator__n_estimators=1000, classifier__estimator__n_jobs=-1, classifier__estimator__num_class=6, classifier__estimator__objective=multi:softmax, classifier__estimator__random_state=42, classifier__estimator__reg_alpha=0, classifier__estimator__reg_lambda=0.01, classifier__estimator__subsample=0.75, classifier__estimator__tree_method=hist
+[CV 3/5; 6/7] END classifier__estimator=XGBClassifier(base_score=None, booster=None, callbacks=None,
+              colsample_bylevel=None, colsample_bynode=None,
+              colsample_bytree=None, early_stopping_rounds=None,
+              enable_categorical=False, eval_metric=None, gamma=None,
+              gpu_id=None, grow_policy=None, importance_type=None,
+              interaction_constraints=None, learning_rate=None, max_bin=None,
+              max_cat_to_onehot=None, max_delta_step=None, max_depth=None,
+              max_leaves=None, min_child_weight=None, missing=nan,
+              monotone_constraints=None, n_estimators=100, n_jobs=None,
+              num_parallel_tree=None, predictor=None, random_state=None,
+              reg_alpha=None, reg_lambda=None, ...), classifier__estimator__colsample_bytree=0.75, classifier__estimator__gamma=0.05, classifier__estimator__learning_rate=0.01, classifier__estimator__max_delta_step=1.0, classifier__estimator__max_depth=None, classifier__estimator__n_estimators=1000, classifier__estimator__n_jobs=-1, classifier__estimator__num_class=6, classifier__estimator__objective=multi:softmax, classifier__estimator__random_state=42, classifier__estimator__reg_alpha=0, classifier__estimator__reg_lambda=0.01, classifier__estimator__subsample=0.75, classifier__estimator__tree_method=hist;, score=0.337 total time= 1.1min
+[CV 4/5; 6/7] START classifier__estimator=XGBClassifier(base_score=None, booster=None, callbacks=None,
+              colsample_bylevel=None, colsample_bynode=None,
+              colsample_bytree=None, early_stopping_rounds=None,
+              enable_categorical=False, eval_metric=None, gamma=None,
+              gpu_id=None, grow_policy=None, importance_type=None,
+              interaction_constraints=None, learning_rate=None, max_bin=None,
+              max_cat_to_onehot=None, max_delta_step=None, max_depth=None,
+              max_leaves=None, min_child_weight=None, missing=nan,
+              monotone_constraints=None, n_estimators=100, n_jobs=None,
+              num_parallel_tree=None, predictor=None, random_state=None,
+              reg_alpha=None, reg_lambda=None, ...), classifier__estimator__colsample_bytree=0.75, classifier__estimator__gamma=0.05, classifier__estimator__learning_rate=0.01, classifier__estimator__max_delta_step=1.0, classifier__estimator__max_depth=None, classifier__estimator__n_estimators=1000, classifier__estimator__n_jobs=-1, classifier__estimator__num_class=6, classifier__estimator__objective=multi:softmax, classifier__estimator__random_state=42, classifier__estimator__reg_alpha=0, classifier__estimator__reg_lambda=0.01, classifier__estimator__subsample=0.75, classifier__estimator__tree_method=hist
+[CV 4/5; 6/7] END classifier__estimator=XGBClassifier(base_score=None, booster=None, callbacks=None,
+              colsample_bylevel=None, colsample_bynode=None,
+              colsample_bytree=None, early_stopping_rounds=None,
+              enable_categorical=False, eval_metric=None, gamma=None,
+              gpu_id=None, grow_policy=None, importance_type=None,
+              interaction_constraints=None, learning_rate=None, max_bin=None,
+              max_cat_to_onehot=None, max_delta_step=None, max_depth=None,
+              max_leaves=None, min_child_weight=None, missing=nan,
+              monotone_constraints=None, n_estimators=100, n_jobs=None,
+              num_parallel_tree=None, predictor=None, random_state=None,
+              reg_alpha=None, reg_lambda=None, ...), classifier__estimator__colsample_bytree=0.75, classifier__estimator__gamma=0.05, classifier__estimator__learning_rate=0.01, classifier__estimator__max_delta_step=1.0, classifier__estimator__max_depth=None, classifier__estimator__n_estimators=1000, classifier__estimator__n_jobs=-1, classifier__estimator__num_class=6, classifier__estimator__objective=multi:softmax, classifier__estimator__random_state=42, classifier__estimator__reg_alpha=0, classifier__estimator__reg_lambda=0.01, classifier__estimator__subsample=0.75, classifier__estimator__tree_method=hist;, score=0.340 total time= 1.0min
+[CV 5/5; 6/7] START classifier__estimator=XGBClassifier(base_score=None, booster=None, callbacks=None,
+              colsample_bylevel=None, colsample_bynode=None,
+              colsample_bytree=None, early_stopping_rounds=None,
+              enable_categorical=False, eval_metric=None, gamma=None,
+              gpu_id=None, grow_policy=None, importance_type=None,
+              interaction_constraints=None, learning_rate=None, max_bin=None,
+              max_cat_to_onehot=None, max_delta_step=None, max_depth=None,
+              max_leaves=None, min_child_weight=None, missing=nan,
+              monotone_constraints=None, n_estimators=100, n_jobs=None,
+              num_parallel_tree=None, predictor=None, random_state=None,
+              reg_alpha=None, reg_lambda=None, ...), classifier__estimator__colsample_bytree=0.75, classifier__estimator__gamma=0.05, classifier__estimator__learning_rate=0.01, classifier__estimator__max_delta_step=1.0, classifier__estimator__max_depth=None, classifier__estimator__n_estimators=1000, classifier__estimator__n_jobs=-1, classifier__estimator__num_class=6, classifier__estimator__objective=multi:softmax, classifier__estimator__random_state=42, classifier__estimator__reg_alpha=0, classifier__estimator__reg_lambda=0.01, classifier__estimator__subsample=0.75, classifier__estimator__tree_method=hist
+[CV 5/5; 6/7] END classifier__estimator=XGBClassifier(base_score=None, booster=None, callbacks=None,
+              colsample_bylevel=None, colsample_bynode=None,
+              colsample_bytree=None, early_stopping_rounds=None,
+              enable_categorical=False, eval_metric=None, gamma=None,
+              gpu_id=None, grow_policy=None, importance_type=None,
+              interaction_constraints=None, learning_rate=None, max_bin=None,
+              max_cat_to_onehot=None, max_delta_step=None, max_depth=None,
+              max_leaves=None, min_child_weight=None, missing=nan,
+              monotone_constraints=None, n_estimators=100, n_jobs=None,
+              num_parallel_tree=None, predictor=None, random_state=None,
+              reg_alpha=None, reg_lambda=None, ...), classifier__estimator__colsample_bytree=0.75, classifier__estimator__gamma=0.05, classifier__estimator__learning_rate=0.01, classifier__estimator__max_delta_step=1.0, classifier__estimator__max_depth=None, classifier__estimator__n_estimators=1000, classifier__estimator__n_jobs=-1, classifier__estimator__num_class=6, classifier__estimator__objective=multi:softmax, classifier__estimator__random_state=42, classifier__estimator__reg_alpha=0, classifier__estimator__reg_lambda=0.01, classifier__estimator__subsample=0.75, classifier__estimator__tree_method=hist;, score=0.337 total time= 1.1min
+[CV 1/5; 7/7] START classifier__estimator=TabNetClassifierTuner(n_d=8, n_a=8, n_steps=3, gamma=1.3, cat_idxs=[], cat_dims=[], cat_emb_dim=1, n_independent=2, n_shared=2, epsilon=1e-15, momentum=0.02, lambda_sparse=0.001, seed=0, clip_value=1, verbose=1, optimizer_fn=<class 'torch.optim.adam.Adam'>, optimizer_params={'lr': 0.02}, scheduler_fn=None, scheduler_params={}, mask_type='sparsemax', input_dim=None, output_dim=None, device_name='cpu', n_shared_decoder=1, n_indep_decoder=1, use_embeddings=True, threshold_categorical_features=150, use_cat_emb_dim=True, fit_eval_metric=['balanced_accuracy', 'logloss', <class 'pytorch_tabnet_tuner.tab_model_tuner.F1ScoreMacro'>], fit_weights=0, fit_batch_size=1024, fit_virtual_batch_size=128), classifier__estimator__cat_emb_dim=20, classifier__estimator__clip_value=1, classifier__estimator__gamma=2.0, classifier__estimator__lambda_sparse=0.001, classifier__estimator__mask_type=sparsemax, classifier__estimator__momentum=0.4, classifier__estimator__n_a=64, classifier__estimator__n_independent=5, classifier__estimator__n_shared=5, classifier__estimator__n_steps=10, classifier__estimator__optimizer_fn=<class 'torch.optim.adam.Adam'>, classifier__estimator__optimizer_params={'lr': 0.02}, classifier__estimator__scheduler_fn=<class 'torch.optim.lr_scheduler.StepLR'>, classifier__estimator__scheduler_params={'step_size': 10, 'gamma': 0.95}, classifier__estimator__seed=42, classifier__estimator__verbose=1
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:75: UserWarning: Device used : cpu
+  warnings.warn(f"Device used : {self.device}")
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:105: UserWarning: Pretraining: n_d changed from 8 to 64
+  warnings.warn(wrn_msg)
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:105: UserWarning: Pretraining: cat_dims changed from [] to [45, 45, 16]
+  warnings.warn(wrn_msg)
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:105: UserWarning: Pretraining: cat_emb_dim changed from 20 to [20, 20, 8]
+  warnings.warn(wrn_msg)
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:105: UserWarning: Pretraining: cat_idxs changed from [] to [1, 2, 3]
+  warnings.warn(wrn_msg)
+epoch 0  | loss: 3.28451 | train_balanced_accuracy: 0.25489 | train_logloss: 2.63407 | train_f1_macro: 0.17409 | valid_balanced_accuracy: 0.25766 | valid_logloss: 2.62317 | valid_f1_macro: 0.17639 |  0:01:02s
+epoch 1  | loss: 1.93294 | train_balanced_accuracy: 0.24386 | train_logloss: 1.71757 | train_f1_macro: 0.20196 | valid_balanced_accuracy: 0.24622 | valid_logloss: 1.71253 | valid_f1_macro: 0.20392 |  0:02:05s
+epoch 2  | loss: 1.55979 | train_balanced_accuracy: 0.31949 | train_logloss: 1.54752 | train_f1_macro: 0.27521 | valid_balanced_accuracy: 0.32408 | valid_logloss: 1.54774 | valid_f1_macro: 0.27942 |  0:03:10s
+epoch 3  | loss: 1.52831 | train_balanced_accuracy: 0.30939 | train_logloss: 1.64339 | train_f1_macro: 0.21969 | valid_balanced_accuracy: 0.31276 | valid_logloss: 1.64603 | valid_f1_macro: 0.22228 |  0:04:17s
+epoch 4  | loss: 1.52243 | train_balanced_accuracy: 0.34038 | train_logloss: 1.52756 | train_f1_macro: 0.2661  | valid_balanced_accuracy: 0.34427 | valid_logloss: 1.52915 | valid_f1_macro: 0.26959 |  0:05:25s
+epoch 5  | loss: 1.50774 | train_balanced_accuracy: 0.33365 | train_logloss: 1.51446 | train_f1_macro: 0.2654  | valid_balanced_accuracy: 0.33565 | valid_logloss: 1.51616 | valid_f1_macro: 0.26744 |  0:06:30s
+epoch 6  | loss: 1.49218 | train_balanced_accuracy: 0.34382 | train_logloss: 1.51399 | train_f1_macro: 0.29232 | valid_balanced_accuracy: 0.3491  | valid_logloss: 1.51601 | valid_f1_macro: 0.29936 |  0:07:34s
+epoch 7  | loss: 1.48386 | train_balanced_accuracy: 0.34973 | train_logloss: 1.50841 | train_f1_macro: 0.29891 | valid_balanced_accuracy: 0.35225 | valid_logloss: 1.51021 | valid_f1_macro: 0.30103 |  0:08:35s
+epoch 8  | loss: 1.50923 | train_balanced_accuracy: 0.3317  | train_logloss: 1.54795 | train_f1_macro: 0.28307 | valid_balanced_accuracy: 0.33364 | valid_logloss: 1.55174 | valid_f1_macro: 0.28543 |  0:09:36s
+epoch 9  | loss: 1.5092  | train_balanced_accuracy: 0.35945 | train_logloss: 1.50304 | train_f1_macro: 0.29511 | valid_balanced_accuracy: 0.3625  | valid_logloss: 1.4985  | valid_f1_macro: 0.29927 |  0:10:37s
+epoch 10 | loss: 1.49716 | train_balanced_accuracy: 0.35246 | train_logloss: 1.49406 | train_f1_macro: 0.3175  | valid_balanced_accuracy: 0.36263 | valid_logloss: 1.48664 | valid_f1_macro: 0.32745 |  0:11:38s
+epoch 11 | loss: 1.49033 | train_balanced_accuracy: 0.35025 | train_logloss: 1.51379 | train_f1_macro: 0.28635 | valid_balanced_accuracy: 0.353   | valid_logloss: 1.51541 | valid_f1_macro: 0.28959 |  0:12:38s
+epoch 12 | loss: 1.48296 | train_balanced_accuracy: 0.35938 | train_logloss: 1.47403 | train_f1_macro: 0.30979 | valid_balanced_accuracy: 0.36457 | valid_logloss: 1.47083 | valid_f1_macro: 0.31537 |  0:13:39s
+epoch 13 | loss: 1.47674 | train_balanced_accuracy: 0.35771 | train_logloss: 1.46989 | train_f1_macro: 0.31168 | valid_balanced_accuracy: 0.36382 | valid_logloss: 1.46628 | valid_f1_macro: 0.31698 |  0:14:41s
+epoch 14 | loss: 1.47413 | train_balanced_accuracy: 0.36659 | train_logloss: 1.46503 | train_f1_macro: 0.32257 | valid_balanced_accuracy: 0.37155 | valid_logloss: 1.46186 | valid_f1_macro: 0.32822 |  0:15:43s
+epoch 15 | loss: 1.47195 | train_balanced_accuracy: 0.36854 | train_logloss: 1.45836 | train_f1_macro: 0.31503 | valid_balanced_accuracy: 0.3723  | valid_logloss: 1.45557 | valid_f1_macro: 0.31899 |  0:16:44s
+epoch 16 | loss: 1.46971 | train_balanced_accuracy: 0.35664 | train_logloss: 1.49166 | train_f1_macro: 0.31832 | valid_balanced_accuracy: 0.35998 | valid_logloss: 1.48804 | valid_f1_macro: 0.32149 |  0:17:45s
+epoch 17 | loss: 1.47252 | train_balanced_accuracy: 0.36728 | train_logloss: 1.46217 | train_f1_macro: 0.3091  | valid_balanced_accuracy: 0.37306 | valid_logloss: 1.45896 | valid_f1_macro: 0.31551 |  0:18:46s
+epoch 18 | loss: 1.46772 | train_balanced_accuracy: 0.36769 | train_logloss: 1.45996 | train_f1_macro: 0.31806 | valid_balanced_accuracy: 0.37186 | valid_logloss: 1.46024 | valid_f1_macro: 0.32257 |  0:19:46s
+epoch 19 | loss: 1.46586 | train_balanced_accuracy: 0.36609 | train_logloss: 1.46847 | train_f1_macro: 0.30935 | valid_balanced_accuracy: 0.37155 | valid_logloss: 1.46992 | valid_f1_macro: 0.31457 |  0:20:48s
+epoch 20 | loss: 1.46698 | train_balanced_accuracy: 0.36508 | train_logloss: 1.46294 | train_f1_macro: 0.31971 | valid_balanced_accuracy: 0.3708  | valid_logloss: 1.46371 | valid_f1_macro: 0.32641 |  0:21:48s
+epoch 21 | loss: 1.46592 | train_balanced_accuracy: 0.36662 | train_logloss: 1.46261 | train_f1_macro: 0.31867 | valid_balanced_accuracy: 0.36797 | valid_logloss: 1.46257 | valid_f1_macro: 0.32002 |  0:22:52s
+epoch 22 | loss: 1.46307 | train_balanced_accuracy: 0.37247 | train_logloss: 1.45811 | train_f1_macro: 0.31918 | valid_balanced_accuracy: 0.3752  | valid_logloss: 1.4577  | valid_f1_macro: 0.32155 |  0:23:56s
+epoch 23 | loss: 1.46158 | train_balanced_accuracy: 0.36975 | train_logloss: 1.45207 | train_f1_macro: 0.31747 | valid_balanced_accuracy: 0.3757  | valid_logloss: 1.45207 | valid_f1_macro: 0.32432 |  0:24:59s
+epoch 24 | loss: 1.46193 | train_balanced_accuracy: 0.35633 | train_logloss: 1.47147 | train_f1_macro: 0.30781 | valid_balanced_accuracy: 0.36519 | valid_logloss: 1.46771 | valid_f1_macro: 0.31514 |  0:26:02s
+epoch 25 | loss: 1.46222 | train_balanced_accuracy: 0.35688 | train_logloss: 1.4653  | train_f1_macro: 0.34423 | valid_balanced_accuracy: 0.36149 | valid_logloss: 1.46737 | valid_f1_macro: 0.3485  |  0:27:07s
+epoch 26 | loss: 1.45938 | train_balanced_accuracy: 0.33767 | train_logloss: 1.50532 | train_f1_macro: 0.26411 | valid_balanced_accuracy: 0.34212 | valid_logloss: 1.50471 | valid_f1_macro: 0.26921 |  0:28:11s
+epoch 27 | loss: 1.46326 | train_balanced_accuracy: 0.36887 | train_logloss: 1.45514 | train_f1_macro: 0.3254  | valid_balanced_accuracy: 0.37243 | valid_logloss: 1.45587 | valid_f1_macro: 0.32934 |  0:29:15s
+epoch 28 | loss: 1.46198 | train_balanced_accuracy: 0.36552 | train_logloss: 1.47744 | train_f1_macro: 0.31796 | valid_balanced_accuracy: 0.36734 | valid_logloss: 1.47483 | valid_f1_macro: 0.31995 |  0:30:18s
+epoch 29 | loss: 1.46725 | train_balanced_accuracy: 0.35645 | train_logloss: 1.47937 | train_f1_macro: 0.31835 | valid_balanced_accuracy: 0.3581  | valid_logloss: 1.4786  | valid_f1_macro: 0.31962 |  0:31:23s
+epoch 30 | loss: 1.46298 | train_balanced_accuracy: 0.35619 | train_logloss: 1.48399 | train_f1_macro: 0.32146 | valid_balanced_accuracy: 0.35979 | valid_logloss: 1.48299 | valid_f1_macro: 0.32453 |  0:32:26s
+epoch 31 | loss: 1.46227 | train_balanced_accuracy: 0.35917 | train_logloss: 1.48081 | train_f1_macro: 0.32223 | valid_balanced_accuracy: 0.36155 | valid_logloss: 1.48137 | valid_f1_macro: 0.32466 |  0:33:30s
+epoch 32 | loss: 1.46242 | train_balanced_accuracy: 0.35221 | train_logloss: 1.48048 | train_f1_macro: 0.30908 | valid_balanced_accuracy: 0.35526 | valid_logloss: 1.4821  | valid_f1_macro: 0.31004 |  0:34:34s
+epoch 33 | loss: 1.46736 | train_balanced_accuracy: 0.37083 | train_logloss: 1.46179 | train_f1_macro: 0.31482 | valid_balanced_accuracy: 0.37042 | valid_logloss: 1.46288 | valid_f1_macro: 0.31457 |  0:35:38s
+epoch 34 | loss: 1.47121 | train_balanced_accuracy: 0.36675 | train_logloss: 1.47393 | train_f1_macro: 0.31093 | valid_balanced_accuracy: 0.37193 | valid_logloss: 1.47292 | valid_f1_macro: 0.31559 |  0:36:42s
+epoch 35 | loss: 1.46218 | train_balanced_accuracy: 0.34302 | train_logloss: 1.52689 | train_f1_macro: 0.27697 | valid_balanced_accuracy: 0.34721 | valid_logloss: 1.52377 | valid_f1_macro: 0.28263 |  0:37:46s
+epoch 36 | loss: 1.4581  | train_balanced_accuracy: 0.36466 | train_logloss: 1.46796 | train_f1_macro: 0.30882 | valid_balanced_accuracy: 0.36822 | valid_logloss: 1.4662  | valid_f1_macro: 0.31246 |  0:38:50s
+epoch 37 | loss: 1.45916 | train_balanced_accuracy: 0.35592 | train_logloss: 1.48818 | train_f1_macro: 0.30258 | valid_balanced_accuracy: 0.36148 | valid_logloss: 1.4848  | valid_f1_macro: 0.3078  |  0:39:54s
+epoch 38 | loss: 1.46462 | train_balanced_accuracy: 0.36114 | train_logloss: 1.46051 | train_f1_macro: 0.31787 | valid_balanced_accuracy: 0.36017 | valid_logloss: 1.45807 | valid_f1_macro: 0.31637 |  0:40:58s
+epoch 39 | loss: 1.46138 | train_balanced_accuracy: 0.36679 | train_logloss: 1.45734 | train_f1_macro: 0.31761 | valid_balanced_accuracy: 0.37067 | valid_logloss: 1.45503 | valid_f1_macro: 0.32264 |  0:42:01s
+epoch 40 | loss: 1.45886 | train_balanced_accuracy: 0.35823 | train_logloss: 1.47727 | train_f1_macro: 0.30373 | valid_balanced_accuracy: 0.36337 | valid_logloss: 1.4734  | valid_f1_macro: 0.30957 |  0:43:05s
+epoch 41 | loss: 1.45581 | train_balanced_accuracy: 0.36808 | train_logloss: 1.46142 | train_f1_macro: 0.32943 | valid_balanced_accuracy: 0.3713  | valid_logloss: 1.45864 | valid_f1_macro: 0.33181 |  0:44:08s
+epoch 42 | loss: 1.45663 | train_balanced_accuracy: 0.35232 | train_logloss: 1.55091 | train_f1_macro: 0.28632 | valid_balanced_accuracy: 0.35934 | valid_logloss: 1.54586 | valid_f1_macro: 0.29344 |  0:45:12s
+epoch 43 | loss: 1.45986 | train_balanced_accuracy: 0.35109 | train_logloss: 1.48476 | train_f1_macro: 0.32141 | valid_balanced_accuracy: 0.35276 | valid_logloss: 1.48073 | valid_f1_macro: 0.32337 |  0:46:17s
+epoch 44 | loss: 1.46229 | train_balanced_accuracy: 0.26354 | train_logloss: 2.22754 | train_f1_macro: 0.19609 | valid_balanced_accuracy: 0.26551 | valid_logloss: 2.22143 | valid_f1_macro: 0.1966  |  0:47:21s
+epoch 45 | loss: 1.45963 | train_balanced_accuracy: 0.35059 | train_logloss: 1.51469 | train_f1_macro: 0.30253 | valid_balanced_accuracy: 0.35639 | valid_logloss: 1.51152 | valid_f1_macro: 0.30702 |  0:48:25s
+
+Early stopping occurred at epoch 45 with best_epoch = 25 and best_valid_f1_macro = 0.3485
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/callbacks.py:172: UserWarning: Best weights from best epoch are automatically used!
+  warnings.warn(wrn_msg)
+[CV 1/5; 7/7] END classifier__estimator=TabNetClassifierTuner(n_d=8, n_a=8, n_steps=3, gamma=1.3, cat_idxs=[], cat_dims=[], cat_emb_dim=1, n_independent=2, n_shared=2, epsilon=1e-15, momentum=0.02, lambda_sparse=0.001, seed=0, clip_value=1, verbose=1, optimizer_fn=<class 'torch.optim.adam.Adam'>, optimizer_params={'lr': 0.02}, scheduler_fn=None, scheduler_params={}, mask_type='sparsemax', input_dim=None, output_dim=None, device_name='cpu', n_shared_decoder=1, n_indep_decoder=1, use_embeddings=True, threshold_categorical_features=150, use_cat_emb_dim=True, fit_eval_metric=['balanced_accuracy', 'logloss', <class 'pytorch_tabnet_tuner.tab_model_tuner.F1ScoreMacro'>], fit_weights=0, fit_batch_size=1024, fit_virtual_batch_size=128), classifier__estimator__cat_emb_dim=20, classifier__estimator__clip_value=1, classifier__estimator__gamma=2.0, classifier__estimator__lambda_sparse=0.001, classifier__estimator__mask_type=sparsemax, classifier__estimator__momentum=0.4, classifier__estimator__n_a=64, classifier__estimator__n_independent=5, classifier__estimator__n_shared=5, classifier__estimator__n_steps=10, classifier__estimator__optimizer_fn=<class 'torch.optim.adam.Adam'>, classifier__estimator__optimizer_params={'lr': 0.02}, classifier__estimator__scheduler_fn=<class 'torch.optim.lr_scheduler.StepLR'>, classifier__estimator__scheduler_params={'step_size': 10, 'gamma': 0.95}, classifier__estimator__seed=42, classifier__estimator__verbose=1;, score=0.283 total time=48.8min
+[CV 2/5; 7/7] START classifier__estimator=TabNetClassifierTuner(n_d=8, n_a=8, n_steps=3, gamma=1.3, cat_idxs=[], cat_dims=[], cat_emb_dim=1, n_independent=2, n_shared=2, epsilon=1e-15, momentum=0.02, lambda_sparse=0.001, seed=0, clip_value=1, verbose=1, optimizer_fn=<class 'torch.optim.adam.Adam'>, optimizer_params={'lr': 0.02}, scheduler_fn=None, scheduler_params={}, mask_type='sparsemax', input_dim=None, output_dim=None, device_name='cpu', n_shared_decoder=1, n_indep_decoder=1, use_embeddings=True, threshold_categorical_features=150, use_cat_emb_dim=True, fit_eval_metric=['balanced_accuracy', 'logloss', <class 'pytorch_tabnet_tuner.tab_model_tuner.F1ScoreMacro'>], fit_weights=0, fit_batch_size=1024, fit_virtual_batch_size=128), classifier__estimator__cat_emb_dim=20, classifier__estimator__clip_value=1, classifier__estimator__gamma=2.0, classifier__estimator__lambda_sparse=0.001, classifier__estimator__mask_type=sparsemax, classifier__estimator__momentum=0.4, classifier__estimator__n_a=64, classifier__estimator__n_independent=5, classifier__estimator__n_shared=5, classifier__estimator__n_steps=10, classifier__estimator__optimizer_fn=<class 'torch.optim.adam.Adam'>, classifier__estimator__optimizer_params={'lr': 0.02}, classifier__estimator__scheduler_fn=<class 'torch.optim.lr_scheduler.StepLR'>, classifier__estimator__scheduler_params={'step_size': 10, 'gamma': 0.95}, classifier__estimator__seed=42, classifier__estimator__verbose=1
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:75: UserWarning: Device used : cpu
+  warnings.warn(f"Device used : {self.device}")
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:105: UserWarning: Pretraining: n_d changed from 8 to 64
+  warnings.warn(wrn_msg)
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:105: UserWarning: Pretraining: cat_dims changed from [] to [35, 40, 17]
+  warnings.warn(wrn_msg)
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:105: UserWarning: Pretraining: cat_emb_dim changed from 20 to [17, 20, 8]
+  warnings.warn(wrn_msg)
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:105: UserWarning: Pretraining: cat_idxs changed from [] to [1, 2, 3]
+  warnings.warn(wrn_msg)
+epoch 0  | loss: 3.95249 | train_balanced_accuracy: 0.16199 | train_logloss: 2.38651 | train_f1_macro: 0.12724 | valid_balanced_accuracy: 0.16914 | valid_logloss: 2.36667 | valid_f1_macro: 0.13382 |  0:01:04s
+epoch 1  | loss: 1.99453 | train_balanced_accuracy: 0.25456 | train_logloss: 1.63849 | train_f1_macro: 0.21778 | valid_balanced_accuracy: 0.2517  | valid_logloss: 1.63793 | valid_f1_macro: 0.21699 |  0:02:09s
+epoch 2  | loss: 1.59949 | train_balanced_accuracy: 0.27548 | train_logloss: 2.0599  | train_f1_macro: 0.20963 | valid_balanced_accuracy: 0.27958 | valid_logloss: 2.04483 | valid_f1_macro: 0.21272 |  0:03:13s
+epoch 3  | loss: 1.54132 | train_balanced_accuracy: 0.31123 | train_logloss: 1.548   | train_f1_macro: 0.25153 | valid_balanced_accuracy: 0.31269 | valid_logloss: 1.5477  | valid_f1_macro: 0.25202 |  0:04:17s
+epoch 4  | loss: 1.53068 | train_balanced_accuracy: 0.32165 | train_logloss: 1.54752 | train_f1_macro: 0.23908 | valid_balanced_accuracy: 0.32184 | valid_logloss: 1.54961 | valid_f1_macro: 0.23912 |  0:05:21s
+epoch 5  | loss: 1.51399 | train_balanced_accuracy: 0.33714 | train_logloss: 1.52448 | train_f1_macro: 0.28169 | valid_balanced_accuracy: 0.33647 | valid_logloss: 1.52358 | valid_f1_macro: 0.28295 |  0:06:24s
+epoch 6  | loss: 1.49071 | train_balanced_accuracy: 0.34721 | train_logloss: 1.51087 | train_f1_macro: 0.30654 | valid_balanced_accuracy: 0.34596 | valid_logloss: 1.50898 | valid_f1_macro: 0.30573 |  0:07:30s
+epoch 7  | loss: 1.47976 | train_balanced_accuracy: 0.34951 | train_logloss: 1.50284 | train_f1_macro: 0.3056  | valid_balanced_accuracy: 0.35087 | valid_logloss: 1.50547 | valid_f1_macro: 0.30598 |  0:08:33s
+epoch 8  | loss: 1.48162 | train_balanced_accuracy: 0.35774 | train_logloss: 1.48566 | train_f1_macro: 0.30897 | valid_balanced_accuracy: 0.35942 | valid_logloss: 1.48756 | valid_f1_macro: 0.31233 |  0:09:37s
+epoch 9  | loss: 1.48916 | train_balanced_accuracy: 0.35186 | train_logloss: 1.52791 | train_f1_macro: 0.28825 | valid_balanced_accuracy: 0.35332 | valid_logloss: 1.52651 | valid_f1_macro: 0.29106 |  0:10:41s
+epoch 10 | loss: 1.48958 | train_balanced_accuracy: 0.35241 | train_logloss: 1.52064 | train_f1_macro: 0.27929 | valid_balanced_accuracy: 0.35168 | valid_logloss: 1.52406 | valid_f1_macro: 0.27883 |  0:11:45s
+epoch 11 | loss: 1.48896 | train_balanced_accuracy: 0.32012 | train_logloss: 1.68184 | train_f1_macro: 0.2541  | valid_balanced_accuracy: 0.31938 | valid_logloss: 1.67255 | valid_f1_macro: 0.25703 |  0:12:47s
+epoch 12 | loss: 1.46848 | train_balanced_accuracy: 0.36616 | train_logloss: 1.46553 | train_f1_macro: 0.33044 | valid_balanced_accuracy: 0.36439 | valid_logloss: 1.4675  | valid_f1_macro: 0.33064 |  0:13:51s
+epoch 13 | loss: 1.46432 | train_balanced_accuracy: 0.33742 | train_logloss: 1.49978 | train_f1_macro: 0.31315 | valid_balanced_accuracy: 0.3395  | valid_logloss: 1.4975  | valid_f1_macro: 0.31582 |  0:14:55s
+epoch 14 | loss: 1.47622 | train_balanced_accuracy: 0.37682 | train_logloss: 1.45103 | train_f1_macro: 0.34483 | valid_balanced_accuracy: 0.38161 | valid_logloss: 1.45118 | valid_f1_macro: 0.35126 |  0:15:58s
+epoch 15 | loss: 1.45628 | train_balanced_accuracy: 0.37808 | train_logloss: 1.43847 | train_f1_macro: 0.33007 | valid_balanced_accuracy: 0.37513 | valid_logloss: 1.43765 | valid_f1_macro: 0.32912 |  0:17:03s
+epoch 16 | loss: 1.44234 | train_balanced_accuracy: 0.3802  | train_logloss: 1.44023 | train_f1_macro: 0.33765 | valid_balanced_accuracy: 0.38387 | valid_logloss: 1.43772 | valid_f1_macro: 0.34219 |  0:18:09s
+epoch 17 | loss: 1.44407 | train_balanced_accuracy: 0.38252 | train_logloss: 1.43545 | train_f1_macro: 0.34099 | valid_balanced_accuracy: 0.38249 | valid_logloss: 1.43473 | valid_f1_macro: 0.34179 |  0:19:12s
+epoch 18 | loss: 1.43746 | train_balanced_accuracy: 0.3786  | train_logloss: 1.4314  | train_f1_macro: 0.33391 | valid_balanced_accuracy: 0.38004 | valid_logloss: 1.43182 | valid_f1_macro: 0.33627 |  0:20:16s
+epoch 19 | loss: 1.43486 | train_balanced_accuracy: 0.38295 | train_logloss: 1.4329  | train_f1_macro: 0.33955 | valid_balanced_accuracy: 0.38142 | valid_logloss: 1.42971 | valid_f1_macro: 0.339   |  0:21:20s
+epoch 20 | loss: 1.42845 | train_balanced_accuracy: 0.38182 | train_logloss: 1.42778 | train_f1_macro: 0.34593 | valid_balanced_accuracy: 0.38212 | valid_logloss: 1.42805 | valid_f1_macro: 0.34601 |  0:22:24s
+epoch 21 | loss: 1.42758 | train_balanced_accuracy: 0.38424 | train_logloss: 1.4241  | train_f1_macro: 0.35121 | valid_balanced_accuracy: 0.38544 | valid_logloss: 1.42278 | valid_f1_macro: 0.35323 |  0:23:28s
+epoch 22 | loss: 1.43498 | train_balanced_accuracy: 0.38138 | train_logloss: 1.43249 | train_f1_macro: 0.33763 | valid_balanced_accuracy: 0.38601 | valid_logloss: 1.43293 | valid_f1_macro: 0.34252 |  0:24:32s
+epoch 23 | loss: 1.4313  | train_balanced_accuracy: 0.37657 | train_logloss: 1.44403 | train_f1_macro: 0.31494 | valid_balanced_accuracy: 0.3774  | valid_logloss: 1.44628 | valid_f1_macro: 0.31635 |  0:25:35s
+epoch 24 | loss: 1.43526 | train_balanced_accuracy: 0.38198 | train_logloss: 1.42624 | train_f1_macro: 0.3596  | valid_balanced_accuracy: 0.38356 | valid_logloss: 1.42742 | valid_f1_macro: 0.36156 |  0:26:40s
+epoch 25 | loss: 1.42691 | train_balanced_accuracy: 0.38194 | train_logloss: 1.42033 | train_f1_macro: 0.33359 | valid_balanced_accuracy: 0.38174 | valid_logloss: 1.41951 | valid_f1_macro: 0.33502 |  0:27:45s
+epoch 26 | loss: 1.42331 | train_balanced_accuracy: 0.38655 | train_logloss: 1.41205 | train_f1_macro: 0.34362 | valid_balanced_accuracy: 0.38501 | valid_logloss: 1.41181 | valid_f1_macro: 0.34174 |  0:28:48s
+epoch 27 | loss: 1.42208 | train_balanced_accuracy: 0.38667 | train_logloss: 1.42527 | train_f1_macro: 0.36339 | valid_balanced_accuracy: 0.38884 | valid_logloss: 1.4279  | valid_f1_macro: 0.36628 |  0:29:54s
+epoch 28 | loss: 1.43882 | train_balanced_accuracy: 0.38377 | train_logloss: 1.41965 | train_f1_macro: 0.34076 | valid_balanced_accuracy: 0.38318 | valid_logloss: 1.42074 | valid_f1_macro: 0.34135 |  0:30:57s
+epoch 29 | loss: 1.45193 | train_balanced_accuracy: 0.27237 | train_logloss: 1.73459 | train_f1_macro: 0.25504 | valid_balanced_accuracy: 0.27298 | valid_logloss: 1.72753 | valid_f1_macro: 0.25841 |  0:32:01s
+epoch 30 | loss: 1.51671 | train_balanced_accuracy: 0.34523 | train_logloss: 1.52041 | train_f1_macro: 0.31125 | valid_balanced_accuracy: 0.34622 | valid_logloss: 1.51972 | valid_f1_macro: 0.31057 |  0:33:05s
+epoch 31 | loss: 1.50051 | train_balanced_accuracy: 0.35564 | train_logloss: 1.50058 | train_f1_macro: 0.30677 | valid_balanced_accuracy: 0.35759 | valid_logloss: 1.49772 | valid_f1_macro: 0.30758 |  0:34:09s
+epoch 32 | loss: 1.48876 | train_balanced_accuracy: 0.36844 | train_logloss: 1.47897 | train_f1_macro: 0.32167 | valid_balanced_accuracy: 0.37186 | valid_logloss: 1.47338 | valid_f1_macro: 0.32435 |  0:35:12s
+epoch 33 | loss: 1.47874 | train_balanced_accuracy: 0.368   | train_logloss: 1.46507 | train_f1_macro: 0.32268 | valid_balanced_accuracy: 0.36897 | valid_logloss: 1.46114 | valid_f1_macro: 0.32323 |  0:36:16s
+epoch 34 | loss: 1.46887 | train_balanced_accuracy: 0.36769 | train_logloss: 1.46217 | train_f1_macro: 0.33958 | valid_balanced_accuracy: 0.3696  | valid_logloss: 1.45847 | valid_f1_macro: 0.34086 |  0:37:19s
+epoch 35 | loss: 1.46605 | train_balanced_accuracy: 0.37838 | train_logloss: 1.46155 | train_f1_macro: 0.33738 | valid_balanced_accuracy: 0.38048 | valid_logloss: 1.45385 | valid_f1_macro: 0.33991 |  0:38:25s
+epoch 36 | loss: 1.48754 | train_balanced_accuracy: 0.28808 | train_logloss: 1.67108 | train_f1_macro: 0.21046 | valid_balanced_accuracy: 0.29619 | valid_logloss: 1.66339 | valid_f1_macro: 0.21768 |  0:39:29s
+epoch 37 | loss: 1.4892  | train_balanced_accuracy: 0.35975 | train_logloss: 1.4735  | train_f1_macro: 0.31769 | valid_balanced_accuracy: 0.35942 | valid_logloss: 1.4718  | valid_f1_macro: 0.31737 |  0:40:32s
+epoch 38 | loss: 1.47453 | train_balanced_accuracy: 0.35989 | train_logloss: 1.4687  | train_f1_macro: 0.32089 | valid_balanced_accuracy: 0.36407 | valid_logloss: 1.4661  | valid_f1_macro: 0.32534 |  0:41:36s
+epoch 39 | loss: 1.4742  | train_balanced_accuracy: 0.36033 | train_logloss: 1.47636 | train_f1_macro: 0.31525 | valid_balanced_accuracy: 0.36382 | valid_logloss: 1.47534 | valid_f1_macro: 0.31757 |  0:42:39s
+epoch 40 | loss: 1.47642 | train_balanced_accuracy: 0.362   | train_logloss: 1.46747 | train_f1_macro: 0.31878 | valid_balanced_accuracy: 0.36331 | valid_logloss: 1.46599 | valid_f1_macro: 0.32131 |  0:43:42s
+epoch 41 | loss: 1.47352 | train_balanced_accuracy: 0.35399 | train_logloss: 1.47388 | train_f1_macro: 0.33577 | valid_balanced_accuracy: 0.35539 | valid_logloss: 1.47275 | valid_f1_macro: 0.33781 |  0:44:47s
+epoch 42 | loss: 1.46959 | train_balanced_accuracy: 0.36022 | train_logloss: 1.46961 | train_f1_macro: 0.30294 | valid_balanced_accuracy: 0.36187 | valid_logloss: 1.46656 | valid_f1_macro: 0.3048  |  0:45:50s
+epoch 43 | loss: 1.47217 | train_balanced_accuracy: 0.36046 | train_logloss: 1.4708  | train_f1_macro: 0.30962 | valid_balanced_accuracy: 0.36193 | valid_logloss: 1.46978 | valid_f1_macro: 0.31054 |  0:46:53s
+epoch 44 | loss: 1.47313 | train_balanced_accuracy: 0.36252 | train_logloss: 1.46544 | train_f1_macro: 0.32698 | valid_balanced_accuracy: 0.36658 | valid_logloss: 1.46032 | valid_f1_macro: 0.33245 |  0:47:58s
+epoch 45 | loss: 1.46895 | train_balanced_accuracy: 0.36343 | train_logloss: 1.46449 | train_f1_macro: 0.31    | valid_balanced_accuracy: 0.36457 | valid_logloss: 1.46265 | valid_f1_macro: 0.31209 |  0:49:01s
+epoch 46 | loss: 1.4727  | train_balanced_accuracy: 0.35652 | train_logloss: 1.48697 | train_f1_macro: 0.31621 | valid_balanced_accuracy: 0.36005 | valid_logloss: 1.48682 | valid_f1_macro: 0.31847 |  0:50:06s
+epoch 47 | loss: 1.47722 | train_balanced_accuracy: 0.35342 | train_logloss: 1.48134 | train_f1_macro: 0.31895 | valid_balanced_accuracy: 0.35193 | valid_logloss: 1.48114 | valid_f1_macro: 0.31831 |  0:51:34s
+
+Early stopping occurred at epoch 47 with best_epoch = 27 and best_valid_f1_macro = 0.36628
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/callbacks.py:172: UserWarning: Best weights from best epoch are automatically used!
+  warnings.warn(wrn_msg)
+[CV 2/5; 7/7] END classifier__estimator=TabNetClassifierTuner(n_d=8, n_a=8, n_steps=3, gamma=1.3, cat_idxs=[], cat_dims=[], cat_emb_dim=1, n_independent=2, n_shared=2, epsilon=1e-15, momentum=0.02, lambda_sparse=0.001, seed=0, clip_value=1, verbose=1, optimizer_fn=<class 'torch.optim.adam.Adam'>, optimizer_params={'lr': 0.02}, scheduler_fn=None, scheduler_params={}, mask_type='sparsemax', input_dim=None, output_dim=None, device_name='cpu', n_shared_decoder=1, n_indep_decoder=1, use_embeddings=True, threshold_categorical_features=150, use_cat_emb_dim=True, fit_eval_metric=['balanced_accuracy', 'logloss', <class 'pytorch_tabnet_tuner.tab_model_tuner.F1ScoreMacro'>], fit_weights=0, fit_batch_size=1024, fit_virtual_batch_size=128), classifier__estimator__cat_emb_dim=20, classifier__estimator__clip_value=1, classifier__estimator__gamma=2.0, classifier__estimator__lambda_sparse=0.001, classifier__estimator__mask_type=sparsemax, classifier__estimator__momentum=0.4, classifier__estimator__n_a=64, classifier__estimator__n_independent=5, classifier__estimator__n_shared=5, classifier__estimator__n_steps=10, classifier__estimator__optimizer_fn=<class 'torch.optim.adam.Adam'>, classifier__estimator__optimizer_params={'lr': 0.02}, classifier__estimator__scheduler_fn=<class 'torch.optim.lr_scheduler.StepLR'>, classifier__estimator__scheduler_params={'step_size': 10, 'gamma': 0.95}, classifier__estimator__seed=42, classifier__estimator__verbose=1;, score=0.285 total time=52.0min
+[CV 3/5; 7/7] START classifier__estimator=TabNetClassifierTuner(n_d=8, n_a=8, n_steps=3, gamma=1.3, cat_idxs=[], cat_dims=[], cat_emb_dim=1, n_independent=2, n_shared=2, epsilon=1e-15, momentum=0.02, lambda_sparse=0.001, seed=0, clip_value=1, verbose=1, optimizer_fn=<class 'torch.optim.adam.Adam'>, optimizer_params={'lr': 0.02}, scheduler_fn=None, scheduler_params={}, mask_type='sparsemax', input_dim=None, output_dim=None, device_name='cpu', n_shared_decoder=1, n_indep_decoder=1, use_embeddings=True, threshold_categorical_features=150, use_cat_emb_dim=True, fit_eval_metric=['balanced_accuracy', 'logloss', <class 'pytorch_tabnet_tuner.tab_model_tuner.F1ScoreMacro'>], fit_weights=0, fit_batch_size=1024, fit_virtual_batch_size=128), classifier__estimator__cat_emb_dim=20, classifier__estimator__clip_value=1, classifier__estimator__gamma=2.0, classifier__estimator__lambda_sparse=0.001, classifier__estimator__mask_type=sparsemax, classifier__estimator__momentum=0.4, classifier__estimator__n_a=64, classifier__estimator__n_independent=5, classifier__estimator__n_shared=5, classifier__estimator__n_steps=10, classifier__estimator__optimizer_fn=<class 'torch.optim.adam.Adam'>, classifier__estimator__optimizer_params={'lr': 0.02}, classifier__estimator__scheduler_fn=<class 'torch.optim.lr_scheduler.StepLR'>, classifier__estimator__scheduler_params={'step_size': 10, 'gamma': 0.95}, classifier__estimator__seed=42, classifier__estimator__verbose=1
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:75: UserWarning: Device used : cpu
+  warnings.warn(f"Device used : {self.device}")
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:105: UserWarning: Pretraining: n_d changed from 8 to 64
+  warnings.warn(wrn_msg)
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:105: UserWarning: Pretraining: cat_dims changed from [] to [63, 61, 22]
+  warnings.warn(wrn_msg)
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:105: UserWarning: Pretraining: cat_emb_dim changed from 20 to [20, 20, 11]
+  warnings.warn(wrn_msg)
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:105: UserWarning: Pretraining: cat_idxs changed from [] to [1, 2, 3]
+  warnings.warn(wrn_msg)
+epoch 0  | loss: 3.67504 | train_balanced_accuracy: 0.17913 | train_logloss: 2.50471 | train_f1_macro: 0.09924 | valid_balanced_accuracy: 0.17955 | valid_logloss: 2.5039  | valid_f1_macro: 0.09882 |  0:01:04s
+epoch 1  | loss: 3.29222 | train_balanced_accuracy: 0.25192 | train_logloss: 1.62153 | train_f1_macro: 0.20054 | valid_balanced_accuracy: 0.25187 | valid_logloss: 1.61935 | valid_f1_macro: 0.20295 |  0:02:12s
+epoch 2  | loss: 1.57181 | train_balanced_accuracy: 0.31262 | train_logloss: 1.63141 | train_f1_macro: 0.23698 | valid_balanced_accuracy: 0.31515 | valid_logloss: 1.62482 | valid_f1_macro: 0.2395  |  0:03:17s
+epoch 3  | loss: 1.537   | train_balanced_accuracy: 0.26981 | train_logloss: 1.63161 | train_f1_macro: 0.16649 | valid_balanced_accuracy: 0.26807 | valid_logloss: 1.63358 | valid_f1_macro: 0.16452 |  0:04:21s
+epoch 4  | loss: 1.53707 | train_balanced_accuracy: 0.31985 | train_logloss: 1.5618  | train_f1_macro: 0.25987 | valid_balanced_accuracy: 0.32013 | valid_logloss: 1.55796 | valid_f1_macro: 0.26068 |  0:05:27s
+epoch 5  | loss: 1.50997 | train_balanced_accuracy: 0.33624 | train_logloss: 1.53563 | train_f1_macro: 0.26808 | valid_balanced_accuracy: 0.33924 | valid_logloss: 1.53394 | valid_f1_macro: 0.26969 |  0:06:33s
+epoch 6  | loss: 1.51397 | train_balanced_accuracy: 0.34515 | train_logloss: 1.51529 | train_f1_macro: 0.28879 | valid_balanced_accuracy: 0.3457  | valid_logloss: 1.51091 | valid_f1_macro: 0.28934 |  0:07:38s
+epoch 7  | loss: 1.50825 | train_balanced_accuracy: 0.35226 | train_logloss: 1.52438 | train_f1_macro: 0.29472 | valid_balanced_accuracy: 0.35293 | valid_logloss: 1.51906 | valid_f1_macro: 0.29286 |  0:08:43s
+epoch 8  | loss: 1.5052  | train_balanced_accuracy: 0.35519 | train_logloss: 1.50147 | train_f1_macro: 0.32015 | valid_balanced_accuracy: 0.3586  | valid_logloss: 1.50143 | valid_f1_macro: 0.32422 |  0:09:49s
+epoch 9  | loss: 1.48106 | train_balanced_accuracy: 0.34822 | train_logloss: 1.48802 | train_f1_macro: 0.31298 | valid_balanced_accuracy: 0.34897 | valid_logloss: 1.48617 | valid_f1_macro: 0.31225 |  0:10:54s
+epoch 10 | loss: 1.46543 | train_balanced_accuracy: 0.38009 | train_logloss: 1.44987 | train_f1_macro: 0.34637 | valid_balanced_accuracy: 0.3769  | valid_logloss: 1.45096 | valid_f1_macro: 0.34341 |  0:12:09s
+epoch 11 | loss: 1.46527 | train_balanced_accuracy: 0.38292 | train_logloss: 1.44656 | train_f1_macro: 0.34766 | valid_balanced_accuracy: 0.38067 | valid_logloss: 1.44495 | valid_f1_macro: 0.34591 |  0:13:20s
+epoch 12 | loss: 1.44876 | train_balanced_accuracy: 0.38108 | train_logloss: 1.44301 | train_f1_macro: 0.35212 | valid_balanced_accuracy: 0.37715 | valid_logloss: 1.44451 | valid_f1_macro: 0.34875 |  0:14:26s
+epoch 13 | loss: 1.4512  | train_balanced_accuracy: 0.37196 | train_logloss: 1.46048 | train_f1_macro: 0.32398 | valid_balanced_accuracy: 0.36867 | valid_logloss: 1.4586  | valid_f1_macro: 0.32076 |  0:15:36s
+epoch 14 | loss: 1.44771 | train_balanced_accuracy: 0.38301 | train_logloss: 1.44135 | train_f1_macro: 0.34673 | valid_balanced_accuracy: 0.37916 | valid_logloss: 1.44356 | valid_f1_macro: 0.34322 |  0:16:41s
+epoch 15 | loss: 1.44774 | train_balanced_accuracy: 0.38103 | train_logloss: 1.46292 | train_f1_macro: 0.34551 | valid_balanced_accuracy: 0.37903 | valid_logloss: 1.462   | valid_f1_macro: 0.34237 |  0:17:46s
+epoch 16 | loss: 1.44597 | train_balanced_accuracy: 0.37723 | train_logloss: 1.44875 | train_f1_macro: 0.36446 | valid_balanced_accuracy: 0.37419 | valid_logloss: 1.45127 | valid_f1_macro: 0.36144 |  0:18:51s
+epoch 17 | loss: 1.4524  | train_balanced_accuracy: 0.38055 | train_logloss: 1.45232 | train_f1_macro: 0.33569 | valid_balanced_accuracy: 0.3789  | valid_logloss: 1.45164 | valid_f1_macro: 0.33353 |  0:20:02s
+epoch 18 | loss: 1.44867 | train_balanced_accuracy: 0.35259 | train_logloss: 1.55527 | train_f1_macro: 0.31457 | valid_balanced_accuracy: 0.3481  | valid_logloss: 1.55916 | valid_f1_macro: 0.31003 |  0:21:12s
+epoch 19 | loss: 1.44606 | train_balanced_accuracy: 0.37457 | train_logloss: 1.4596  | train_f1_macro: 0.33047 | valid_balanced_accuracy: 0.37219 | valid_logloss: 1.46201 | valid_f1_macro: 0.32733 |  0:22:17s
+epoch 20 | loss: 1.44291 | train_balanced_accuracy: 0.38254 | train_logloss: 1.43639 | train_f1_macro: 0.34827 | valid_balanced_accuracy: 0.38306 | valid_logloss: 1.43777 | valid_f1_macro: 0.34813 |  0:23:39s
+epoch 21 | loss: 1.44292 | train_balanced_accuracy: 0.38573 | train_logloss: 1.43263 | train_f1_macro: 0.34701 | valid_balanced_accuracy: 0.38576 | valid_logloss: 1.43451 | valid_f1_macro: 0.34754 |  0:24:49s
+epoch 22 | loss: 1.44493 | train_balanced_accuracy: 0.37253 | train_logloss: 1.48321 | train_f1_macro: 0.33766 | valid_balanced_accuracy: 0.36859 | valid_logloss: 1.48237 | valid_f1_macro: 0.33418 |  0:26:02s
+epoch 23 | loss: 1.44924 | train_balanced_accuracy: 0.38652 | train_logloss: 1.43145 | train_f1_macro: 0.34523 | valid_balanced_accuracy: 0.38406 | valid_logloss: 1.43229 | valid_f1_macro: 0.34355 |  0:27:07s
+epoch 24 | loss: 1.44255 | train_balanced_accuracy: 0.38922 | train_logloss: 1.431   | train_f1_macro: 0.35732 | valid_balanced_accuracy: 0.3911  | valid_logloss: 1.43131 | valid_f1_macro: 0.35914 |  0:28:16s
+epoch 25 | loss: 1.44124 | train_balanced_accuracy: 0.38524 | train_logloss: 1.42991 | train_f1_macro: 0.36365 | valid_balanced_accuracy: 0.38519 | valid_logloss: 1.432   | valid_f1_macro: 0.36419 |  0:29:21s
+epoch 26 | loss: 1.43937 | train_balanced_accuracy: 0.38751 | train_logloss: 1.43661 | train_f1_macro: 0.35188 | valid_balanced_accuracy: 0.38212 | valid_logloss: 1.43872 | valid_f1_macro: 0.3469  |  0:30:29s
+epoch 27 | loss: 1.43611 | train_balanced_accuracy: 0.3905  | train_logloss: 1.43045 | train_f1_macro: 0.35775 | valid_balanced_accuracy: 0.39424 | valid_logloss: 1.43359 | valid_f1_macro: 0.36207 |  0:31:35s
+epoch 28 | loss: 1.43332 | train_balanced_accuracy: 0.38793 | train_logloss: 1.43623 | train_f1_macro: 0.34834 | valid_balanced_accuracy: 0.38921 | valid_logloss: 1.43764 | valid_f1_macro: 0.34986 |  0:32:41s
+epoch 29 | loss: 1.43752 | train_balanced_accuracy: 0.39051 | train_logloss: 1.43087 | train_f1_macro: 0.34876 | valid_balanced_accuracy: 0.38695 | valid_logloss: 1.43479 | valid_f1_macro: 0.34553 |  0:33:48s
+epoch 30 | loss: 1.45866 | train_balanced_accuracy: 0.38151 | train_logloss: 1.45462 | train_f1_macro: 0.35939 | valid_balanced_accuracy: 0.38022 | valid_logloss: 1.4574  | valid_f1_macro: 0.35831 |  0:34:55s
+epoch 31 | loss: 1.45355 | train_balanced_accuracy: 0.38509 | train_logloss: 1.43845 | train_f1_macro: 0.34904 | valid_balanced_accuracy: 0.38129 | valid_logloss: 1.44313 | valid_f1_macro: 0.34604 |  0:36:07s
+epoch 32 | loss: 1.46029 | train_balanced_accuracy: 0.38141 | train_logloss: 1.4432  | train_f1_macro: 0.34105 | valid_balanced_accuracy: 0.38318 | valid_logloss: 1.44674 | valid_f1_macro: 0.34142 |  0:37:18s
+epoch 33 | loss: 1.44166 | train_balanced_accuracy: 0.38633 | train_logloss: 1.43159 | train_f1_macro: 0.34931 | valid_balanced_accuracy: 0.38739 | valid_logloss: 1.43488 | valid_f1_macro: 0.35087 |  0:38:25s
+epoch 34 | loss: 1.44017 | train_balanced_accuracy: 0.3896  | train_logloss: 1.43315 | train_f1_macro: 0.35746 | valid_balanced_accuracy: 0.38991 | valid_logloss: 1.43454 | valid_f1_macro: 0.35742 |  0:39:31s
+epoch 35 | loss: 1.43821 | train_balanced_accuracy: 0.39419 | train_logloss: 1.42453 | train_f1_macro: 0.34983 | valid_balanced_accuracy: 0.39141 | valid_logloss: 1.42867 | valid_f1_macro: 0.34654 |  0:40:37s
+epoch 36 | loss: 1.43354 | train_balanced_accuracy: 0.38844 | train_logloss: 1.42408 | train_f1_macro: 0.37068 | valid_balanced_accuracy: 0.38884 | valid_logloss: 1.42881 | valid_f1_macro: 0.37218 |  0:41:43s
+epoch 37 | loss: 1.43469 | train_balanced_accuracy: 0.39034 | train_logloss: 1.42869 | train_f1_macro: 0.34985 | valid_balanced_accuracy: 0.38651 | valid_logloss: 1.43284 | valid_f1_macro: 0.34664 |  0:42:49s
+epoch 38 | loss: 1.43066 | train_balanced_accuracy: 0.39354 | train_logloss: 1.42423 | train_f1_macro: 0.35215 | valid_balanced_accuracy: 0.3889  | valid_logloss: 1.42934 | valid_f1_macro: 0.34799 |  0:43:54s
+epoch 39 | loss: 1.42663 | train_balanced_accuracy: 0.39081 | train_logloss: 1.43595 | train_f1_macro: 0.348   | valid_balanced_accuracy: 0.39179 | valid_logloss: 1.43825 | valid_f1_macro: 0.34801 |  0:45:00s
+epoch 40 | loss: 1.42621 | train_balanced_accuracy: 0.39719 | train_logloss: 1.41313 | train_f1_macro: 0.35791 | valid_balanced_accuracy: 0.39381 | valid_logloss: 1.41901 | valid_f1_macro: 0.35549 |  0:46:08s
+epoch 41 | loss: 1.41934 | train_balanced_accuracy: 0.39865 | train_logloss: 1.41212 | train_f1_macro: 0.36379 | valid_balanced_accuracy: 0.39525 | valid_logloss: 1.4187  | valid_f1_macro: 0.36074 |  0:47:14s
+epoch 42 | loss: 1.41753 | train_balanced_accuracy: 0.39931 | train_logloss: 1.41945 | train_f1_macro: 0.35808 | valid_balanced_accuracy: 0.39694 | valid_logloss: 1.42757 | valid_f1_macro: 0.35627 |  0:48:21s
+epoch 43 | loss: 1.41719 | train_balanced_accuracy: 0.40011 | train_logloss: 1.40762 | train_f1_macro: 0.36233 | valid_balanced_accuracy: 0.39682 | valid_logloss: 1.41505 | valid_f1_macro: 0.3594  |  0:49:27s
+epoch 44 | loss: 1.41478 | train_balanced_accuracy: 0.40439 | train_logloss: 1.40916 | train_f1_macro: 0.36172 | valid_balanced_accuracy: 0.40311 | valid_logloss: 1.4159  | valid_f1_macro: 0.36008 |  0:50:34s
+epoch 45 | loss: 1.41231 | train_balanced_accuracy: 0.4033  | train_logloss: 1.39869 | train_f1_macro: 0.36571 | valid_balanced_accuracy: 0.40015 | valid_logloss: 1.40683 | valid_f1_macro: 0.36355 |  0:51:45s
+epoch 46 | loss: 1.41577 | train_balanced_accuracy: 0.40194 | train_logloss: 1.40809 | train_f1_macro: 0.36038 | valid_balanced_accuracy: 0.39827 | valid_logloss: 1.41735 | valid_f1_macro: 0.35751 |  0:52:52s
+epoch 47 | loss: 1.43051 | train_balanced_accuracy: 0.39345 | train_logloss: 1.43785 | train_f1_macro: 0.35732 | valid_balanced_accuracy: 0.39462 | valid_logloss: 1.44499 | valid_f1_macro: 0.35947 |  0:54:04s
+epoch 48 | loss: 1.42999 | train_balanced_accuracy: 0.39189 | train_logloss: 1.42368 | train_f1_macro: 0.37179 | valid_balanced_accuracy: 0.39122 | valid_logloss: 1.42986 | valid_f1_macro: 0.3725  |  0:55:14s
+epoch 49 | loss: 1.4232  | train_balanced_accuracy: 0.40104 | train_logloss: 1.40911 | train_f1_macro: 0.36697 | valid_balanced_accuracy: 0.39946 | valid_logloss: 1.41686 | valid_f1_macro: 0.3665  |  0:56:33s
+epoch 50 | loss: 1.41348 | train_balanced_accuracy: 0.40917 | train_logloss: 1.39186 | train_f1_macro: 0.36604 | valid_balanced_accuracy: 0.40399 | valid_logloss: 1.40222 | valid_f1_macro: 0.36151 |  0:57:55s
+epoch 51 | loss: 1.42589 | train_balanced_accuracy: 0.40093 | train_logloss: 1.41931 | train_f1_macro: 0.36353 | valid_balanced_accuracy: 0.3982  | valid_logloss: 1.42924 | valid_f1_macro: 0.36225 |  0:59:06s
+epoch 52 | loss: 1.43543 | train_balanced_accuracy: 0.37921 | train_logloss: 1.45487 | train_f1_macro: 0.34494 | valid_balanced_accuracy: 0.38173 | valid_logloss: 1.4568  | valid_f1_macro: 0.34684 |  1:00:12s
+epoch 53 | loss: 1.45208 | train_balanced_accuracy: 0.3918  | train_logloss: 1.44076 | train_f1_macro: 0.36058 | valid_balanced_accuracy: 0.38853 | valid_logloss: 1.44308 | valid_f1_macro: 0.35629 |  1:01:17s
+epoch 54 | loss: 1.43585 | train_balanced_accuracy: 0.37523 | train_logloss: 1.43748 | train_f1_macro: 0.34034 | valid_balanced_accuracy: 0.3708  | valid_logloss: 1.44316 | valid_f1_macro: 0.33811 |  1:02:23s
+epoch 55 | loss: 1.43068 | train_balanced_accuracy: 0.39192 | train_logloss: 1.41762 | train_f1_macro: 0.36202 | valid_balanced_accuracy: 0.39079 | valid_logloss: 1.42282 | valid_f1_macro: 0.36026 |  1:03:32s
+epoch 56 | loss: 1.42043 | train_balanced_accuracy: 0.3946  | train_logloss: 1.48597 | train_f1_macro: 0.36    | valid_balanced_accuracy: 0.39324 | valid_logloss: 1.49328 | valid_f1_macro: 0.35906 |  1:04:39s
+epoch 57 | loss: 1.4125  | train_balanced_accuracy: 0.40283 | train_logloss: 1.40412 | train_f1_macro: 0.36217 | valid_balanced_accuracy: 0.40191 | valid_logloss: 1.40951 | valid_f1_macro: 0.36151 |  1:05:53s
+epoch 58 | loss: 1.41245 | train_balanced_accuracy: 0.37864 | train_logloss: 1.42809 | train_f1_macro: 0.34117 | valid_balanced_accuracy: 0.37507 | valid_logloss: 1.43273 | valid_f1_macro: 0.33867 |  1:07:10s
+epoch 59 | loss: 1.40991 | train_balanced_accuracy: 0.40818 | train_logloss: 1.39699 | train_f1_macro: 0.36985 | valid_balanced_accuracy: 0.40933 | valid_logloss: 1.40289 | valid_f1_macro: 0.37118 |  1:08:17s
+epoch 60 | loss: 1.40474 | train_balanced_accuracy: 0.41533 | train_logloss: 1.39342 | train_f1_macro: 0.37578 | valid_balanced_accuracy: 0.41021 | valid_logloss: 1.39932 | valid_f1_macro: 0.37159 |  1:09:23s
+epoch 61 | loss: 1.40165 | train_balanced_accuracy: 0.41611 | train_logloss: 1.38729 | train_f1_macro: 0.38432 | valid_balanced_accuracy: 0.41581 | valid_logloss: 1.39487 | valid_f1_macro: 0.38462 |  1:10:29s
+epoch 62 | loss: 1.39194 | train_balanced_accuracy: 0.42007 | train_logloss: 1.37756 | train_f1_macro: 0.38847 | valid_balanced_accuracy: 0.41707 | valid_logloss: 1.38591 | valid_f1_macro: 0.38651 |  1:11:34s
+epoch 63 | loss: 1.39462 | train_balanced_accuracy: 0.41193 | train_logloss: 1.38267 | train_f1_macro: 0.3758  | valid_balanced_accuracy: 0.41084 | valid_logloss: 1.39169 | valid_f1_macro: 0.37443 |  1:12:45s
+epoch 64 | loss: 1.39064 | train_balanced_accuracy: 0.41929 | train_logloss: 1.38029 | train_f1_macro: 0.37677 | valid_balanced_accuracy: 0.41838 | valid_logloss: 1.39042 | valid_f1_macro: 0.37496 |  1:13:51s
+epoch 65 | loss: 1.3909  | train_balanced_accuracy: 0.4216  | train_logloss: 1.37558 | train_f1_macro: 0.38369 | valid_balanced_accuracy: 0.41832 | valid_logloss: 1.38624 | valid_f1_macro: 0.38111 |  1:14:58s
+epoch 66 | loss: 1.38422 | train_balanced_accuracy: 0.43106 | train_logloss: 1.3602  | train_f1_macro: 0.39494 | valid_balanced_accuracy: 0.42756 | valid_logloss: 1.37299 | valid_f1_macro: 0.39248 |  1:16:06s
+epoch 67 | loss: 1.37309 | train_balanced_accuracy: 0.43373 | train_logloss: 1.36019 | train_f1_macro: 0.40183 | valid_balanced_accuracy: 0.42888 | valid_logloss: 1.37592 | valid_f1_macro: 0.39598 |  1:17:11s
+epoch 68 | loss: 1.36858 | train_balanced_accuracy: 0.439   | train_logloss: 1.34363 | train_f1_macro: 0.39302 | valid_balanced_accuracy: 0.4324  | valid_logloss: 1.35938 | valid_f1_macro: 0.38701 |  1:18:21s
+epoch 69 | loss: 1.36294 | train_balanced_accuracy: 0.44308 | train_logloss: 1.34047 | train_f1_macro: 0.41058 | valid_balanced_accuracy: 0.43554 | valid_logloss: 1.35658 | valid_f1_macro: 0.40428 |  1:19:26s
+epoch 70 | loss: 1.35343 | train_balanced_accuracy: 0.44712 | train_logloss: 1.32972 | train_f1_macro: 0.41091 | valid_balanced_accuracy: 0.43868 | valid_logloss: 1.34733 | valid_f1_macro: 0.40472 |  1:20:31s
+epoch 71 | loss: 1.34505 | train_balanced_accuracy: 0.45385 | train_logloss: 1.3217  | train_f1_macro: 0.41585 | valid_balanced_accuracy: 0.44472 | valid_logloss: 1.34437 | valid_f1_macro: 0.40746 |  1:21:37s
+epoch 72 | loss: 1.34163 | train_balanced_accuracy: 0.45716 | train_logloss: 1.31478 | train_f1_macro: 0.41561 | valid_balanced_accuracy: 0.44654 | valid_logloss: 1.33896 | valid_f1_macro: 0.40589 |  1:22:44s
+epoch 73 | loss: 1.33713 | train_balanced_accuracy: 0.45907 | train_logloss: 1.31279 | train_f1_macro: 0.43118 | valid_balanced_accuracy: 0.44679 | valid_logloss: 1.33818 | valid_f1_macro: 0.41963 |  1:23:56s
+epoch 74 | loss: 1.3275  | train_balanced_accuracy: 0.46677 | train_logloss: 1.29867 | train_f1_macro: 0.42521 | valid_balanced_accuracy: 0.45314 | valid_logloss: 1.32983 | valid_f1_macro: 0.41346 |  1:25:01s
+epoch 75 | loss: 1.32058 | train_balanced_accuracy: 0.46763 | train_logloss: 1.29333 | train_f1_macro: 0.43922 | valid_balanced_accuracy: 0.45427 | valid_logloss: 1.32688 | valid_f1_macro: 0.42692 |  1:26:07s
+epoch 76 | loss: 1.3129  | train_balanced_accuracy: 0.39566 | train_logloss: 1.57707 | train_f1_macro: 0.36691 | valid_balanced_accuracy: 0.38816 | valid_logloss: 1.60871 | valid_f1_macro: 0.35981 |  1:27:12s
+epoch 77 | loss: 1.30726 | train_balanced_accuracy: 0.48    | train_logloss: 1.28122 | train_f1_macro: 0.44112 | valid_balanced_accuracy: 0.46508 | valid_logloss: 1.31565 | valid_f1_macro: 0.42727 |  1:28:17s
+epoch 78 | loss: 1.30253 | train_balanced_accuracy: 0.47973 | train_logloss: 1.27291 | train_f1_macro: 0.44207 | valid_balanced_accuracy: 0.4637  | valid_logloss: 1.3084  | valid_f1_macro: 0.42683 |  1:29:22s
+epoch 79 | loss: 1.29209 | train_balanced_accuracy: 0.49056 | train_logloss: 1.25217 | train_f1_macro: 0.44941 | valid_balanced_accuracy: 0.47244 | valid_logloss: 1.29391 | valid_f1_macro: 0.43252 |  1:30:28s
+epoch 80 | loss: 1.28076 | train_balanced_accuracy: 0.50127 | train_logloss: 1.23799 | train_f1_macro: 0.46261 | valid_balanced_accuracy: 0.47709 | valid_logloss: 1.28414 | valid_f1_macro: 0.44046 |  1:31:36s
+epoch 81 | loss: 1.27162 | train_balanced_accuracy: 0.50361 | train_logloss: 1.23077 | train_f1_macro: 0.46719 | valid_balanced_accuracy: 0.47583 | valid_logloss: 1.28496 | valid_f1_macro: 0.44084 |  1:32:42s
+epoch 82 | loss: 1.27184 | train_balanced_accuracy: 0.50119 | train_logloss: 1.24249 | train_f1_macro: 0.45905 | valid_balanced_accuracy: 0.48035 | valid_logloss: 1.28705 | valid_f1_macro: 0.4393  |  1:33:48s
+epoch 83 | loss: 1.26476 | train_balanced_accuracy: 0.5129  | train_logloss: 1.21887 | train_f1_macro: 0.4679  | valid_balanced_accuracy: 0.48394 | valid_logloss: 1.27354 | valid_f1_macro: 0.44161 |  1:34:56s
+epoch 84 | loss: 1.25279 | train_balanced_accuracy: 0.50901 | train_logloss: 1.22765 | train_f1_macro: 0.47286 | valid_balanced_accuracy: 0.48438 | valid_logloss: 1.27938 | valid_f1_macro: 0.44934 |  1:36:19s
+epoch 85 | loss: 1.24453 | train_balanced_accuracy: 0.5153  | train_logloss: 1.20924 | train_f1_macro: 0.47936 | valid_balanced_accuracy: 0.48821 | valid_logloss: 1.26567 | valid_f1_macro: 0.45401 |  1:37:29s
+epoch 86 | loss: 1.23577 | train_balanced_accuracy: 0.52467 | train_logloss: 1.18799 | train_f1_macro: 0.48239 | valid_balanced_accuracy: 0.49789 | valid_logloss: 1.25172 | valid_f1_macro: 0.45644 |  1:38:35s
+epoch 87 | loss: 1.23608 | train_balanced_accuracy: 0.53451 | train_logloss: 1.17061 | train_f1_macro: 0.49501 | valid_balanced_accuracy: 0.50317 | valid_logloss: 1.23987 | valid_f1_macro: 0.4657  |  1:39:45s
+epoch 88 | loss: 1.22218 | train_balanced_accuracy: 0.53545 | train_logloss: 1.16652 | train_f1_macro: 0.50379 | valid_balanced_accuracy: 0.50424 | valid_logloss: 1.23387 | valid_f1_macro: 0.47409 |  1:40:56s
+epoch 89 | loss: 1.20608 | train_balanced_accuracy: 0.54269 | train_logloss: 1.1477  | train_f1_macro: 0.51604 | valid_balanced_accuracy: 0.50795 | valid_logloss: 1.22632 | valid_f1_macro: 0.48162 |  1:42:03s
+epoch 90 | loss: 1.20354 | train_balanced_accuracy: 0.54046 | train_logloss: 1.15267 | train_f1_macro: 0.50544 | valid_balanced_accuracy: 0.505   | valid_logloss: 1.22959 | valid_f1_macro: 0.47012 |  1:43:11s
+epoch 91 | loss: 1.19669 | train_balanced_accuracy: 0.54115 | train_logloss: 1.15567 | train_f1_macro: 0.50637 | valid_balanced_accuracy: 0.50745 | valid_logloss: 1.23626 | valid_f1_macro: 0.4738  |  1:44:17s
+epoch 92 | loss: 1.18992 | train_balanced_accuracy: 0.55035 | train_logloss: 1.13482 | train_f1_macro: 0.51345 | valid_balanced_accuracy: 0.51675 | valid_logloss: 1.2132  | valid_f1_macro: 0.48114 |  1:45:24s
+epoch 93 | loss: 1.17422 | train_balanced_accuracy: 0.56144 | train_logloss: 1.1073  | train_f1_macro: 0.52538 | valid_balanced_accuracy: 0.52303 | valid_logloss: 1.20107 | valid_f1_macro: 0.48894 |  1:46:32s
+epoch 94 | loss: 1.17244 | train_balanced_accuracy: 0.54257 | train_logloss: 1.1434  | train_f1_macro: 0.50968 | valid_balanced_accuracy: 0.51071 | valid_logloss: 1.22519 | valid_f1_macro: 0.47739 |  1:47:39s
+epoch 95 | loss: 1.17194 | train_balanced_accuracy: 0.55752 | train_logloss: 1.11518 | train_f1_macro: 0.53002 | valid_balanced_accuracy: 0.51756 | valid_logloss: 1.20283 | valid_f1_macro: 0.48951 |  1:48:45s
+epoch 96 | loss: 1.158   | train_balanced_accuracy: 0.56537 | train_logloss: 1.1001  | train_f1_macro: 0.52786 | valid_balanced_accuracy: 0.52919 | valid_logloss: 1.19534 | valid_f1_macro: 0.4918  |  1:49:52s
+epoch 97 | loss: 1.15429 | train_balanced_accuracy: 0.55564 | train_logloss: 1.11856 | train_f1_macro: 0.52035 | valid_balanced_accuracy: 0.52725 | valid_logloss: 1.20153 | valid_f1_macro: 0.49375 |  1:50:58s
+epoch 98 | loss: 1.15657 | train_balanced_accuracy: 0.57081 | train_logloss: 1.08856 | train_f1_macro: 0.55053 | valid_balanced_accuracy: 0.52631 | valid_logloss: 1.18436 | valid_f1_macro: 0.50515 |  1:52:02s
+epoch 99 | loss: 1.13845 | train_balanced_accuracy: 0.57807 | train_logloss: 1.07257 | train_f1_macro: 0.54994 | valid_balanced_accuracy: 0.53196 | valid_logloss: 1.18396 | valid_f1_macro: 0.50353 |  1:53:08s
+epoch 100| loss: 1.13317 | train_balanced_accuracy: 0.57804 | train_logloss: 1.07389 | train_f1_macro: 0.5467  | valid_balanced_accuracy: 0.53504 | valid_logloss: 1.17102 | valid_f1_macro: 0.50247 |  1:54:13s
+epoch 101| loss: 1.12569 | train_balanced_accuracy: 0.57924 | train_logloss: 1.06089 | train_f1_macro: 0.54348 | valid_balanced_accuracy: 0.53888 | valid_logloss: 1.17541 | valid_f1_macro: 0.50374 |  1:55:20s
+epoch 102| loss: 1.12087 | train_balanced_accuracy: 0.58942 | train_logloss: 1.04128 | train_f1_macro: 0.56232 | valid_balanced_accuracy: 0.5407  | valid_logloss: 1.15987 | valid_f1_macro: 0.51395 |  1:56:37s
+epoch 103| loss: 1.10937 | train_balanced_accuracy: 0.58888 | train_logloss: 1.04265 | train_f1_macro: 0.56159 | valid_balanced_accuracy: 0.53862 | valid_logloss: 1.15497 | valid_f1_macro: 0.5115  |  1:57:43s
+epoch 104| loss: 1.09986 | train_balanced_accuracy: 0.59456 | train_logloss: 1.0327  | train_f1_macro: 0.56771 | valid_balanced_accuracy: 0.54724 | valid_logloss: 1.14994 | valid_f1_macro: 0.52056 |  1:58:49s
+epoch 105| loss: 1.09358 | train_balanced_accuracy: 0.59467 | train_logloss: 1.0301  | train_f1_macro: 0.56119 | valid_balanced_accuracy: 0.54629 | valid_logloss: 1.15219 | valid_f1_macro: 0.51293 |  1:59:57s
+epoch 106| loss: 1.0921  | train_balanced_accuracy: 0.59775 | train_logloss: 1.02237 | train_f1_macro: 0.57039 | valid_balanced_accuracy: 0.54862 | valid_logloss: 1.14203 | valid_f1_macro: 0.5212  |  2:01:02s
+epoch 107| loss: 1.09233 | train_balanced_accuracy: 0.5985  | train_logloss: 1.02383 | train_f1_macro: 0.56925 | valid_balanced_accuracy: 0.54416 | valid_logloss: 1.15135 | valid_f1_macro: 0.51436 |  2:02:17s
+epoch 108| loss: 1.08677 | train_balanced_accuracy: 0.60053 | train_logloss: 1.02663 | train_f1_macro: 0.57511 | valid_balanced_accuracy: 0.54309 | valid_logloss: 1.14981 | valid_f1_macro: 0.51747 |  2:03:47s
+epoch 109| loss: 1.11155 | train_balanced_accuracy: 0.59654 | train_logloss: 1.03218 | train_f1_macro: 0.56426 | valid_balanced_accuracy: 0.5417  | valid_logloss: 1.15888 | valid_f1_macro: 0.50986 |  2:04:58s
+epoch 110| loss: 1.08488 | train_balanced_accuracy: 0.58057 | train_logloss: 1.07664 | train_f1_macro: 0.55786 | valid_balanced_accuracy: 0.53209 | valid_logloss: 1.19591 | valid_f1_macro: 0.50917 |  2:06:22s
+epoch 111| loss: 1.18309 | train_balanced_accuracy: 0.5647  | train_logloss: 1.10532 | train_f1_macro: 0.54328 | valid_balanced_accuracy: 0.51939 | valid_logloss: 1.20561 | valid_f1_macro: 0.49761 |  2:07:47s
+epoch 112| loss: 1.14676 | train_balanced_accuracy: 0.5589  | train_logloss: 1.10308 | train_f1_macro: 0.53302 | valid_balanced_accuracy: 0.51594 | valid_logloss: 1.20661 | valid_f1_macro: 0.49048 |  2:09:06s
+epoch 113| loss: 1.16889 | train_balanced_accuracy: 0.56397 | train_logloss: 1.10014 | train_f1_macro: 0.53204 | valid_balanced_accuracy: 0.52367 | valid_logloss: 1.19856 | valid_f1_macro: 0.49251 |  2:10:39s
+epoch 114| loss: 1.11521 | train_balanced_accuracy: 0.59681 | train_logloss: 1.02968 | train_f1_macro: 0.57165 | valid_balanced_accuracy: 0.54843 | valid_logloss: 1.15385 | valid_f1_macro: 0.5229  |  2:12:09s
+epoch 115| loss: 1.08634 | train_balanced_accuracy: 0.60672 | train_logloss: 1.00931 | train_f1_macro: 0.58292 | valid_balanced_accuracy: 0.55233 | valid_logloss: 1.14669 | valid_f1_macro: 0.52746 |  2:13:16s
+epoch 116| loss: 1.06603 | train_balanced_accuracy: 0.61541 | train_logloss: 0.98267 | train_f1_macro: 0.59535 | valid_balanced_accuracy: 0.55686 | valid_logloss: 1.12792 | valid_f1_macro: 0.53705 |  2:14:49s
+epoch 117| loss: 1.05707 | train_balanced_accuracy: 0.61295 | train_logloss: 0.98943 | train_f1_macro: 0.58886 | valid_balanced_accuracy: 0.55485 | valid_logloss: 1.13281 | valid_f1_macro: 0.53068 |  2:16:24s
+epoch 118| loss: 1.04599 | train_balanced_accuracy: 0.62418 | train_logloss: 0.96913 | train_f1_macro: 0.60298 | valid_balanced_accuracy: 0.56138 | valid_logloss: 1.12316 | valid_f1_macro: 0.53995 |  2:17:57s
+epoch 119| loss: 1.04633 | train_balanced_accuracy: 0.62959 | train_logloss: 0.95494 | train_f1_macro: 0.61274 | valid_balanced_accuracy: 0.56949 | valid_logloss: 1.10649 | valid_f1_macro: 0.5514  |  2:19:35s
+epoch 120| loss: 1.03668 | train_balanced_accuracy: 0.63328 | train_logloss: 0.94628 | train_f1_macro: 0.61171 | valid_balanced_accuracy: 0.5688  | valid_logloss: 1.10918 | valid_f1_macro: 0.54636 |  2:21:07s
+epoch 121| loss: 1.02579 | train_balanced_accuracy: 0.63679 | train_logloss: 0.93601 | train_f1_macro: 0.61771 | valid_balanced_accuracy: 0.56566 | valid_logloss: 1.10401 | valid_f1_macro: 0.5461  |  2:22:39s
+epoch 122| loss: 1.03115 | train_balanced_accuracy: 0.59629 | train_logloss: 1.04905 | train_f1_macro: 0.56858 | valid_balanced_accuracy: 0.54026 | valid_logloss: 1.20321 | valid_f1_macro: 0.51213 |  2:24:11s
+epoch 123| loss: 1.0511  | train_balanced_accuracy: 0.62885 | train_logloss: 1.24732 | train_f1_macro: 0.60419 | valid_balanced_accuracy: 0.56182 | valid_logloss: 1.39955 | valid_f1_macro: 0.53693 |  2:25:43s
+epoch 124| loss: 1.02544 | train_balanced_accuracy: 0.63797 | train_logloss: 0.94462 | train_f1_macro: 0.61172 | valid_balanced_accuracy: 0.56924 | valid_logloss: 1.12371 | valid_f1_macro: 0.54219 |  2:27:15s
+epoch 125| loss: 1.02012 | train_balanced_accuracy: 0.64315 | train_logloss: 0.93207 | train_f1_macro: 0.62158 | valid_balanced_accuracy: 0.56968 | valid_logloss: 1.105   | valid_f1_macro: 0.54628 |  2:28:46s
+epoch 126| loss: 1.00817 | train_balanced_accuracy: 0.64758 | train_logloss: 0.91411 | train_f1_macro: 0.62414 | valid_balanced_accuracy: 0.5759  | valid_logloss: 1.10143 | valid_f1_macro: 0.55209 |  2:29:55s
+epoch 127| loss: 1.01239 | train_balanced_accuracy: 0.64897 | train_logloss: 0.92252 | train_f1_macro: 0.63325 | valid_balanced_accuracy: 0.57502 | valid_logloss: 1.11164 | valid_f1_macro: 0.55785 |  2:31:00s
+epoch 128| loss: 1.01628 | train_balanced_accuracy: 0.64581 | train_logloss: 0.92047 | train_f1_macro: 0.6255  | valid_balanced_accuracy: 0.57258 | valid_logloss: 1.10963 | valid_f1_macro: 0.55304 |  2:32:05s
+epoch 129| loss: 1.01218 | train_balanced_accuracy: 0.62986 | train_logloss: 0.95631 | train_f1_macro: 0.60127 | valid_balanced_accuracy: 0.56339 | valid_logloss: 1.13005 | valid_f1_macro: 0.53444 |  2:33:10s
+epoch 130| loss: 1.03006 | train_balanced_accuracy: 0.64249 | train_logloss: 0.93239 | train_f1_macro: 0.62169 | valid_balanced_accuracy: 0.56987 | valid_logloss: 1.11171 | valid_f1_macro: 0.54817 |  2:34:17s
+epoch 131| loss: 1.02071 | train_balanced_accuracy: 0.33256 | train_logloss: 9.33326 | train_f1_macro: 0.31348 | valid_balanced_accuracy: 0.31035 | valid_logloss: 9.53352 | valid_f1_macro: 0.28214 |  2:35:22s
+epoch 132| loss: 0.99367 | train_balanced_accuracy: 0.64927 | train_logloss: 0.91434 | train_f1_macro: 0.63229 | valid_balanced_accuracy: 0.5749  | valid_logloss: 1.1081  | valid_f1_macro: 0.55475 |  2:36:27s
+epoch 133| loss: 0.98156 | train_balanced_accuracy: 0.61585 | train_logloss: 1.17666 | train_f1_macro: 0.61468 | valid_balanced_accuracy: 0.53896 | valid_logloss: 1.37567 | valid_f1_macro: 0.53827 |  2:37:32s
+epoch 134| loss: 0.97173 | train_balanced_accuracy: 0.66182 | train_logloss: 0.88077 | train_f1_macro: 0.64043 | valid_balanced_accuracy: 0.58251 | valid_logloss: 1.08139 | valid_f1_macro: 0.55996 |  2:38:36s
+epoch 135| loss: 0.98024 | train_balanced_accuracy: 0.64325 | train_logloss: 0.92327 | train_f1_macro: 0.62637 | valid_balanced_accuracy: 0.56974 | valid_logloss: 1.10597 | valid_f1_macro: 0.55097 |  2:39:42s
+epoch 136| loss: 1.02041 | train_balanced_accuracy: 0.64106 | train_logloss: 0.9274  | train_f1_macro: 0.61838 | valid_balanced_accuracy: 0.57163 | valid_logloss: 1.11549 | valid_f1_macro: 0.54729 |  2:40:48s
+epoch 137| loss: 1.00433 | train_balanced_accuracy: 0.58197 | train_logloss: 4.93454 | train_f1_macro: 0.55663 | valid_balanced_accuracy: 0.52511 | valid_logloss: 5.04461 | valid_f1_macro: 0.49776 |  2:41:52s
+epoch 138| loss: 1.03672 | train_balanced_accuracy: 0.48955 | train_logloss: 1.62489 | train_f1_macro: 0.4918  | valid_balanced_accuracy: 0.44454 | valid_logloss: 1.79833 | valid_f1_macro: 0.44163 |  2:42:57s
+epoch 139| loss: 1.02584 | train_balanced_accuracy: 0.62371 | train_logloss: 0.97114 | train_f1_macro: 0.60702 | valid_balanced_accuracy: 0.5568  | valid_logloss: 1.13433 | valid_f1_macro: 0.53962 |  2:44:02s
+epoch 140| loss: 1.03449 | train_balanced_accuracy: 0.63182 | train_logloss: 0.95826 | train_f1_macro: 0.61091 | valid_balanced_accuracy: 0.56283 | valid_logloss: 1.12849 | valid_f1_macro: 0.54165 |  2:45:06s
+epoch 141| loss: 1.05021 | train_balanced_accuracy: 0.62429 | train_logloss: 0.97146 | train_f1_macro: 0.60171 | valid_balanced_accuracy: 0.55811 | valid_logloss: 1.13361 | valid_f1_macro: 0.53417 |  2:46:12s
+epoch 142| loss: 1.03837 | train_balanced_accuracy: 0.62464 | train_logloss: 0.9762  | train_f1_macro: 0.60294 | valid_balanced_accuracy: 0.55541 | valid_logloss: 1.13357 | valid_f1_macro: 0.53263 |  2:47:17s
+epoch 143| loss: 1.04216 | train_balanced_accuracy: 0.63022 | train_logloss: 0.9618  | train_f1_macro: 0.60814 | valid_balanced_accuracy: 0.5595  | valid_logloss: 1.13333 | valid_f1_macro: 0.53737 |  2:48:21s
+epoch 144| loss: 1.02254 | train_balanced_accuracy: 0.35353 | train_logloss: 16.18175| train_f1_macro: 0.3118  | valid_balanced_accuracy: 0.33434 | valid_logloss: 16.42113| valid_f1_macro: 0.2869  |  2:49:26s
+epoch 145| loss: 0.98915 | train_balanced_accuracy: 0.35768 | train_logloss: 18.40697| train_f1_macro: 0.31813 | valid_balanced_accuracy: 0.33911 | valid_logloss: 18.56019| valid_f1_macro: 0.29465 |  2:50:31s
+epoch 146| loss: 1.00805 | train_balanced_accuracy: 0.44432 | train_logloss: 2.05576 | train_f1_macro: 0.42752 | valid_balanced_accuracy: 0.40719 | valid_logloss: 2.26268 | valid_f1_macro: 0.38361 |  2:51:35s
+epoch 147| loss: 0.99341 | train_balanced_accuracy: 0.59756 | train_logloss: 1.06544 | train_f1_macro: 0.55965 | valid_balanced_accuracy: 0.52745 | valid_logloss: 1.26663 | valid_f1_macro: 0.49315 |  2:52:40s
+epoch 148| loss: 1.00905 | train_balanced_accuracy: 0.23169 | train_logloss: 15.19237| train_f1_macro: 0.16584 | valid_balanced_accuracy: 0.21934 | valid_logloss: 15.29998| valid_f1_macro: 0.15281 |  2:53:44s
+epoch 149| loss: 0.98074 | train_balanced_accuracy: 0.63499 | train_logloss: 0.94241 | train_f1_macro: 0.6174  | valid_balanced_accuracy: 0.5634  | valid_logloss: 1.14998 | valid_f1_macro: 0.54649 |  2:54:50s
+epoch 150| loss: 1.00796 | train_balanced_accuracy: 0.59578 | train_logloss: 1.00822 | train_f1_macro: 0.59081 | valid_balanced_accuracy: 0.51545 | valid_logloss: 1.19443 | valid_f1_macro: 0.51127 |  2:55:56s
+epoch 151| loss: 0.98573 | train_balanced_accuracy: 0.65101 | train_logloss: 0.91141 | train_f1_macro: 0.63413 | valid_balanced_accuracy: 0.571   | valid_logloss: 1.11165 | valid_f1_macro: 0.55067 |  2:57:00s
+epoch 152| loss: 0.98203 | train_balanced_accuracy: 0.65022 | train_logloss: 0.90226 | train_f1_macro: 0.6206  | valid_balanced_accuracy: 0.57446 | valid_logloss: 1.1098  | valid_f1_macro: 0.54448 |  2:58:05s
+epoch 153| loss: 0.97282 | train_balanced_accuracy: 0.35707 | train_logloss: 17.47578| train_f1_macro: 0.31253 | valid_balanced_accuracy: 0.33873 | valid_logloss: 17.6158 | valid_f1_macro: 0.28764 |  2:59:10s
+epoch 154| loss: 0.96507 | train_balanced_accuracy: 0.65893 | train_logloss: 0.88296 | train_f1_macro: 0.65043 | valid_balanced_accuracy: 0.57729 | valid_logloss: 1.10026 | valid_f1_macro: 0.56641 |  3:00:15s
+epoch 155| loss: 0.95602 | train_balanced_accuracy: 0.45706 | train_logloss: 9.3195  | train_f1_macro: 0.47183 | valid_balanced_accuracy: 0.39522 | valid_logloss: 9.51588 | valid_f1_macro: 0.41027 |  3:01:20s
+epoch 156| loss: 0.94126 | train_balanced_accuracy: 0.67924 | train_logloss: 0.841   | train_f1_macro: 0.6615  | valid_balanced_accuracy: 0.59099 | valid_logloss: 1.07036 | valid_f1_macro: 0.56991 |  3:02:25s
+epoch 157| loss: 0.92225 | train_balanced_accuracy: 0.51798 | train_logloss: 2.46387 | train_f1_macro: 0.52239 | valid_balanced_accuracy: 0.44255 | valid_logloss: 2.73075 | valid_f1_macro: 0.44809 |  3:03:29s
+epoch 158| loss: 0.9407  | train_balanced_accuracy: 0.6727  | train_logloss: 0.84865 | train_f1_macro: 0.65718 | valid_balanced_accuracy: 0.58716 | valid_logloss: 1.08719 | valid_f1_macro: 0.56965 |  3:04:34s
+epoch 159| loss: 0.94755 | train_balanced_accuracy: 0.63784 | train_logloss: 0.92762 | train_f1_macro: 0.62983 | valid_balanced_accuracy: 0.55396 | valid_logloss: 1.18169 | valid_f1_macro: 0.54191 |  3:05:40s
+epoch 160| loss: 0.93515 | train_balanced_accuracy: 0.63599 | train_logloss: 0.92983 | train_f1_macro: 0.62296 | valid_balanced_accuracy: 0.55371 | valid_logloss: 1.17049 | valid_f1_macro: 0.53882 |  3:06:45s
+epoch 161| loss: 0.93043 | train_balanced_accuracy: 0.67594 | train_logloss: 0.84447 | train_f1_macro: 0.65782 | valid_balanced_accuracy: 0.58709 | valid_logloss: 1.09488 | valid_f1_macro: 0.56682 |  3:07:49s
+epoch 162| loss: 0.92086 | train_balanced_accuracy: 0.68474 | train_logloss: 0.82471 | train_f1_macro: 0.67845 | valid_balanced_accuracy: 0.58848 | valid_logloss: 1.07721 | valid_f1_macro: 0.58033 |  3:08:53s
+epoch 163| loss: 0.92603 | train_balanced_accuracy: 0.68483 | train_logloss: 0.8296  | train_f1_macro: 0.6809  | valid_balanced_accuracy: 0.58471 | valid_logloss: 1.06961 | valid_f1_macro: 0.57861 |  3:09:59s
+epoch 164| loss: 0.9157  | train_balanced_accuracy: 0.6774  | train_logloss: 0.84196 | train_f1_macro: 0.67814 | valid_balanced_accuracy: 0.57893 | valid_logloss: 1.09643 | valid_f1_macro: 0.57918 |  3:11:03s
+epoch 165| loss: 0.89732 | train_balanced_accuracy: 0.39062 | train_logloss: 3.61742 | train_f1_macro: 0.3621  | valid_balanced_accuracy: 0.36684 | valid_logloss: 3.91265 | valid_f1_macro: 0.32707 |  3:12:08s
+epoch 166| loss: 0.88987 | train_balanced_accuracy: 0.61945 | train_logloss: 0.92712 | train_f1_macro: 0.6136  | valid_balanced_accuracy: 0.54208 | valid_logloss: 1.19254 | valid_f1_macro: 0.53192 |  3:13:13s
+epoch 167| loss: 0.9022  | train_balanced_accuracy: 0.57157 | train_logloss: 1.16272 | train_f1_macro: 0.55853 | valid_balanced_accuracy: 0.51404 | valid_logloss: 1.41955 | valid_f1_macro: 0.49403 |  3:14:21s
+epoch 168| loss: 0.89053 | train_balanced_accuracy: 0.38932 | train_logloss: 4.32164 | train_f1_macro: 0.35931 | valid_balanced_accuracy: 0.36684 | valid_logloss: 4.60462 | valid_f1_macro: 0.32822 |  3:15:26s
+epoch 169| loss: 0.89424 | train_balanced_accuracy: 0.66005 | train_logloss: 1.43362 | train_f1_macro: 0.6414  | valid_balanced_accuracy: 0.5825  | valid_logloss: 1.72197 | valid_f1_macro: 0.55898 |  3:16:31s
+epoch 170| loss: 0.9023  | train_balanced_accuracy: 0.68496 | train_logloss: 0.81645 | train_f1_macro: 0.68308 | valid_balanced_accuracy: 0.58703 | valid_logloss: 1.08342 | valid_f1_macro: 0.5828  |  3:17:36s
+epoch 171| loss: 0.9137  | train_balanced_accuracy: 0.67502 | train_logloss: 0.85845 | train_f1_macro: 0.66219 | valid_balanced_accuracy: 0.57999 | valid_logloss: 1.13231 | valid_f1_macro: 0.56509 |  3:18:41s
+epoch 172| loss: 0.89874 | train_balanced_accuracy: 0.69874 | train_logloss: 0.78514 | train_f1_macro: 0.68624 | valid_balanced_accuracy: 0.59885 | valid_logloss: 1.0674  | valid_f1_macro: 0.58481 |  3:19:46s
+epoch 173| loss: 0.88699 | train_balanced_accuracy: 0.70305 | train_logloss: 0.78205 | train_f1_macro: 0.68763 | valid_balanced_accuracy: 0.60162 | valid_logloss: 1.05992 | valid_f1_macro: 0.58342 |  3:20:51s
+epoch 174| loss: 0.88508 | train_balanced_accuracy: 0.70328 | train_logloss: 0.78143 | train_f1_macro: 0.694   | valid_balanced_accuracy: 0.60407 | valid_logloss: 1.0528  | valid_f1_macro: 0.59266 |  3:21:57s
+epoch 175| loss: 0.88143 | train_balanced_accuracy: 0.52368 | train_logloss: 2.29106 | train_f1_macro: 0.56386 | valid_balanced_accuracy: 0.43853 | valid_logloss: 2.5774  | valid_f1_macro: 0.47726 |  3:23:02s
+epoch 176| loss: 0.87745 | train_balanced_accuracy: 0.70477 | train_logloss: 0.76943 | train_f1_macro: 0.69031 | valid_balanced_accuracy: 0.60482 | valid_logloss: 1.05318 | valid_f1_macro: 0.58821 |  3:24:06s
+epoch 177| loss: 0.88343 | train_balanced_accuracy: 0.69667 | train_logloss: 0.79553 | train_f1_macro: 0.68443 | valid_balanced_accuracy: 0.59394 | valid_logloss: 1.08638 | valid_f1_macro: 0.5777  |  3:25:11s
+epoch 178| loss: 0.88929 | train_balanced_accuracy: 0.70635 | train_logloss: 0.77088 | train_f1_macro: 0.69512 | valid_balanced_accuracy: 0.59998 | valid_logloss: 1.06688 | valid_f1_macro: 0.58746 |  3:26:17s
+epoch 179| loss: 0.86615 | train_balanced_accuracy: 0.51276 | train_logloss: 2.92803 | train_f1_macro: 0.44998 | valid_balanced_accuracy: 0.4667  | valid_logloss: 3.26626 | valid_f1_macro: 0.39904 |  3:27:21s
+epoch 180| loss: 0.87068 | train_balanced_accuracy: 0.70498 | train_logloss: 0.77367 | train_f1_macro: 0.6899  | valid_balanced_accuracy: 0.60558 | valid_logloss: 1.04652 | valid_f1_macro: 0.58816 |  3:28:26s
+epoch 181| loss: 0.86559 | train_balanced_accuracy: 0.70883 | train_logloss: 0.77295 | train_f1_macro: 0.69405 | valid_balanced_accuracy: 0.60696 | valid_logloss: 1.04085 | valid_f1_macro: 0.5895  |  3:29:31s
+epoch 182| loss: 0.85572 | train_balanced_accuracy: 0.72029 | train_logloss: 0.73727 | train_f1_macro: 0.7078  | valid_balanced_accuracy: 0.61312 | valid_logloss: 1.03536 | valid_f1_macro: 0.59875 |  3:30:36s
+epoch 183| loss: 0.86094 | train_balanced_accuracy: 0.71108 | train_logloss: 0.76557 | train_f1_macro: 0.69963 | valid_balanced_accuracy: 0.60508 | valid_logloss: 1.06711 | valid_f1_macro: 0.59271 |  3:31:41s
+epoch 184| loss: 0.85159 | train_balanced_accuracy: 0.72098 | train_logloss: 0.73998 | train_f1_macro: 0.70955 | valid_balanced_accuracy: 0.61394 | valid_logloss: 1.03812 | valid_f1_macro: 0.59919 |  3:32:46s
+epoch 185| loss: 0.8393  | train_balanced_accuracy: 0.72675 | train_logloss: 0.72066 | train_f1_macro: 0.71924 | valid_balanced_accuracy: 0.61048 | valid_logloss: 1.04351 | valid_f1_macro: 0.60169 |  3:33:51s
+epoch 186| loss: 0.83857 | train_balanced_accuracy: 0.70447 | train_logloss: 0.78021 | train_f1_macro: 0.69708 | valid_balanced_accuracy: 0.59081 | valid_logloss: 1.09614 | valid_f1_macro: 0.58484 |  3:34:56s
+epoch 187| loss: 0.83439 | train_balanced_accuracy: 0.72741 | train_logloss: 0.71822 | train_f1_macro: 0.71645 | valid_balanced_accuracy: 0.61501 | valid_logloss: 1.03531 | valid_f1_macro: 0.60106 |  3:36:02s
+epoch 188| loss: 0.83108 | train_balanced_accuracy: 0.73333 | train_logloss: 0.7067  | train_f1_macro: 0.72271 | valid_balanced_accuracy: 0.61614 | valid_logloss: 1.03241 | valid_f1_macro: 0.60294 |  3:37:06s
+epoch 189| loss: 0.82751 | train_balanced_accuracy: 0.49726 | train_logloss: 4.78318 | train_f1_macro: 0.52316 | valid_balanced_accuracy: 0.41729 | valid_logloss: 5.12995 | valid_f1_macro: 0.44388 |  3:38:12s
+epoch 190| loss: 0.84873 | train_balanced_accuracy: 0.72198 | train_logloss: 0.73195 | train_f1_macro: 0.70966 | valid_balanced_accuracy: 0.614   | valid_logloss: 1.04793 | valid_f1_macro: 0.60053 |  3:39:16s
+epoch 191| loss: 0.8382  | train_balanced_accuracy: 0.7244  | train_logloss: 0.72604 | train_f1_macro: 0.71247 | valid_balanced_accuracy: 0.6118  | valid_logloss: 1.04658 | valid_f1_macro: 0.59786 |  3:40:22s
+epoch 192| loss: 0.83496 | train_balanced_accuracy: 0.72008 | train_logloss: 0.73363 | train_f1_macro: 0.70703 | valid_balanced_accuracy: 0.60671 | valid_logloss: 1.07288 | valid_f1_macro: 0.59058 |  3:41:27s
+epoch 193| loss: 0.8227  | train_balanced_accuracy: 0.72406 | train_logloss: 0.73523 | train_f1_macro: 0.71996 | valid_balanced_accuracy: 0.60018 | valid_logloss: 1.07187 | valid_f1_macro: 0.59658 |  3:42:31s
+epoch 194| loss: 0.82394 | train_balanced_accuracy: 0.70732 | train_logloss: 0.7702  | train_f1_macro: 0.69589 | valid_balanced_accuracy: 0.60243 | valid_logloss: 1.09735 | valid_f1_macro: 0.58707 |  3:43:36s
+epoch 195| loss: 0.82757 | train_balanced_accuracy: 0.72561 | train_logloss: 0.73309 | train_f1_macro: 0.71312 | valid_balanced_accuracy: 0.61331 | valid_logloss: 1.08273 | valid_f1_macro: 0.5962  |  3:44:41s
+epoch 196| loss: 0.81691 | train_balanced_accuracy: 0.69943 | train_logloss: 0.80169 | train_f1_macro: 0.68469 | valid_balanced_accuracy: 0.59671 | valid_logloss: 1.14949 | valid_f1_macro: 0.57798 |  3:45:48s
+epoch 197| loss: 0.83328 | train_balanced_accuracy: 0.72994 | train_logloss: 0.72006 | train_f1_macro: 0.72066 | valid_balanced_accuracy: 0.60809 | valid_logloss: 1.04963 | valid_f1_macro: 0.5971  |  3:46:53s
+epoch 198| loss: 0.83522 | train_balanced_accuracy: 0.72858 | train_logloss: 0.72023 | train_f1_macro: 0.71837 | valid_balanced_accuracy: 0.61287 | valid_logloss: 1.05256 | valid_f1_macro: 0.59866 |  3:47:58s
+epoch 199| loss: 0.83174 | train_balanced_accuracy: 0.73253 | train_logloss: 0.70982 | train_f1_macro: 0.72446 | valid_balanced_accuracy: 0.61186 | valid_logloss: 1.04813 | valid_f1_macro: 0.6006  |  3:49:02s
+epoch 200| loss: 0.81625 | train_balanced_accuracy: 0.59131 | train_logloss: 1.17392 | train_f1_macro: 0.56058 | valid_balanced_accuracy: 0.52623 | valid_logloss: 1.51767 | valid_f1_macro: 0.48804 |  3:50:08s
+epoch 201| loss: 0.80254 | train_balanced_accuracy: 0.74273 | train_logloss: 0.68082 | train_f1_macro: 0.72855 | valid_balanced_accuracy: 0.62462 | valid_logloss: 1.02721 | valid_f1_macro: 0.60537 |  3:51:13s
+epoch 202| loss: 0.81449 | train_balanced_accuracy: 0.52728 | train_logloss: 1.82091 | train_f1_macro: 0.46684 | valid_balanced_accuracy: 0.47387 | valid_logloss: 2.19087 | valid_f1_macro: 0.41043 |  3:52:18s
+epoch 203| loss: 0.79933 | train_balanced_accuracy: 0.74179 | train_logloss: 0.67683 | train_f1_macro: 0.7312  | valid_balanced_accuracy: 0.62091 | valid_logloss: 1.04538 | valid_f1_macro: 0.60732 |  3:53:22s
+epoch 204| loss: 0.8042  | train_balanced_accuracy: 0.61231 | train_logloss: 2.61593 | train_f1_macro: 0.60455 | valid_balanced_accuracy: 0.52417 | valid_logloss: 3.00736 | valid_f1_macro: 0.50578 |  3:54:27s
+epoch 205| loss: 0.80388 | train_balanced_accuracy: 0.71271 | train_logloss: 0.73878 | train_f1_macro: 0.69349 | valid_balanced_accuracy: 0.60495 | valid_logloss: 1.07576 | valid_f1_macro: 0.58252 |  3:55:32s
+epoch 206| loss: 0.81165 | train_balanced_accuracy: 0.73119 | train_logloss: 0.71578 | train_f1_macro: 0.72195 | valid_balanced_accuracy: 0.61821 | valid_logloss: 1.06548 | valid_f1_macro: 0.60503 |  3:56:38s
+epoch 207| loss: 0.81845 | train_balanced_accuracy: 0.39656 | train_logloss: 11.94421| train_f1_macro: 0.38504 | valid_balanced_accuracy: 0.37079 | valid_logloss: 12.18286| valid_f1_macro: 0.35315 |  3:57:42s
+epoch 208| loss: 0.81113 | train_balanced_accuracy: 0.74441 | train_logloss: 0.68248 | train_f1_macro: 0.7343  | valid_balanced_accuracy: 0.62142 | valid_logloss: 1.04542 | valid_f1_macro: 0.60725 |  3:58:47s
+epoch 209| loss: 0.81261 | train_balanced_accuracy: 0.55818 | train_logloss: 8.70922 | train_f1_macro: 0.58623 | valid_balanced_accuracy: 0.47629 | valid_logloss: 8.9999  | valid_f1_macro: 0.49917 |  3:59:52s
+epoch 210| loss: 0.79957 | train_balanced_accuracy: 0.74735 | train_logloss: 0.6773  | train_f1_macro: 0.73715 | valid_balanced_accuracy: 0.6245  | valid_logloss: 1.02851 | valid_f1_macro: 0.61169 |  4:00:56s
+epoch 211| loss: 0.78709 | train_balanced_accuracy: 0.73545 | train_logloss: 0.69683 | train_f1_macro: 0.73241 | valid_balanced_accuracy: 0.61023 | valid_logloss: 1.07617 | valid_f1_macro: 0.60612 |  4:02:01s
+epoch 212| loss: 0.78451 | train_balanced_accuracy: 0.7372  | train_logloss: 0.69477 | train_f1_macro: 0.72877 | valid_balanced_accuracy: 0.61871 | valid_logloss: 1.04058 | valid_f1_macro: 0.60624 |  4:03:05s
+epoch 213| loss: 0.79299 | train_balanced_accuracy: 0.75106 | train_logloss: 0.65828 | train_f1_macro: 0.7388  | valid_balanced_accuracy: 0.63085 | valid_logloss: 1.02381 | valid_f1_macro: 0.6156  |  4:04:10s
+epoch 214| loss: 0.77996 | train_balanced_accuracy: 0.75573 | train_logloss: 0.65119 | train_f1_macro: 0.7458  | valid_balanced_accuracy: 0.63154 | valid_logloss: 1.01349 | valid_f1_macro: 0.61912 |  4:05:15s
+epoch 215| loss: 0.77606 | train_balanced_accuracy: 0.75359 | train_logloss: 0.65931 | train_f1_macro: 0.74419 | valid_balanced_accuracy: 0.62833 | valid_logloss: 1.01651 | valid_f1_macro: 0.61593 |  4:06:21s
+epoch 216| loss: 0.77541 | train_balanced_accuracy: 0.75885 | train_logloss: 0.64191 | train_f1_macro: 0.74947 | valid_balanced_accuracy: 0.63242 | valid_logloss: 1.0154  | valid_f1_macro: 0.61966 |  4:07:26s
+epoch 217| loss: 0.77478 | train_balanced_accuracy: 0.5955  | train_logloss: 8.08833 | train_f1_macro: 0.5802  | valid_balanced_accuracy: 0.51555 | valid_logloss: 8.30258 | valid_f1_macro: 0.49402 |  4:08:31s
+epoch 218| loss: 0.78559 | train_balanced_accuracy: 0.7485  | train_logloss: 0.66758 | train_f1_macro: 0.73714 | valid_balanced_accuracy: 0.62733 | valid_logloss: 1.02532 | valid_f1_macro: 0.61184 |  4:09:37s
+epoch 219| loss: 0.7849  | train_balanced_accuracy: 0.75714 | train_logloss: 0.65454 | train_f1_macro: 0.75108 | valid_balanced_accuracy: 0.62362 | valid_logloss: 1.0314  | valid_f1_macro: 0.61519 |  4:10:41s
+epoch 220| loss: 0.77038 | train_balanced_accuracy: 0.75774 | train_logloss: 0.64605 | train_f1_macro: 0.74915 | valid_balanced_accuracy: 0.6272  | valid_logloss: 1.03467 | valid_f1_macro: 0.61642 |  4:11:46s
+epoch 221| loss: 0.77083 | train_balanced_accuracy: 0.75574 | train_logloss: 0.65471 | train_f1_macro: 0.74541 | valid_balanced_accuracy: 0.62733 | valid_logloss: 1.02301 | valid_f1_macro: 0.61303 |  4:12:51s
+epoch 222| loss: 0.77408 | train_balanced_accuracy: 0.75708 | train_logloss: 0.64798 | train_f1_macro: 0.74943 | valid_balanced_accuracy: 0.62789 | valid_logloss: 1.03963 | valid_f1_macro: 0.61704 |  4:13:56s
+epoch 223| loss: 0.77324 | train_balanced_accuracy: 0.75056 | train_logloss: 0.66241 | train_f1_macro: 0.73869 | valid_balanced_accuracy: 0.62764 | valid_logloss: 1.03825 | valid_f1_macro: 0.61154 |  4:15:01s
+epoch 224| loss: 0.76581 | train_balanced_accuracy: 0.75719 | train_logloss: 0.63938 | train_f1_macro: 0.7483  | valid_balanced_accuracy: 0.62859 | valid_logloss: 1.0346  | valid_f1_macro: 0.61634 |  4:16:08s
+epoch 225| loss: 0.75308 | train_balanced_accuracy: 0.76409 | train_logloss: 0.62876 | train_f1_macro: 0.75635 | valid_balanced_accuracy: 0.6311  | valid_logloss: 1.01844 | valid_f1_macro: 0.62042 |  4:17:13s
+epoch 226| loss: 0.74746 | train_balanced_accuracy: 0.53362 | train_logloss: 1.46694 | train_f1_macro: 0.53975 | valid_balanced_accuracy: 0.44586 | valid_logloss: 1.90014 | valid_f1_macro: 0.45265 |  4:18:18s
+epoch 227| loss: 0.7718  | train_balanced_accuracy: 0.75582 | train_logloss: 0.64463 | train_f1_macro: 0.74464 | valid_balanced_accuracy: 0.62978 | valid_logloss: 1.03348 | valid_f1_macro: 0.61459 |  4:19:22s
+epoch 228| loss: 0.76143 | train_balanced_accuracy: 0.68578 | train_logloss: 1.01022 | train_f1_macro: 0.68685 | valid_balanced_accuracy: 0.58087 | valid_logloss: 1.39197 | valid_f1_macro: 0.57809 |  4:20:28s
+epoch 229| loss: 0.76157 | train_balanced_accuracy: 0.76036 | train_logloss: 0.63664 | train_f1_macro: 0.7514  | valid_balanced_accuracy: 0.6289  | valid_logloss: 1.01688 | valid_f1_macro: 0.61573 |  4:21:32s
+epoch 230| loss: 0.74572 | train_balanced_accuracy: 0.76236 | train_logloss: 0.6334  | train_f1_macro: 0.7541  | valid_balanced_accuracy: 0.62947 | valid_logloss: 1.03438 | valid_f1_macro: 0.6181  |  4:22:37s
+epoch 231| loss: 0.75605 | train_balanced_accuracy: 0.64832 | train_logloss: 2.52719 | train_f1_macro: 0.63867 | valid_balanced_accuracy: 0.54994 | valid_logloss: 2.98755 | valid_f1_macro: 0.53366 |  4:23:42s
+epoch 232| loss: 0.74789 | train_balanced_accuracy: 0.76134 | train_logloss: 0.63154 | train_f1_macro: 0.75396 | valid_balanced_accuracy: 0.62368 | valid_logloss: 1.04959 | valid_f1_macro: 0.6124  |  4:24:47s
+epoch 233| loss: 0.74976 | train_balanced_accuracy: 0.75867 | train_logloss: 0.63316 | train_f1_macro: 0.75135 | valid_balanced_accuracy: 0.62663 | valid_logloss: 1.05438 | valid_f1_macro: 0.61634 |  4:25:52s
+epoch 234| loss: 0.73938 | train_balanced_accuracy: 0.76261 | train_logloss: 0.63015 | train_f1_macro: 0.7527  | valid_balanced_accuracy: 0.63349 | valid_logloss: 1.03967 | valid_f1_macro: 0.6196  |  4:26:58s
+epoch 235| loss: 0.73746 | train_balanced_accuracy: 0.42768 | train_logloss: 10.62467| train_f1_macro: 0.38522 | valid_balanced_accuracy: 0.37771 | valid_logloss: 10.91796| valid_f1_macro: 0.33002 |  4:28:02s
+epoch 236| loss: 0.74038 | train_balanced_accuracy: 0.77215 | train_logloss: 0.60904 | train_f1_macro: 0.76458 | valid_balanced_accuracy: 0.63355 | valid_logloss: 1.02182 | valid_f1_macro: 0.62315 |  4:29:07s
+epoch 237| loss: 0.74881 | train_balanced_accuracy: 0.76828 | train_logloss: 0.61794 | train_f1_macro: 0.76134 | valid_balanced_accuracy: 0.63336 | valid_logloss: 1.03018 | valid_f1_macro: 0.62124 |  4:30:12s
+epoch 238| loss: 0.73177 | train_balanced_accuracy: 0.75909 | train_logloss: 0.63426 | train_f1_macro: 0.75129 | valid_balanced_accuracy: 0.62588 | valid_logloss: 1.0668  | valid_f1_macro: 0.61606 |  4:31:16s
+epoch 239| loss: 0.73049 | train_balanced_accuracy: 0.77019 | train_logloss: 0.61093 | train_f1_macro: 0.76341 | valid_balanced_accuracy: 0.6277  | valid_logloss: 1.04546 | valid_f1_macro: 0.61733 |  4:32:21s
+epoch 240| loss: 0.72767 | train_balanced_accuracy: 0.76943 | train_logloss: 0.61069 | train_f1_macro: 0.76217 | valid_balanced_accuracy: 0.63161 | valid_logloss: 1.03396 | valid_f1_macro: 0.62184 |  4:33:25s
+epoch 241| loss: 0.72141 | train_balanced_accuracy: 0.77811 | train_logloss: 0.59523 | train_f1_macro: 0.77002 | valid_balanced_accuracy: 0.64116 | valid_logloss: 1.01051 | valid_f1_macro: 0.62897 |  4:34:30s
+epoch 242| loss: 0.72154 | train_balanced_accuracy: 0.78031 | train_logloss: 0.58528 | train_f1_macro: 0.77329 | valid_balanced_accuracy: 0.64091 | valid_logloss: 1.00909 | valid_f1_macro: 0.63038 |  4:35:37s
+epoch 243| loss: 0.72318 | train_balanced_accuracy: 0.63574 | train_logloss: 3.29556 | train_f1_macro: 0.64369 | valid_balanced_accuracy: 0.5384  | valid_logloss: 3.75168 | valid_f1_macro: 0.5465  |  4:36:42s
+epoch 244| loss: 0.71878 | train_balanced_accuracy: 0.27986 | train_logloss: 10.26393| train_f1_macro: 0.23131 | valid_balanced_accuracy: 0.2697  | valid_logloss: 10.7543 | valid_f1_macro: 0.22096 |  4:37:46s
+epoch 245| loss: 0.72006 | train_balanced_accuracy: 0.77873 | train_logloss: 0.5881  | train_f1_macro: 0.77322 | valid_balanced_accuracy: 0.62752 | valid_logloss: 1.04458 | valid_f1_macro: 0.61932 |  4:38:51s
+epoch 246| loss: 0.71705 | train_balanced_accuracy: 0.77789 | train_logloss: 0.59001 | train_f1_macro: 0.7724  | valid_balanced_accuracy: 0.63456 | valid_logloss: 1.03399 | valid_f1_macro: 0.62655 |  4:39:56s
+epoch 247| loss: 0.71525 | train_balanced_accuracy: 0.77963 | train_logloss: 0.58817 | train_f1_macro: 0.77207 | valid_balanced_accuracy: 0.6382  | valid_logloss: 1.03139 | valid_f1_macro: 0.62669 |  4:41:01s
+epoch 248| loss: 0.71339 | train_balanced_accuracy: 0.78174 | train_logloss: 0.58228 | train_f1_macro: 0.77471 | valid_balanced_accuracy: 0.64072 | valid_logloss: 1.01441 | valid_f1_macro: 0.62952 |  4:42:06s
+epoch 249| loss: 0.713   | train_balanced_accuracy: 0.77628 | train_logloss: 0.59259 | train_f1_macro: 0.77039 | valid_balanced_accuracy: 0.63336 | valid_logloss: 1.02056 | valid_f1_macro: 0.62359 |  4:43:10s
+epoch 250| loss: 0.70664 | train_balanced_accuracy: 0.78472 | train_logloss: 0.57464 | train_f1_macro: 0.77782 | valid_balanced_accuracy: 0.63952 | valid_logloss: 1.01504 | valid_f1_macro: 0.6286  |  4:44:15s
+epoch 251| loss: 0.71594 | train_balanced_accuracy: 0.3795  | train_logloss: 18.14818| train_f1_macro: 0.37901 | valid_balanced_accuracy: 0.33581 | valid_logloss: 18.24214| valid_f1_macro: 0.32726 |  4:45:21s
+epoch 252| loss: 0.71181 | train_balanced_accuracy: 0.78251 | train_logloss: 0.58097 | train_f1_macro: 0.77734 | valid_balanced_accuracy: 0.63311 | valid_logloss: 1.03283 | valid_f1_macro: 0.62415 |  4:46:28s
+epoch 253| loss: 0.71004 | train_balanced_accuracy: 0.78137 | train_logloss: 0.59095 | train_f1_macro: 0.77487 | valid_balanced_accuracy: 0.63217 | valid_logloss: 1.03431 | valid_f1_macro: 0.62196 |  4:47:33s
+epoch 254| loss: 0.72117 | train_balanced_accuracy: 0.58508 | train_logloss: 2.52004 | train_f1_macro: 0.60481 | valid_balanced_accuracy: 0.46424 | valid_logloss: 3.03875 | valid_f1_macro: 0.48925 |  4:48:38s
+epoch 255| loss: 0.72216 | train_balanced_accuracy: 0.75991 | train_logloss: 0.63339 | train_f1_macro: 0.75774 | valid_balanced_accuracy: 0.60942 | valid_logloss: 1.09626 | valid_f1_macro: 0.60827 |  4:49:42s
+epoch 256| loss: 0.70756 | train_balanced_accuracy: 0.78738 | train_logloss: 0.5711  | train_f1_macro: 0.78313 | valid_balanced_accuracy: 0.63619 | valid_logloss: 1.04301 | valid_f1_macro: 0.62847 |  4:50:48s
+epoch 257| loss: 0.70174 | train_balanced_accuracy: 0.41802 | train_logloss: 9.83677 | train_f1_macro: 0.39857 | valid_balanced_accuracy: 0.34393 | valid_logloss: 10.24554| valid_f1_macro: 0.32457 |  4:51:53s
+epoch 258| loss: 0.69846 | train_balanced_accuracy: 0.78221 | train_logloss: 0.57934 | train_f1_macro: 0.77521 | valid_balanced_accuracy: 0.63644 | valid_logloss: 1.03587 | valid_f1_macro: 0.62556 |  4:52:58s
+epoch 259| loss: 0.69273 | train_balanced_accuracy: 0.78992 | train_logloss: 0.56072 | train_f1_macro: 0.78456 | valid_balanced_accuracy: 0.6377  | valid_logloss: 1.04402 | valid_f1_macro: 0.62855 |  4:54:02s
+epoch 260| loss: 0.68715 | train_balanced_accuracy: 0.79574 | train_logloss: 0.54813 | train_f1_macro: 0.78875 | valid_balanced_accuracy: 0.6404  | valid_logloss: 1.02534 | valid_f1_macro: 0.62917 |  4:55:08s
+epoch 261| loss: 0.69737 | train_balanced_accuracy: 0.78983 | train_logloss: 0.5644  | train_f1_macro: 0.78175 | valid_balanced_accuracy: 0.6448  | valid_logloss: 1.01429 | valid_f1_macro: 0.63209 |  4:56:13s
+epoch 262| loss: 0.6961  | train_balanced_accuracy: 0.79307 | train_logloss: 0.5532  | train_f1_macro: 0.78674 | valid_balanced_accuracy: 0.64285 | valid_logloss: 1.03773 | valid_f1_macro: 0.63258 |  4:57:18s
+epoch 263| loss: 0.69619 | train_balanced_accuracy: 0.7887  | train_logloss: 0.56283 | train_f1_macro: 0.78182 | valid_balanced_accuracy: 0.64021 | valid_logloss: 1.02717 | valid_f1_macro: 0.62902 |  4:58:23s
+epoch 264| loss: 0.69748 | train_balanced_accuracy: 0.79005 | train_logloss: 0.55726 | train_f1_macro: 0.78425 | valid_balanced_accuracy: 0.63921 | valid_logloss: 1.03014 | valid_f1_macro: 0.63037 |  4:59:27s
+epoch 265| loss: 0.69556 | train_balanced_accuracy: 0.79535 | train_logloss: 0.5532  | train_f1_macro: 0.78997 | valid_balanced_accuracy: 0.63984 | valid_logloss: 1.02987 | valid_f1_macro: 0.63112 |  5:00:32s
+epoch 266| loss: 0.69011 | train_balanced_accuracy: 0.79649 | train_logloss: 0.54744 | train_f1_macro: 0.79196 | valid_balanced_accuracy: 0.64147 | valid_logloss: 1.0343  | valid_f1_macro: 0.63325 |  5:01:37s
+epoch 267| loss: 0.68481 | train_balanced_accuracy: 0.7878  | train_logloss: 0.56015 | train_f1_macro: 0.77841 | valid_balanced_accuracy: 0.63952 | valid_logloss: 1.06114 | valid_f1_macro: 0.62423 |  5:02:42s
+epoch 268| loss: 0.68857 | train_balanced_accuracy: 0.79913 | train_logloss: 0.54254 | train_f1_macro: 0.79348 | valid_balanced_accuracy: 0.64323 | valid_logloss: 1.02507 | valid_f1_macro: 0.63476 |  5:03:47s
+epoch 269| loss: 0.6861  | train_balanced_accuracy: 0.78332 | train_logloss: 0.57994 | train_f1_macro: 0.78346 | valid_balanced_accuracy: 0.62205 | valid_logloss: 1.07598 | valid_f1_macro: 0.6215  |  5:04:52s
+epoch 270| loss: 0.6798  | train_balanced_accuracy: 0.7774  | train_logloss: 0.59119 | train_f1_macro: 0.77597 | valid_balanced_accuracy: 0.62268 | valid_logloss: 1.07904 | valid_f1_macro: 0.62005 |  5:05:58s
+epoch 271| loss: 0.68889 | train_balanced_accuracy: 0.79835 | train_logloss: 0.54024 | train_f1_macro: 0.79262 | valid_balanced_accuracy: 0.64386 | valid_logloss: 1.01945 | valid_f1_macro: 0.63402 |  5:07:04s
+epoch 272| loss: 0.67558 | train_balanced_accuracy: 0.79671 | train_logloss: 0.5414  | train_f1_macro: 0.791   | valid_balanced_accuracy: 0.64549 | valid_logloss: 1.02705 | valid_f1_macro: 0.63604 |  5:08:08s
+epoch 273| loss: 0.6726  | train_balanced_accuracy: 0.79785 | train_logloss: 0.54254 | train_f1_macro: 0.79136 | valid_balanced_accuracy: 0.64424 | valid_logloss: 1.04001 | valid_f1_macro: 0.63237 |  5:09:13s
+epoch 274| loss: 0.67658 | train_balanced_accuracy: 0.79475 | train_logloss: 0.5471  | train_f1_macro: 0.78685 | valid_balanced_accuracy: 0.64323 | valid_logloss: 1.03685 | valid_f1_macro: 0.63055 |  5:10:18s
+epoch 275| loss: 0.68128 | train_balanced_accuracy: 0.78897 | train_logloss: 0.55622 | train_f1_macro: 0.78444 | valid_balanced_accuracy: 0.63971 | valid_logloss: 1.06526 | valid_f1_macro: 0.63146 |  5:11:22s
+epoch 276| loss: 0.68587 | train_balanced_accuracy: 0.79288 | train_logloss: 0.5559  | train_f1_macro: 0.78655 | valid_balanced_accuracy: 0.6448  | valid_logloss: 1.0345  | valid_f1_macro: 0.63372 |  5:12:28s
+epoch 277| loss: 0.67753 | train_balanced_accuracy: 0.49228 | train_logloss: 10.13678| train_f1_macro: 0.48529 | valid_balanced_accuracy: 0.44151 | valid_logloss: 10.48641| valid_f1_macro: 0.42507 |  5:13:32s
+epoch 278| loss: 0.674   | train_balanced_accuracy: 0.79796 | train_logloss: 0.53885 | train_f1_macro: 0.79319 | valid_balanced_accuracy: 0.63896 | valid_logloss: 1.06372 | valid_f1_macro: 0.63069 |  5:14:37s
+epoch 279| loss: 0.67456 | train_balanced_accuracy: 0.79476 | train_logloss: 0.54743 | train_f1_macro: 0.78765 | valid_balanced_accuracy: 0.64411 | valid_logloss: 1.03879 | valid_f1_macro: 0.63237 |  5:15:44s
+epoch 280| loss: 0.67348 | train_balanced_accuracy: 0.79469 | train_logloss: 0.55005 | train_f1_macro: 0.7877  | valid_balanced_accuracy: 0.64185 | valid_logloss: 1.05941 | valid_f1_macro: 0.63003 |  5:16:49s
+epoch 281| loss: 0.662   | train_balanced_accuracy: 0.79123 | train_logloss: 0.55006 | train_f1_macro: 0.78671 | valid_balanced_accuracy: 0.64015 | valid_logloss: 1.02848 | valid_f1_macro: 0.63247 |  5:17:55s
+epoch 282| loss: 0.67718 | train_balanced_accuracy: 0.79184 | train_logloss: 0.54907 | train_f1_macro: 0.78489 | valid_balanced_accuracy: 0.6394  | valid_logloss: 1.05116 | valid_f1_macro: 0.62733 |  5:18:59s
+epoch 283| loss: 0.667   | train_balanced_accuracy: 0.8022  | train_logloss: 0.5281  | train_f1_macro: 0.79427 | valid_balanced_accuracy: 0.64575 | valid_logloss: 1.04662 | valid_f1_macro: 0.63158 |  5:20:04s
+epoch 284| loss: 0.66808 | train_balanced_accuracy: 0.79939 | train_logloss: 0.55614 | train_f1_macro: 0.79305 | valid_balanced_accuracy: 0.64216 | valid_logloss: 1.08425 | valid_f1_macro: 0.63109 |  5:21:09s
+epoch 285| loss: 0.66033 | train_balanced_accuracy: 0.80344 | train_logloss: 0.52489 | train_f1_macro: 0.79727 | valid_balanced_accuracy: 0.64216 | valid_logloss: 1.05049 | valid_f1_macro: 0.63008 |  5:22:14s
+epoch 286| loss: 0.65868 | train_balanced_accuracy: 0.62842 | train_logloss: 4.22757 | train_f1_macro: 0.64735 | valid_balanced_accuracy: 0.52483 | valid_logloss: 4.79005 | valid_f1_macro: 0.54217 |  5:23:19s
+epoch 287| loss: 0.6536  | train_balanced_accuracy: 0.80968 | train_logloss: 0.5095  | train_f1_macro: 0.80527 | valid_balanced_accuracy: 0.64832 | valid_logloss: 1.03576 | valid_f1_macro: 0.64062 |  5:24:24s
+epoch 288| loss: 0.65607 | train_balanced_accuracy: 0.79357 | train_logloss: 0.54467 | train_f1_macro: 0.78579 | valid_balanced_accuracy: 0.64323 | valid_logloss: 1.06228 | valid_f1_macro: 0.62952 |  5:25:31s
+epoch 289| loss: 0.65737 | train_balanced_accuracy: 0.80316 | train_logloss: 0.52508 | train_f1_macro: 0.79869 | valid_balanced_accuracy: 0.64317 | valid_logloss: 1.05013 | valid_f1_macro: 0.63553 |  5:26:37s
+epoch 290| loss: 0.64936 | train_balanced_accuracy: 0.80399 | train_logloss: 0.51804 | train_f1_macro: 0.79885 | valid_balanced_accuracy: 0.63959 | valid_logloss: 1.0671  | valid_f1_macro: 0.62978 |  5:27:42s
+epoch 291| loss: 0.64825 | train_balanced_accuracy: 0.80473 | train_logloss: 0.51845 | train_f1_macro: 0.79783 | valid_balanced_accuracy: 0.6431  | valid_logloss: 1.07141 | valid_f1_macro: 0.6294  |  5:28:47s
+epoch 292| loss: 0.65342 | train_balanced_accuracy: 0.48811 | train_logloss: 3.46431 | train_f1_macro: 0.47512 | valid_balanced_accuracy: 0.4049  | valid_logloss: 4.03148 | valid_f1_macro: 0.38803 |  5:29:51s
+epoch 293| loss: 0.65353 | train_balanced_accuracy: 0.80644 | train_logloss: 0.51877 | train_f1_macro: 0.8001  | valid_balanced_accuracy: 0.6438  | valid_logloss: 1.0681  | valid_f1_macro: 0.63266 |  5:30:56s
+epoch 294| loss: 0.66285 | train_balanced_accuracy: 0.7956  | train_logloss: 0.5391  | train_f1_macro: 0.78973 | valid_balanced_accuracy: 0.63638 | valid_logloss: 1.07478 | valid_f1_macro: 0.6261  |  5:32:01s
+epoch 295| loss: 0.65793 | train_balanced_accuracy: 0.7947  | train_logloss: 0.53829 | train_f1_macro: 0.78972 | valid_balanced_accuracy: 0.64135 | valid_logloss: 1.06578 | valid_f1_macro: 0.6321  |  5:33:05s
+epoch 296| loss: 0.65281 | train_balanced_accuracy: 0.79277 | train_logloss: 0.54444 | train_f1_macro: 0.78529 | valid_balanced_accuracy: 0.63676 | valid_logloss: 1.09771 | valid_f1_macro: 0.62287 |  5:34:09s
+epoch 297| loss: 0.64462 | train_balanced_accuracy: 0.41433 | train_logloss: 9.42461 | train_f1_macro: 0.41739 | valid_balanced_accuracy: 0.35667 | valid_logloss: 9.91168 | valid_f1_macro: 0.34195 |  5:35:14s
+epoch 298| loss: 0.6508  | train_balanced_accuracy: 0.81054 | train_logloss: 0.50507 | train_f1_macro: 0.80405 | valid_balanced_accuracy: 0.64682 | valid_logloss: 1.05563 | valid_f1_macro: 0.63578 |  5:36:20s
+epoch 299| loss: 0.6577  | train_balanced_accuracy: 0.80709 | train_logloss: 0.51895 | train_f1_macro: 0.80305 | valid_balanced_accuracy: 0.64342 | valid_logloss: 1.04777 | valid_f1_macro: 0.63563 |  5:37:24s
+epoch 300| loss: 0.64492 | train_balanced_accuracy: 0.7975  | train_logloss: 0.5244  | train_f1_macro: 0.79132 | valid_balanced_accuracy: 0.64286 | valid_logloss: 1.08603 | valid_f1_macro: 0.63127 |  5:38:28s
+epoch 301| loss: 0.64193 | train_balanced_accuracy: 0.81021 | train_logloss: 0.50614 | train_f1_macro: 0.80529 | valid_balanced_accuracy: 0.64757 | valid_logloss: 1.0563  | valid_f1_macro: 0.63818 |  5:39:33s
+epoch 302| loss: 0.63593 | train_balanced_accuracy: 0.81153 | train_logloss: 0.50449 | train_f1_macro: 0.80734 | valid_balanced_accuracy: 0.64688 | valid_logloss: 1.0517  | valid_f1_macro: 0.63925 |  5:40:38s
+epoch 303| loss: 0.64208 | train_balanced_accuracy: 0.79632 | train_logloss: 0.54008 | train_f1_macro: 0.79468 | valid_balanced_accuracy: 0.6306  | valid_logloss: 1.09592 | valid_f1_macro: 0.62749 |  5:41:42s
+epoch 304| loss: 0.64605 | train_balanced_accuracy: 0.79396 | train_logloss: 0.53732 | train_f1_macro: 0.79706 | valid_balanced_accuracy: 0.62387 | valid_logloss: 1.09917 | valid_f1_macro: 0.62797 |  5:42:46s
+epoch 305| loss: 0.63668 | train_balanced_accuracy: 0.80988 | train_logloss: 0.50495 | train_f1_macro: 0.80346 | valid_balanced_accuracy: 0.65159 | valid_logloss: 1.0416  | valid_f1_macro: 0.63914 |  5:43:50s
+epoch 306| loss: 0.63766 | train_balanced_accuracy: 0.81293 | train_logloss: 0.49283 | train_f1_macro: 0.80613 | valid_balanced_accuracy: 0.64776 | valid_logloss: 1.06891 | valid_f1_macro: 0.63587 |  5:44:54s
+epoch 307| loss: 0.63703 | train_balanced_accuracy: 0.80331 | train_logloss: 0.51967 | train_f1_macro: 0.79772 | valid_balanced_accuracy: 0.64405 | valid_logloss: 1.07251 | valid_f1_macro: 0.63398 |  5:46:01s
+
+Early stopping occurred at epoch 307 with best_epoch = 287 and best_valid_f1_macro = 0.64062
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/callbacks.py:172: UserWarning: Best weights from best epoch are automatically used!
+  warnings.warn(wrn_msg)
+[CV 3/5; 7/7] END classifier__estimator=TabNetClassifierTuner(n_d=8, n_a=8, n_steps=3, gamma=1.3, cat_idxs=[], cat_dims=[], cat_emb_dim=1, n_independent=2, n_shared=2, epsilon=1e-15, momentum=0.02, lambda_sparse=0.001, seed=0, clip_value=1, verbose=1, optimizer_fn=<class 'torch.optim.adam.Adam'>, optimizer_params={'lr': 0.02}, scheduler_fn=None, scheduler_params={}, mask_type='sparsemax', input_dim=None, output_dim=None, device_name='cpu', n_shared_decoder=1, n_indep_decoder=1, use_embeddings=True, threshold_categorical_features=150, use_cat_emb_dim=True, fit_eval_metric=['balanced_accuracy', 'logloss', <class 'pytorch_tabnet_tuner.tab_model_tuner.F1ScoreMacro'>], fit_weights=0, fit_batch_size=1024, fit_virtual_batch_size=128), classifier__estimator__cat_emb_dim=20, classifier__estimator__clip_value=1, classifier__estimator__gamma=2.0, classifier__estimator__lambda_sparse=0.001, classifier__estimator__mask_type=sparsemax, classifier__estimator__momentum=0.4, classifier__estimator__n_a=64, classifier__estimator__n_independent=5, classifier__estimator__n_shared=5, classifier__estimator__n_steps=10, classifier__estimator__optimizer_fn=<class 'torch.optim.adam.Adam'>, classifier__estimator__optimizer_params={'lr': 0.02}, classifier__estimator__scheduler_fn=<class 'torch.optim.lr_scheduler.StepLR'>, classifier__estimator__scheduler_params={'step_size': 10, 'gamma': 0.95}, classifier__estimator__seed=42, classifier__estimator__verbose=1;, score=0.340 total time=346.4min
+[CV 4/5; 7/7] START classifier__estimator=TabNetClassifierTuner(n_d=8, n_a=8, n_steps=3, gamma=1.3, cat_idxs=[], cat_dims=[], cat_emb_dim=1, n_independent=2, n_shared=2, epsilon=1e-15, momentum=0.02, lambda_sparse=0.001, seed=0, clip_value=1, verbose=1, optimizer_fn=<class 'torch.optim.adam.Adam'>, optimizer_params={'lr': 0.02}, scheduler_fn=None, scheduler_params={}, mask_type='sparsemax', input_dim=None, output_dim=None, device_name='cpu', n_shared_decoder=1, n_indep_decoder=1, use_embeddings=True, threshold_categorical_features=150, use_cat_emb_dim=True, fit_eval_metric=['balanced_accuracy', 'logloss', <class 'pytorch_tabnet_tuner.tab_model_tuner.F1ScoreMacro'>], fit_weights=0, fit_batch_size=1024, fit_virtual_batch_size=128), classifier__estimator__cat_emb_dim=20, classifier__estimator__clip_value=1, classifier__estimator__gamma=2.0, classifier__estimator__lambda_sparse=0.001, classifier__estimator__mask_type=sparsemax, classifier__estimator__momentum=0.4, classifier__estimator__n_a=64, classifier__estimator__n_independent=5, classifier__estimator__n_shared=5, classifier__estimator__n_steps=10, classifier__estimator__optimizer_fn=<class 'torch.optim.adam.Adam'>, classifier__estimator__optimizer_params={'lr': 0.02}, classifier__estimator__scheduler_fn=<class 'torch.optim.lr_scheduler.StepLR'>, classifier__estimator__scheduler_params={'step_size': 10, 'gamma': 0.95}, classifier__estimator__seed=42, classifier__estimator__verbose=1
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:75: UserWarning: Device used : cpu
+  warnings.warn(f"Device used : {self.device}")
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:105: UserWarning: Pretraining: n_d changed from 8 to 64
+  warnings.warn(wrn_msg)
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:105: UserWarning: Pretraining: cat_dims changed from [] to [39, 43, 34]
+  warnings.warn(wrn_msg)
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:105: UserWarning: Pretraining: cat_emb_dim changed from 20 to [19, 20, 17]
+  warnings.warn(wrn_msg)
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:105: UserWarning: Pretraining: cat_idxs changed from [] to [1, 2, 3]
+  warnings.warn(wrn_msg)
+epoch 0  | loss: 4.04062 | train_balanced_accuracy: 0.23458 | train_logloss: 2.37275 | train_f1_macro: 0.16664 | valid_balanced_accuracy: 0.23743 | valid_logloss: 2.3762  | valid_f1_macro: 0.16772 |  0:01:04s
+epoch 1  | loss: 2.03503 | train_balanced_accuracy: 0.26921 | train_logloss: 1.6289  | train_f1_macro: 0.16773 | valid_balanced_accuracy: 0.26619 | valid_logloss: 1.6265  | valid_f1_macro: 0.16439 |  0:02:08s
+epoch 2  | loss: 1.62187 | train_balanced_accuracy: 0.3229  | train_logloss: 1.568   | train_f1_macro: 0.29995 | valid_balanced_accuracy: 0.32572 | valid_logloss: 1.56258 | valid_f1_macro: 0.302   |  0:03:13s
+epoch 3  | loss: 1.52825 | train_balanced_accuracy: 0.31265 | train_logloss: 1.54748 | train_f1_macro: 0.24629 | valid_balanced_accuracy: 0.31509 | valid_logloss: 1.54091 | valid_f1_macro: 0.2493  |  0:04:17s
+epoch 4  | loss: 1.52404 | train_balanced_accuracy: 0.29923 | train_logloss: 1.56317 | train_f1_macro: 0.22581 | valid_balanced_accuracy: 0.30102 | valid_logloss: 1.55917 | valid_f1_macro: 0.22616 |  0:05:22s
+epoch 5  | loss: 1.52443 | train_balanced_accuracy: 0.2724  | train_logloss: 1.66101 | train_f1_macro: 0.18613 | valid_balanced_accuracy: 0.27407 | valid_logloss: 1.6568  | valid_f1_macro: 0.18627 |  0:06:25s
+epoch 6  | loss: 1.50186 | train_balanced_accuracy: 0.33565 | train_logloss: 1.53929 | train_f1_macro: 0.28527 | valid_balanced_accuracy: 0.3381  | valid_logloss: 1.5348  | valid_f1_macro: 0.28782 |  0:07:29s
+epoch 7  | loss: 1.49555 | train_balanced_accuracy: 0.31485 | train_logloss: 1.56998 | train_f1_macro: 0.25945 | valid_balanced_accuracy: 0.31436 | valid_logloss: 1.56364 | valid_f1_macro: 0.25777 |  0:08:33s
+epoch 8  | loss: 1.48912 | train_balanced_accuracy: 0.34704 | train_logloss: 1.51302 | train_f1_macro: 0.31061 | valid_balanced_accuracy: 0.34766 | valid_logloss: 1.5083  | valid_f1_macro: 0.31164 |  0:09:38s
+epoch 9  | loss: 1.47777 | train_balanced_accuracy: 0.34919 | train_logloss: 1.57213 | train_f1_macro: 0.29131 | valid_balanced_accuracy: 0.34621 | valid_logloss: 1.5711  | valid_f1_macro: 0.28812 |  0:10:42s
+epoch 10 | loss: 1.47273 | train_balanced_accuracy: 0.35666 | train_logloss: 1.48281 | train_f1_macro: 0.31097 | valid_balanced_accuracy: 0.35552 | valid_logloss: 1.48268 | valid_f1_macro: 0.31129 |  0:11:46s
+epoch 11 | loss: 1.46512 | train_balanced_accuracy: 0.35331 | train_logloss: 1.52847 | train_f1_macro: 0.31008 | valid_balanced_accuracy: 0.35149 | valid_logloss: 1.52647 | valid_f1_macro: 0.30902 |  0:12:49s
+epoch 12 | loss: 1.46521 | train_balanced_accuracy: 0.36595 | train_logloss: 1.46063 | train_f1_macro: 0.35095 | valid_balanced_accuracy: 0.36696 | valid_logloss: 1.45923 | valid_f1_macro: 0.35349 |  0:13:53s
+epoch 13 | loss: 1.46807 | train_balanced_accuracy: 0.32681 | train_logloss: 1.59235 | train_f1_macro: 0.30396 | valid_balanced_accuracy: 0.32718 | valid_logloss: 1.58919 | valid_f1_macro: 0.30447 |  0:14:58s
+epoch 14 | loss: 1.46966 | train_balanced_accuracy: 0.35719 | train_logloss: 1.48041 | train_f1_macro: 0.31114 | valid_balanced_accuracy: 0.35603 | valid_logloss: 1.47755 | valid_f1_macro: 0.31039 |  0:16:02s
+epoch 15 | loss: 1.4646  | train_balanced_accuracy: 0.3629  | train_logloss: 1.46362 | train_f1_macro: 0.33021 | valid_balanced_accuracy: 0.36526 | valid_logloss: 1.4618  | valid_f1_macro: 0.33471 |  0:17:06s
+epoch 16 | loss: 1.45763 | train_balanced_accuracy: 0.35177 | train_logloss: 1.4748  | train_f1_macro: 0.31722 | valid_balanced_accuracy: 0.35182 | valid_logloss: 1.47017 | valid_f1_macro: 0.31752 |  0:18:10s
+epoch 17 | loss: 1.4766  | train_balanced_accuracy: 0.36125 | train_logloss: 1.48613 | train_f1_macro: 0.32925 | valid_balanced_accuracy: 0.3598  | valid_logloss: 1.4822  | valid_f1_macro: 0.328   |  0:19:16s
+epoch 18 | loss: 1.46815 | train_balanced_accuracy: 0.36629 | train_logloss: 1.46311 | train_f1_macro: 0.32941 | valid_balanced_accuracy: 0.36721 | valid_logloss: 1.45767 | valid_f1_macro: 0.32999 |  0:20:20s
+epoch 19 | loss: 1.46964 | train_balanced_accuracy: 0.36989 | train_logloss: 1.46163 | train_f1_macro: 0.32992 | valid_balanced_accuracy: 0.37011 | valid_logloss: 1.4575  | valid_f1_macro: 0.33011 |  0:21:24s
+epoch 20 | loss: 1.4626  | train_balanced_accuracy: 0.37132 | train_logloss: 1.45843 | train_f1_macro: 0.3277  | valid_balanced_accuracy: 0.37142 | valid_logloss: 1.45395 | valid_f1_macro: 0.32767 |  0:22:27s
+epoch 21 | loss: 1.45973 | train_balanced_accuracy: 0.37237 | train_logloss: 1.45412 | train_f1_macro: 0.33055 | valid_balanced_accuracy: 0.36979 | valid_logloss: 1.44891 | valid_f1_macro: 0.32707 |  0:23:31s
+epoch 22 | loss: 1.45944 | train_balanced_accuracy: 0.36591 | train_logloss: 1.47216 | train_f1_macro: 0.33049 | valid_balanced_accuracy: 0.36646 | valid_logloss: 1.46695 | valid_f1_macro: 0.3317  |  0:24:35s
+epoch 23 | loss: 1.45742 | train_balanced_accuracy: 0.36918 | train_logloss: 1.45465 | train_f1_macro: 0.32219 | valid_balanced_accuracy: 0.37124 | valid_logloss: 1.44942 | valid_f1_macro: 0.32467 |  0:25:39s
+epoch 24 | loss: 1.46319 | train_balanced_accuracy: 0.36601 | train_logloss: 1.45919 | train_f1_macro: 0.31782 | valid_balanced_accuracy: 0.36998 | valid_logloss: 1.45283 | valid_f1_macro: 0.32229 |  0:26:43s
+epoch 25 | loss: 1.4633  | train_balanced_accuracy: 0.37126 | train_logloss: 1.46094 | train_f1_macro: 0.32603 | valid_balanced_accuracy: 0.37312 | valid_logloss: 1.45684 | valid_f1_macro: 0.32816 |  0:27:47s
+epoch 26 | loss: 1.45843 | train_balanced_accuracy: 0.37457 | train_logloss: 1.45769 | train_f1_macro: 0.33303 | valid_balanced_accuracy: 0.37281 | valid_logloss: 1.45363 | valid_f1_macro: 0.33054 |  0:28:51s
+epoch 27 | loss: 1.49287 | train_balanced_accuracy: 0.34886 | train_logloss: 1.48511 | train_f1_macro: 0.29868 | valid_balanced_accuracy: 0.3481  | valid_logloss: 1.48026 | valid_f1_macro: 0.29818 |  0:29:57s
+epoch 28 | loss: 1.51015 | train_balanced_accuracy: 0.23728 | train_logloss: 2.67219 | train_f1_macro: 0.20662 | valid_balanced_accuracy: 0.23322 | valid_logloss: 2.68843 | valid_f1_macro: 0.20372 |  0:31:01s
+epoch 29 | loss: 1.53076 | train_balanced_accuracy: 0.34949 | train_logloss: 1.50897 | train_f1_macro: 0.30487 | valid_balanced_accuracy: 0.34804 | valid_logloss: 1.50639 | valid_f1_macro: 0.30268 |  0:32:05s
+epoch 30 | loss: 1.50392 | train_balanced_accuracy: 0.34811 | train_logloss: 1.4981  | train_f1_macro: 0.29604 | valid_balanced_accuracy: 0.3459  | valid_logloss: 1.49677 | valid_f1_macro: 0.29286 |  0:33:08s
+epoch 31 | loss: 1.5079  | train_balanced_accuracy: 0.28612 | train_logloss: 2.12238 | train_f1_macro: 0.23314 | valid_balanced_accuracy: 0.28444 | valid_logloss: 2.13074 | valid_f1_macro: 0.23159 |  0:34:13s
+epoch 32 | loss: 1.50017 | train_balanced_accuracy: 0.25902 | train_logloss: 6.70959 | train_f1_macro: 0.23334 | valid_balanced_accuracy: 0.26093 | valid_logloss: 6.75664 | valid_f1_macro: 0.2352  |  0:35:17s
+
+Early stopping occurred at epoch 32 with best_epoch = 12 and best_valid_f1_macro = 0.35349
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/callbacks.py:172: UserWarning: Best weights from best epoch are automatically used!
+  warnings.warn(wrn_msg)
+[CV 4/5; 7/7] END classifier__estimator=TabNetClassifierTuner(n_d=8, n_a=8, n_steps=3, gamma=1.3, cat_idxs=[], cat_dims=[], cat_emb_dim=1, n_independent=2, n_shared=2, epsilon=1e-15, momentum=0.02, lambda_sparse=0.001, seed=0, clip_value=1, verbose=1, optimizer_fn=<class 'torch.optim.adam.Adam'>, optimizer_params={'lr': 0.02}, scheduler_fn=None, scheduler_params={}, mask_type='sparsemax', input_dim=None, output_dim=None, device_name='cpu', n_shared_decoder=1, n_indep_decoder=1, use_embeddings=True, threshold_categorical_features=150, use_cat_emb_dim=True, fit_eval_metric=['balanced_accuracy', 'logloss', <class 'pytorch_tabnet_tuner.tab_model_tuner.F1ScoreMacro'>], fit_weights=0, fit_batch_size=1024, fit_virtual_batch_size=128), classifier__estimator__cat_emb_dim=20, classifier__estimator__clip_value=1, classifier__estimator__gamma=2.0, classifier__estimator__lambda_sparse=0.001, classifier__estimator__mask_type=sparsemax, classifier__estimator__momentum=0.4, classifier__estimator__n_a=64, classifier__estimator__n_independent=5, classifier__estimator__n_shared=5, classifier__estimator__n_steps=10, classifier__estimator__optimizer_fn=<class 'torch.optim.adam.Adam'>, classifier__estimator__optimizer_params={'lr': 0.02}, classifier__estimator__scheduler_fn=<class 'torch.optim.lr_scheduler.StepLR'>, classifier__estimator__scheduler_params={'step_size': 10, 'gamma': 0.95}, classifier__estimator__seed=42, classifier__estimator__verbose=1;, score=0.288 total time=35.6min
+[CV 5/5; 7/7] START classifier__estimator=TabNetClassifierTuner(n_d=8, n_a=8, n_steps=3, gamma=1.3, cat_idxs=[], cat_dims=[], cat_emb_dim=1, n_independent=2, n_shared=2, epsilon=1e-15, momentum=0.02, lambda_sparse=0.001, seed=0, clip_value=1, verbose=1, optimizer_fn=<class 'torch.optim.adam.Adam'>, optimizer_params={'lr': 0.02}, scheduler_fn=None, scheduler_params={}, mask_type='sparsemax', input_dim=None, output_dim=None, device_name='cpu', n_shared_decoder=1, n_indep_decoder=1, use_embeddings=True, threshold_categorical_features=150, use_cat_emb_dim=True, fit_eval_metric=['balanced_accuracy', 'logloss', <class 'pytorch_tabnet_tuner.tab_model_tuner.F1ScoreMacro'>], fit_weights=0, fit_batch_size=1024, fit_virtual_batch_size=128), classifier__estimator__cat_emb_dim=20, classifier__estimator__clip_value=1, classifier__estimator__gamma=2.0, classifier__estimator__lambda_sparse=0.001, classifier__estimator__mask_type=sparsemax, classifier__estimator__momentum=0.4, classifier__estimator__n_a=64, classifier__estimator__n_independent=5, classifier__estimator__n_shared=5, classifier__estimator__n_steps=10, classifier__estimator__optimizer_fn=<class 'torch.optim.adam.Adam'>, classifier__estimator__optimizer_params={'lr': 0.02}, classifier__estimator__scheduler_fn=<class 'torch.optim.lr_scheduler.StepLR'>, classifier__estimator__scheduler_params={'step_size': 10, 'gamma': 0.95}, classifier__estimator__seed=42, classifier__estimator__verbose=1
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:75: UserWarning: Device used : cpu
+  warnings.warn(f"Device used : {self.device}")
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:105: UserWarning: Pretraining: n_d changed from 8 to 64
+  warnings.warn(wrn_msg)
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:105: UserWarning: Pretraining: cat_dims changed from [] to [47, 48, 23, 146]
+  warnings.warn(wrn_msg)
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:105: UserWarning: Pretraining: cat_emb_dim changed from 20 to [20, 20, 11, 20]
+  warnings.warn(wrn_msg)
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/abstract_model.py:105: UserWarning: Pretraining: cat_idxs changed from [] to [1, 2, 3, 12]
+  warnings.warn(wrn_msg)
+epoch 0  | loss: 5.79563 | train_balanced_accuracy: 0.25213 | train_logloss: 3.46294 | train_f1_macro: 0.14839 | valid_balanced_accuracy: 0.25256 | valid_logloss: 3.46655 | valid_f1_macro: 0.1498  |  0:01:05s
+epoch 1  | loss: 2.18132 | train_balanced_accuracy: 0.20474 | train_logloss: 3.23524 | train_f1_macro: 0.10773 | valid_balanced_accuracy: 0.20474 | valid_logloss: 3.21393 | valid_f1_macro: 0.10788 |  0:02:10s
+epoch 2  | loss: 1.6461  | train_balanced_accuracy: 0.29695 | train_logloss: 1.60691 | train_f1_macro: 0.22325 | valid_balanced_accuracy: 0.29492 | valid_logloss: 1.60797 | valid_f1_macro: 0.22148 |  0:03:15s
+epoch 3  | loss: 1.5506  | train_balanced_accuracy: 0.32793 | train_logloss: 1.5404  | train_f1_macro: 0.25843 | valid_balanced_accuracy: 0.32786 | valid_logloss: 1.54014 | valid_f1_macro: 0.25954 |  0:04:21s
+epoch 4  | loss: 1.54108 | train_balanced_accuracy: 0.31072 | train_logloss: 1.56043 | train_f1_macro: 0.249   | valid_balanced_accuracy: 0.31026 | valid_logloss: 1.5648  | valid_f1_macro: 0.24846 |  0:05:27s
+epoch 5  | loss: 1.52813 | train_balanced_accuracy: 0.33189 | train_logloss: 1.53282 | train_f1_macro: 0.25888 | valid_balanced_accuracy: 0.32767 | valid_logloss: 1.53317 | valid_f1_macro: 0.25594 |  0:06:32s
+epoch 6  | loss: 1.53403 | train_balanced_accuracy: 0.30978 | train_logloss: 1.6008  | train_f1_macro: 0.24292 | valid_balanced_accuracy: 0.31056 | valid_logloss: 1.60188 | valid_f1_macro: 0.2429  |  0:07:37s
+epoch 7  | loss: 1.53012 | train_balanced_accuracy: 0.34075 | train_logloss: 1.51997 | train_f1_macro: 0.27772 | valid_balanced_accuracy: 0.33704 | valid_logloss: 1.52391 | valid_f1_macro: 0.2747  |  0:08:42s
+epoch 8  | loss: 1.51871 | train_balanced_accuracy: 0.34039 | train_logloss: 1.51647 | train_f1_macro: 0.2952  | valid_balanced_accuracy: 0.34055 | valid_logloss: 1.52003 | valid_f1_macro: 0.29573 |  0:09:47s
+epoch 9  | loss: 1.53261 | train_balanced_accuracy: 0.3136  | train_logloss: 1.52531 | train_f1_macro: 0.26693 | valid_balanced_accuracy: 0.31371 | valid_logloss: 1.52508 | valid_f1_macro: 0.26763 |  0:10:53s
+epoch 10 | loss: 1.51723 | train_balanced_accuracy: 0.32692 | train_logloss: 1.53267 | train_f1_macro: 0.25143 | valid_balanced_accuracy: 0.32584 | valid_logloss: 1.5372  | valid_f1_macro: 0.25198 |  0:11:58s
+epoch 11 | loss: 1.51157 | train_balanced_accuracy: 0.34053 | train_logloss: 1.50883 | train_f1_macro: 0.26773 | valid_balanced_accuracy: 0.33867 | valid_logloss: 1.51376 | valid_f1_macro: 0.26694 |  0:13:03s
+epoch 12 | loss: 1.50719 | train_balanced_accuracy: 0.33827 | train_logloss: 1.50865 | train_f1_macro: 0.26371 | valid_balanced_accuracy: 0.33615 | valid_logloss: 1.51208 | valid_f1_macro: 0.26239 |  0:14:10s
+epoch 13 | loss: 1.50375 | train_balanced_accuracy: 0.34525 | train_logloss: 1.50177 | train_f1_macro: 0.29062 | valid_balanced_accuracy: 0.34276 | valid_logloss: 1.50636 | valid_f1_macro: 0.28891 |  0:15:15s
+epoch 14 | loss: 1.50179 | train_balanced_accuracy: 0.33409 | train_logloss: 1.51423 | train_f1_macro: 0.26624 | valid_balanced_accuracy: 0.33326 | valid_logloss: 1.52003 | valid_f1_macro: 0.26647 |  0:16:21s
+epoch 15 | loss: 1.50193 | train_balanced_accuracy: 0.34735 | train_logloss: 1.50231 | train_f1_macro: 0.2859  | valid_balanced_accuracy: 0.34433 | valid_logloss: 1.5082  | valid_f1_macro: 0.28294 |  0:17:27s
+epoch 16 | loss: 1.49939 | train_balanced_accuracy: 0.34148 | train_logloss: 1.49768 | train_f1_macro: 0.29867 | valid_balanced_accuracy: 0.3393  | valid_logloss: 1.50264 | valid_f1_macro: 0.29541 |  0:18:32s
+epoch 17 | loss: 1.49883 | train_balanced_accuracy: 0.3521  | train_logloss: 1.49502 | train_f1_macro: 0.28149 | valid_balanced_accuracy: 0.34929 | valid_logloss: 1.4989  | valid_f1_macro: 0.27947 |  0:19:39s
+epoch 18 | loss: 1.4973  | train_balanced_accuracy: 0.33623 | train_logloss: 1.51312 | train_f1_macro: 0.26313 | valid_balanced_accuracy: 0.33257 | valid_logloss: 1.51937 | valid_f1_macro: 0.26054 |  0:20:44s
+epoch 19 | loss: 1.49475 | train_balanced_accuracy: 0.34512 | train_logloss: 1.49954 | train_f1_macro: 0.27287 | valid_balanced_accuracy: 0.34269 | valid_logloss: 1.50449 | valid_f1_macro: 0.27111 |  0:21:49s
+epoch 20 | loss: 1.49553 | train_balanced_accuracy: 0.34017 | train_logloss: 1.51454 | train_f1_macro: 0.26752 | valid_balanced_accuracy: 0.33703 | valid_logloss: 1.52212 | valid_f1_macro: 0.26534 |  0:22:55s
+epoch 21 | loss: 1.5027  | train_balanced_accuracy: 0.32062 | train_logloss: 1.52734 | train_f1_macro: 0.25028 | valid_balanced_accuracy: 0.31843 | valid_logloss: 1.53382 | valid_f1_macro: 0.24878 |  0:24:04s
+epoch 22 | loss: 1.5056  | train_balanced_accuracy: 0.34878 | train_logloss: 1.50324 | train_f1_macro: 0.27865 | valid_balanced_accuracy: 0.34697 | valid_logloss: 1.51025 | valid_f1_macro: 0.27734 |  0:25:10s
+epoch 23 | loss: 1.50269 | train_balanced_accuracy: 0.34434 | train_logloss: 1.50118 | train_f1_macro: 0.27316 | valid_balanced_accuracy: 0.34238 | valid_logloss: 1.50669 | valid_f1_macro: 0.27239 |  0:26:18s
+epoch 24 | loss: 1.49886 | train_balanced_accuracy: 0.33755 | train_logloss: 1.51872 | train_f1_macro: 0.26473 | valid_balanced_accuracy: 0.33339 | valid_logloss: 1.52391 | valid_f1_macro: 0.26165 |  0:27:24s
+epoch 25 | loss: 1.49907 | train_balanced_accuracy: 0.33904 | train_logloss: 1.50997 | train_f1_macro: 0.28482 | valid_balanced_accuracy: 0.3376  | valid_logloss: 1.5111  | valid_f1_macro: 0.28357 |  0:28:29s
+epoch 26 | loss: 1.50336 | train_balanced_accuracy: 0.33202 | train_logloss: 1.51841 | train_f1_macro: 0.28724 | valid_balanced_accuracy: 0.33131 | valid_logloss: 1.52297 | valid_f1_macro: 0.28705 |  0:29:35s
+epoch 27 | loss: 1.50685 | train_balanced_accuracy: 0.33291 | train_logloss: 1.52546 | train_f1_macro: 0.27707 | valid_balanced_accuracy: 0.33207 | valid_logloss: 1.53029 | valid_f1_macro: 0.27731 |  0:30:40s
+epoch 28 | loss: 1.49855 | train_balanced_accuracy: 0.34979 | train_logloss: 1.49782 | train_f1_macro: 0.28162 | valid_balanced_accuracy: 0.34747 | valid_logloss: 1.5037  | valid_f1_macro: 0.28028 |  0:31:46s
+
+Early stopping occurred at epoch 28 with best_epoch = 8 and best_valid_f1_macro = 0.29573
+/mnt/Dados/Mestrado_Computacao_Aplicada_UFMS/documentos_dissertacao/algoritmos/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pytorch_tabnet/callbacks.py:172: UserWarning: Best weights from best epoch are automatically used!
+  warnings.warn(wrn_msg)
+[CV 5/5; 7/7] END classifier__estimator=TabNetClassifierTuner(n_d=8, n_a=8, n_steps=3, gamma=1.3, cat_idxs=[], cat_dims=[], cat_emb_dim=1, n_independent=2, n_shared=2, epsilon=1e-15, momentum=0.02, lambda_sparse=0.001, seed=0, clip_value=1, verbose=1, optimizer_fn=<class 'torch.optim.adam.Adam'>, optimizer_params={'lr': 0.02}, scheduler_fn=None, scheduler_params={}, mask_type='sparsemax', input_dim=None, output_dim=None, device_name='cpu', n_shared_decoder=1, n_indep_decoder=1, use_embeddings=True, threshold_categorical_features=150, use_cat_emb_dim=True, fit_eval_metric=['balanced_accuracy', 'logloss', <class 'pytorch_tabnet_tuner.tab_model_tuner.F1ScoreMacro'>], fit_weights=0, fit_batch_size=1024, fit_virtual_batch_size=128), classifier__estimator__cat_emb_dim=20, classifier__estimator__clip_value=1, classifier__estimator__gamma=2.0, classifier__estimator__lambda_sparse=0.001, classifier__estimator__mask_type=sparsemax, classifier__estimator__momentum=0.4, classifier__estimator__n_a=64, classifier__estimator__n_independent=5, classifier__estimator__n_shared=5, classifier__estimator__n_steps=10, classifier__estimator__optimizer_fn=<class 'torch.optim.adam.Adam'>, classifier__estimator__optimizer_params={'lr': 0.02}, classifier__estimator__scheduler_fn=<class 'torch.optim.lr_scheduler.StepLR'>, classifier__estimator__scheduler_params={'step_size': 10, 'gamma': 0.95}, classifier__estimator__seed=42, classifier__estimator__verbose=1;, score=0.227 total time=32.1min
+--------------------- RESULTS GS1 ---------------------
+
+CSV gerado com sucesso em: ./runs/results/GS1-cv_results-15-04-2023_23:04:16.csv.
+Function generate_new_csv Took 0:00:00.025537
+
+Cross validation results:
+   mean_fit_time  std_fit_time  mean_score_time  std_score_time  ... split4_test_score mean_test_score std_test_score rank_test_score
+4     401.261253     19.703161         2.037185        0.309940  ...          0.355363        0.360152       0.004986               1
+5      75.536296     16.106131         0.640662        0.026720  ...          0.336623        0.339451       0.002226               2
+1       2.734969      0.140871         0.021775        0.002607  ...          0.308849        0.311307       0.002976               3
+3     224.366623     27.299826         0.060213        0.011028  ...          0.315189        0.300370       0.008883               4
+6    6175.853392   7315.736455         4.320428        0.274220  ...          0.227230        0.284694       0.035729               5
+0       2.024634      0.647531         0.037234        0.005794  ...          0.212807        0.214850       0.002764               6
+2       4.077618      0.108094         0.025081        0.003150  ...          0.213646        0.212600       0.001646               7
+
+[7 rows x 59 columns]
+Object saved in file: ./runs/best_estimators/GS1-best_pipe-15-04-2023_23:04:16.joblib
+Object saved in file: ./runs/best_estimators/best_estimator-RandomForestClassifier-15-04-2023_23:05:37.joblib
+Best estimator: RandomForestClassifier(criterion='entropy', max_features=0.75,
+                       n_estimators=1000, n_jobs=-1, random_state=42)
+Object saved in file: ./runs/encoders_scalers/GS1-column_transformer-15-04-2023_23:06:54.joblib
+Internal CV score obtained by the best set of parameters: 0.36015160295618226
+Best params: {'classifier__estimator': RandomForestClassifier(criterion='entropy', max_features=0.75,
+                       n_estimators=1000, n_jobs=-1, random_state=42), 'classifier__estimator__class_weight': None, 'classifier__estimator__criterion': 'entropy', 'classifier__estimator__max_depth': None, 'classifier__estimator__max_features': 0.75, 'classifier__estimator__n_estimators': 1000, 'classifier__estimator__n_jobs': -1, 'classifier__estimator__random_state': 42}
+Scorer function: make_scorer(f1_score, pos_label=None, average=macro)
+The number of CV splits: 5
+Seconds used for refitting the best model on the whole dataset: 470.1383447647095
+Whether the scorers compute several metrics: False
+The number of features when fit is performed: 21
+Names of features seen during fit: ['Tipificacao' 'Peso' 'QuestionarioClassificacaoEstabel' 'ILP' 'IFP'
+ 'ILPF' 'QuestionarioPossuiOutrosIncentiv' 'QuestionarioFabricaRacao'
+ 'regua de manejo' 'identificacao individual' 'rastreamento SISBOV'
+ 'participa de aliancas mercadolog' 'QuestionarioPraticaRecuperacaoPa'
+ 'Confinamento' 'Suplementacao_a_campo' 'SemiConfinamento' 'tot3m_Chuva'
+ 'med3m_formITUinst' 'med3m_NDVI' 'med3m_preR_milho' 'med3m_preR_boi']
+
+!!!>> When you observe high training accuracy, but low test accuracy, it is likely that you encountered overfitting problem.
+Training set score: 0.9956344179837284
+Test set score: 0.37017941466164883
+
+CSV gerado com sucesso em: ./runs/results/GS1-grid_search_results-15-04-2023_23:07:30.csv.
+Function generate_new_csv Took 0:00:00.003602
+
+*****INICIO CONFUSION MATRIX DISPLAY******
+Figure confusion_matrix_display-15-04-2023_23:07:36.png saved in ./plots/ directory.
+*****FIM CONFUSION MATRIX DISPLAY******
+
+Function confusion_matrix_display Took 0:00:01.930368
+
+
+--- Test data performance ---
+Test Acurácia: 0.4007053488957931
+Test Acurácia Balanceada: 0.3864042302499793
+Test Revocação Ponderada: 0.4007053488957931
+Test Micro Revocação: 0.4007053488957931
+Test Macro Revocação: 0.3864042302499793
+Test Precisão Ponderada: 0.41291974746542703
+Test Micro Precisão: 0.4007053488957931
+Test Macro Precisão: 0.3625905336191014
+Test F1 Ponderado: 0.4046346533908722
+Test Micro F1: 0.4007053488957932
+Test Macro F1: 0.37017941466164883
+Test Coeficiente Kappa: 0.2415791195621685
+Test Coeficiente de Correlação de Matthews: 0.2422451281627528
+Test Log Loss: 1.662605173633329
+Test ROC AUC Score Ponderado: 0.7176818036089807
+
+CSV gerado com sucesso em: ./runs/results/GS1-performance_results-15-04-2023_23:07:36.csv.
+Function generate_new_csv Took 0:00:00.001211
+
+              precision    recall  f1-score   support
+
+           0       0.45      0.39      0.42      4142
+           1       0.49      0.49      0.49      2452
+           2       0.33      0.32      0.33      1886
+           3       0.25      0.35      0.29       935
+           4       0.21      0.34      0.26       494
+           5       0.45      0.43      0.44      2000
+
+    accuracy                           0.40     11909
+   macro avg       0.36      0.39      0.37     11909
+weighted avg       0.41      0.40      0.40     11909
+
+
+CSV gerado com sucesso em: ./runs/results/GS1-classification_report-15-04-2023_23:07:36.csv.
+Function generate_new_csv Took 0:00:00.001071
+
+Function run_grid_search Took 9:45:49.561710
+
