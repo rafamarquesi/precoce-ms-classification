@@ -202,9 +202,9 @@ if __name__ == '__main__':
             # 0 for no balancing, 1 for automated balancing, dict for custom weights per class, default 0 (parameter for fit method)
             # settings.weights = 0
             # Number of examples per batch. For larger dataset set 16384 (parameter for fit method)
-            # settings.batch_size = 1024
+            settings.batch_size = 16384
             # Size of the mini batches used for "Ghost Batch Normalization". /!\ virtual_batch_size should divide batch_size. For larger dataset set 2048 (parameter for fit method)
-            # settings.virtual_batch_size = 128
+            settings.virtual_batch_size = 2048
 
             # Show settings of the project
             reports.show_settings(settings=settings)
