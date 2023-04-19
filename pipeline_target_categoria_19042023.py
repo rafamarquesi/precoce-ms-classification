@@ -360,19 +360,6 @@ if __name__ == '__main__':
                     'classifier__estimator__C': list(np.power(10, np.arange(-3, 1, dtype=np.float16))),
                     'classifier__estimator__max_iter': [100, 1000, 10000],
                     'classifier__estimator__class_weight': ['balanced', None]
-                },
-                {
-                    'classifier__estimator': [MLPClassifier()],
-                    'classifier__estimator__random_state': [settings.random_seed],
-                    'classifier__estimator__max_iter': [1000],
-                    'classifier__estimator__early_stopping': [True],
-                    'classifier__estimator__hidden_layer_sizes': [(50, 100, 50), (100,), (200, 100)],
-                    'classifier__estimator__activation': ['logistic', 'relu'],
-                    'classifier__estimator__solver': ['adam', 'sgd'],
-                    'classifier__estimator__alpha': [0.0001, 0.05],
-                    'classifier__estimator__learning_rate': ['constant', 'adaptive'],
-                    'classifier__estimator__learning_rate_init': [0.0001, 0.001],
-                    'classifier__estimator__momentum': list(np.arange(0, 1, 0.3))
                 }
             ]
 
@@ -402,15 +389,49 @@ if __name__ == '__main__':
                 n_jobs=settings.n_jobs,
                 test_size=0.2,
                 random_state=settings.random_seed,
-                pre_dispatch=59,
+                pre_dispatch=40,
                 execution_name='GS1'
+            )
+
+            # Configuration run MLPClassifier
+            settings.n_jobs = 120
+            print('\n-------Number of jobs for grid search 2: {}'.format(settings.n_jobs))
+
+            param_grid_gs2 = [
+                {
+                    'classifier__estimator': [MLPClassifier()],
+                    'classifier__estimator__random_state': [settings.random_seed],
+                    'classifier__estimator__max_iter': [1000],
+                    'classifier__estimator__early_stopping': [True],
+                    'classifier__estimator__hidden_layer_sizes': [(50, 100, 50), (100,), (200, 100)],
+                    'classifier__estimator__activation': ['logistic', 'relu'],
+                    'classifier__estimator__solver': ['adam', 'sgd'],
+                    'classifier__estimator__alpha': [0.0001, 0.05],
+                    'classifier__estimator__learning_rate': ['constant', 'adaptive'],
+                    'classifier__estimator__learning_rate_init': [0.0001, 0.001],
+                    'classifier__estimator__momentum': list(np.arange(0, 1, 0.3))
+                }
+            ]
+
+            pattern_extraction.run_grid_search(
+                x=x,
+                y=y,
+                estimator=pipe,
+                param_grid=param_grid_gs2,
+                cv=cv,
+                score=score,
+                n_jobs=settings.n_jobs,
+                test_size=0.2,
+                random_state=settings.random_seed,
+                pre_dispatch=59,
+                execution_name='GS2'
             )
 
             # Configuration run RandomForest
             settings.n_jobs = 15
             print('\n-------Number of jobs for grid search 2: {}'.format(settings.n_jobs))
 
-            param_grid_gs2 = [
+            param_grid_gs3 = [
                 {
                     'classifier__estimator': [RandomForestClassifier()],
                     'classifier__estimator__random_state': [settings.random_seed],
@@ -429,20 +450,20 @@ if __name__ == '__main__':
                 x=x,
                 y=y,
                 estimator=pipe,
-                param_grid=param_grid_gs2,
+                param_grid=param_grid_gs3,
                 cv=cv,
                 score=score,
                 n_jobs=settings.n_jobs,
                 test_size=0.2,
                 random_state=settings.random_seed,
-                execution_name='GS2'
+                execution_name='GS3'
             )
 
             # Configuration run XGBoost
             settings.n_jobs = 10
             print('\n-------Number of jobs for grid search 3: {}'.format(settings.n_jobs))
 
-            param_grid_gs3 = [
+            param_grid_gs4 = [
                 {
                     'classifier__estimator': [XGBClassifier()],
                     'classifier__estimator__tree_method': [settings.tree_method],
@@ -465,7 +486,7 @@ if __name__ == '__main__':
 
             # Remove num_class parameter from XGBClassifier when using binary classification
             if class_number == 2:
-                for estimator in param_grid_gs3:
+                for estimator in param_grid_gs4:
                     if estimator['classifier__estimator'][0].__class__.__name__ == XGBClassifier().__class__.__name__:
                         estimator.pop('classifier__estimator__num_class')
                         break
@@ -474,20 +495,20 @@ if __name__ == '__main__':
                 x=x,
                 y=y,
                 estimator=pipe,
-                param_grid=param_grid_gs3,
+                param_grid=param_grid_gs4,
                 cv=cv,
                 score=score,
                 n_jobs=settings.n_jobs,
                 test_size=0.2,
                 random_state=settings.random_seed,
-                execution_name='GS3'
+                execution_name='GS4'
             )
 
             # Configuration run TabNet
             settings.n_jobs = 5
             print('\n-------Number of jobs for grid search 4: {}'.format(settings.n_jobs))
 
-            param_grid_gs4 = [
+            param_grid_gs5 = [
                 {
                     'classifier__estimator': [
                         TabNetClassifierTuner(
@@ -532,14 +553,14 @@ if __name__ == '__main__':
                 x=x,
                 y=y,
                 estimator=pipe,
-                param_grid=param_grid_gs4,
+                param_grid=param_grid_gs5,
                 cv=cv,
                 score=score,
                 n_jobs=settings.n_jobs,
                 test_size=0.2,
                 random_state=settings.random_seed,
                 pre_dispatch=settings.n_jobs,
-                execution_name='GS4'
+                execution_name='GS5'
             )
 
         tee_log_file.close()
