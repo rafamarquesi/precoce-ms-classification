@@ -74,13 +74,13 @@ if __name__ == '__main__':
 
         # Path to the dataset
         settings.csv_path = csv_treatments.choose_csv_path(
-            sampling='2', folder_path=settings.dataset_folder_path)
+            sampling='ANIMAIS-POR-LOTE-CATEGORIA_BINARIA', folder_path=settings.dataset_folder_path)
 
         # Number of lines to be read from the dataset, where None read all lines
         # settings.number_csv_lines = 1000
 
         # Class column name
-        settings.class_column = 'CATEGORIA'
+        settings.class_column = 'CATEGORIA_BINARIA'
 
         # Checks if it is batch separated animals dataset
         # It was necessary to create to do some validations while loading the dataset, as it was changed from the original.
@@ -115,8 +115,8 @@ if __name__ == '__main__':
             'Data_homol', 'DataAbate_6m_ANT', 'data_homol_select',
             'data12m', 'data6m', 'data3m', 'data1m', 'data7d',
             # column above removed because it will not have the attribute at the time of performing the prediction and the target is derived from this attribute
-            'classificacao'
-            # 'CATEGORIA'
+            'classificacao',
+            'CATEGORIA'
         ]
 
         # Dict update for ordinal encoding
@@ -141,7 +141,7 @@ if __name__ == '__main__':
 
         # List with column names to apply the min max scaler
         settings.min_max_scaler_columns_names = [
-            'Peso',
+            'QTD_ANIMAIS_LOTE', 'PESO_MEDIO_LOTE',
             'tot3m_Chuva', 'med3m_formITUinst', 'med3m_NDVI', 'med3m_preR_milho', 'med3m_preR_boi'
         ]
 
