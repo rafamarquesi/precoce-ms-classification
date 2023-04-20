@@ -1,0 +1,357 @@
+
+*****INICIO LOAD DATA******
+
+*****INICIO PRINT INFOS******
+Número total de linhas do DataFrame: 49641
+Número de colunas: 25
+Informações do DataFrame:
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 49641 entries, 0 to 49640
+Data columns (total 25 columns):
+ #   Column                            Non-Null Count  Dtype         
+---  ------                            --------------  -----         
+ 0   DataAbate                         49641 non-null  datetime64[ns]
+ 1   EstabelecimentoIdentificador      49641 non-null  uint16        
+ 2   Tipificacao                       49641 non-null  category      
+ 3   QTD_ANIMAIS_LOTE                  49641 non-null  uint16        
+ 4   PESO_MEDIO_LOTE                   49641 non-null  float32       
+ 5   QuestionarioClassificacaoEstabel  49641 non-null  uint8         
+ 6   ILP                               49641 non-null  uint8         
+ 7   IFP                               49641 non-null  uint8         
+ 8   ILPF                              49641 non-null  uint8         
+ 9   QuestionarioPossuiOutrosIncentiv  49641 non-null  uint8         
+ 10  QuestionarioFabricaRacao          49641 non-null  uint8         
+ 11  regua de manejo                   49633 non-null  UInt8         
+ 12  identificacao individual          49633 non-null  UInt8         
+ 13  rastreamento SISBOV               49631 non-null  UInt8         
+ 14  participa de aliancas mercadolog  49633 non-null  UInt8         
+ 15  QuestionarioPraticaRecuperacaoPa  49641 non-null  uint8         
+ 16  Confinamento                      49633 non-null  UInt8         
+ 17  Suplementacao_a_campo             49633 non-null  UInt8         
+ 18  SemiConfinamento                  49633 non-null  UInt8         
+ 19  tot3m_Chuva                       48290 non-null  float32       
+ 20  med3m_formITUinst                 49629 non-null  float32       
+ 21  med3m_NDVI                        48081 non-null  float32       
+ 22  med3m_preR_milho                  49629 non-null  float32       
+ 23  med3m_preR_boi                    49629 non-null  float32       
+ 24  CATEGORIA_BINARIA                 49641 non-null  category      
+dtypes: UInt8(7), category(2), datetime64[ns](1), float32(6), uint16(2), uint8(7)
+memory usage: 2.8 MB
+*****FIM PRINT INFOS*********
+Function informations Took 0:00:00.008507
+
+*****INICIO DELETE COLUNAS******
+!!!>>> Coluna " EstabelecimentoMunicipio " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Frigorifico_ID " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Frigorifico_CNPJ " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Frigorifico_RazaoSocial " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Municipio_Frigorifico " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Peso " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Maturidade " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Acabamento " não encontrada no DataFrame para exclusão.
+Coluna EstabelecimentoIdentificador excluída.
+!!!>>> Coluna " Questionario_ID " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " FERTIIRRIGACAO " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " CONCEN_VOLUM " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " CREEPFEEDING " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " FORN_ESTRAT_SILAGEM " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " PROTEICO " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " PROTEICO_ENERGETICO " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " RACAO_BAL_CONS_INFERIOR " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " SAL_MINERAL " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " SALMINERAL_UREIA " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " RACAOO_BAL_CONSUMO_IG " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " GRAO_INTEIRO " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " ALTO_CONCENTR_VOLUM " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " ALTO_CONCENTRADO " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " area so confinamento " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " boa cobertura vegetal, com baixa " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " erosaoo laminar ou em sulco igua " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Lista Trace " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " BPA " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " dif_datas " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " tot7d_Chuva " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_TempInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_TempMin " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_UmidInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_formITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_formITUmax " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_NDVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_EVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_preR_soja " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_preR_milho " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med7d_preR_boi " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " tot1m_Chuva " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_TempInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_UmidInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_formITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_NDVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_EVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_preR_soja " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_preR_milho " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med1m_preR_boi " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med3m_TempInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med3m_UmidInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med3m_formITUmax " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med3m_EVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med3m_preR_soja " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " tot6m_Chuva " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_TempInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_UmidInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_formITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_NDVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_EVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_preR_soja " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_preR_milho " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med6m_preR_boi " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " tot12m_Chuva " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_TempInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_TempMin " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_UmidInst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_formITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_NDVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_EVI " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_preR_soja " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_preR_milho " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " med12m_preR_boi " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " cnt7d_CL_ITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " cnt1m_CL_ITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " cnt3m_CL_ITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " cnt6m_CL_ITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " cnt12m_CL_ITUinst " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " ANO " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " Motivo " não encontrada no DataFrame para exclusão.
+Coluna DataAbate excluída.
+!!!>>> Coluna " Data_homol " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " DataAbate_6m_ANT " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " data_homol_select " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " data12m " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " data6m " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " data3m " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " data1m " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " data7d " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " classificacao " não encontrada no DataFrame para exclusão.
+!!!>>> Coluna " CATEGORIA " não encontrada no DataFrame para exclusão.
+*****FIM DELETE COLUNAS*********
+
+*****INICIO PRINT INFOS******
+Número total de linhas do DataFrame: 49641
+Número de colunas: 23
+Informações do DataFrame:
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 49641 entries, 0 to 49640
+Data columns (total 23 columns):
+ #   Column                            Non-Null Count  Dtype   
+---  ------                            --------------  -----   
+ 0   Tipificacao                       49641 non-null  category
+ 1   QTD_ANIMAIS_LOTE                  49641 non-null  uint16  
+ 2   PESO_MEDIO_LOTE                   49641 non-null  float32 
+ 3   QuestionarioClassificacaoEstabel  49641 non-null  uint8   
+ 4   ILP                               49641 non-null  uint8   
+ 5   IFP                               49641 non-null  uint8   
+ 6   ILPF                              49641 non-null  uint8   
+ 7   QuestionarioPossuiOutrosIncentiv  49641 non-null  uint8   
+ 8   QuestionarioFabricaRacao          49641 non-null  uint8   
+ 9   regua de manejo                   49633 non-null  UInt8   
+ 10  identificacao individual          49633 non-null  UInt8   
+ 11  rastreamento SISBOV               49631 non-null  UInt8   
+ 12  participa de aliancas mercadolog  49633 non-null  UInt8   
+ 13  QuestionarioPraticaRecuperacaoPa  49641 non-null  uint8   
+ 14  Confinamento                      49633 non-null  UInt8   
+ 15  Suplementacao_a_campo             49633 non-null  UInt8   
+ 16  SemiConfinamento                  49633 non-null  UInt8   
+ 17  tot3m_Chuva                       48290 non-null  float32 
+ 18  med3m_formITUinst                 49629 non-null  float32 
+ 19  med3m_NDVI                        48081 non-null  float32 
+ 20  med3m_preR_milho                  49629 non-null  float32 
+ 21  med3m_preR_boi                    49629 non-null  float32 
+ 22  CATEGORIA_BINARIA                 49641 non-null  category
+dtypes: UInt8(7), category(2), float32(6), uint16(1), uint8(7)
+memory usage: 2.3 MB
+*****FIM PRINT INFOS*********
+Function informations Took 0:00:00.006461
+
+*****FIM LOAD DATA******
+Function load_data Took 0:00:00.416638
+
+*****INICIO SHOW SETTINGS******
+os = <module 'os' from '/usr/local/lib/python3.8/os.py'>
+pd = <module 'pandas' from '/home/externo/rafaelrm/algoritmos/run_pipeline_target_categoria_binaria_lote_with_best_parameters_model_20042023/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/pandas/__init__.py'>
+torch = <module 'torch' from '/home/externo/rafaelrm/algoritmos/run_pipeline_target_categoria_binaria_lote_with_best_parameters_model_20042023/precoce-ms-classification/.venv-precoce-ms/lib/python3.8/site-packages/torch/__init__.py'>
+PANDAS_MAX_ROWS = 5000
+random_seed = 42
+n_jobs = 37
+dataset_folder_path = /home/externo/rafaelrm/base_dados/
+csv_path = /home/externo/rafaelrm/base_dados/TAB_MODELAGEM_RAFAEL_2020_1-ANIMAIS-POR-LOTE-CATEGORIA_BINARIA.csv
+number_csv_lines = None
+dtype_dict = {'ID_ANIMAL': 'uint32', 'EstabelecimentoMunicipio': 'category', 'Frigorifico_ID': 'uint8', 'Frigorifico_CNPJ': 'uint64', 'Frigorifico_RazaoSocial': 'category', 'Municipio_Frigorifico': 'category', 'Tipificacao': 'category', 'Maturidade': 'category', 'Acabamento': 'category', 'Peso': 'float32', 'EstabelecimentoIdentificador': 'uint16', 'Questionario_ID': 'uint16', 'QuestionarioClassificacaoEstabel': 'uint8', 'FERTIIRRIGACAO': 'uint8', 'ILP': 'uint8', 'IFP': 'uint8', 'ILPF': 'uint8', 'CONCEN_VOLUM': 'UInt8', 'CREEPFEEDING': 'UInt8', 'FORN_ESTRAT_SILAGEM': 'UInt8', 'PROTEICO': 'UInt8', 'PROTEICO_ENERGETICO': 'UInt8', 'RACAO_BAL_CONS_INFERIOR': 'UInt8', 'SAL_MINERAL': 'UInt8', 'SALMINERAL_UREIA': 'UInt8', 'RACAOO_BAL_CONSUMO_IG': 'UInt8', 'GRAO_INTEIRO': 'UInt8', 'ALTO_CONCENTR_VOLUM': 'UInt8', 'ALTO_CONCENTRADO': 'UInt8', 'QuestionarioPossuiOutrosIncentiv': 'uint8', 'QuestionarioFabricaRacao': 'uint8', 'area so confinamento': 'UInt8', 'regua de manejo': 'UInt8', 'boa cobertura vegetal, com baixa': 'UInt8', 'erosaoo laminar ou em sulco igua': 'UInt8', 'identificacao individual': 'UInt8', 'rastreamento SISBOV': 'UInt8', 'Lista Trace': 'UInt8', 'BPA': 'UInt8', 'participa de aliancas mercadolog': 'UInt8', 'QuestionarioPraticaRecuperacaoPa': 'uint8', 'Confinamento': 'UInt8', 'Suplementacao_a_campo': 'UInt8', 'SemiConfinamento': 'UInt8', 'dif_datas': 'uint16', 'tot7d_Chuva': 'float32', 'med7d_TempInst': 'float32', 'med7d_TempMin': 'float32', 'med7d_UmidInst': 'float32', 'med7d_formITUinst': 'float32', 'med7d_formITUmax': 'float32', 'med7d_NDVI': 'float32', 'med7d_EVI': 'float32', 'med7d_preR_soja': 'float32', 'med7d_preR_milho': 'float32', 'med7d_preR_boi': 'float32', 'tot1m_Chuva': 'float32', 'med1m_TempInst': 'float32', 'med1m_UmidInst': 'float32', 'med1m_formITUinst': 'float32', 'med1m_NDVI': 'float32', 'med1m_EVI': 'float32', 'med1m_preR_soja': 'float32', 'med1m_preR_milho': 'float32', 'med1m_preR_boi': 'float32', 'tot3m_Chuva': 'float32', 'med3m_TempInst': 'float32', 'med3m_UmidInst': 'float32', 'med3m_formITUinst': 'float32', 'med3m_formITUmax': 'float32', 'med3m_NDVI': 'float32', 'med3m_EVI': 'float32', 'med3m_preR_soja': 'float32', 'med3m_preR_milho': 'float32', 'med3m_preR_boi': 'float32', 'tot6m_Chuva': 'float32', 'med6m_TempInst': 'float32', 'med6m_UmidInst': 'float32', 'med6m_formITUinst': 'float32', 'med6m_NDVI': 'float32', 'med6m_EVI': 'float32', 'med6m_preR_soja': 'float32', 'med6m_preR_milho': 'float32', 'med6m_preR_boi': 'float32', 'tot12m_Chuva': 'float32', 'med12m_TempInst': 'float32', 'med12m_TempMin': 'float32', 'med12m_UmidInst': 'float32', 'med12m_formITUinst': 'float32', 'med12m_NDVI': 'float32', 'med12m_EVI': 'float32', 'med12m_preR_soja': 'float32', 'med12m_preR_milho': 'float32', 'med12m_preR_boi': 'float32', 'cnt7d_CL_ITUinst': 'float32', 'cnt1m_CL_ITUinst': 'float32', 'cnt3m_CL_ITUinst': 'float32', 'cnt6m_CL_ITUinst': 'float32', 'cnt12m_CL_ITUinst': 'float32', 'ANO': 'uint16', 'CATEGORIA': 'category', 'classificacao': 'category', 'Motivo': 'category', 'QTD_ANIMAIS_LOTE': 'uint16', 'PESO_MEDIO_LOTE': 'float32', 'CATEGORIA_BINARIA': 'category'}
+parse_dates = ['DataAbate']
+delete_columns_names_on_load_data = ['EstabelecimentoMunicipio', 'Frigorifico_ID', 'Frigorifico_CNPJ', 'Frigorifico_RazaoSocial', 'Municipio_Frigorifico', 'Peso', 'Maturidade', 'Acabamento', 'EstabelecimentoIdentificador', 'Questionario_ID', 'FERTIIRRIGACAO', 'CONCEN_VOLUM', 'CREEPFEEDING', 'FORN_ESTRAT_SILAGEM', 'PROTEICO', 'PROTEICO_ENERGETICO', 'RACAO_BAL_CONS_INFERIOR', 'SAL_MINERAL', 'SALMINERAL_UREIA', 'RACAOO_BAL_CONSUMO_IG', 'GRAO_INTEIRO', 'ALTO_CONCENTR_VOLUM', 'ALTO_CONCENTRADO', 'area so confinamento', 'boa cobertura vegetal, com baixa', 'erosaoo laminar ou em sulco igua', 'Lista Trace', 'BPA', 'dif_datas', 'tot7d_Chuva', 'med7d_TempInst', 'med7d_TempMin', 'med7d_UmidInst', 'med7d_formITUinst', 'med7d_formITUmax', 'med7d_NDVI', 'med7d_EVI', 'med7d_preR_soja', 'med7d_preR_milho', 'med7d_preR_boi', 'tot1m_Chuva', 'med1m_TempInst', 'med1m_UmidInst', 'med1m_formITUinst', 'med1m_NDVI', 'med1m_EVI', 'med1m_preR_soja', 'med1m_preR_milho', 'med1m_preR_boi', 'med3m_TempInst', 'med3m_UmidInst', 'med3m_formITUmax', 'med3m_EVI', 'med3m_preR_soja', 'tot6m_Chuva', 'med6m_TempInst', 'med6m_UmidInst', 'med6m_formITUinst', 'med6m_NDVI', 'med6m_EVI', 'med6m_preR_soja', 'med6m_preR_milho', 'med6m_preR_boi', 'tot12m_Chuva', 'med12m_TempInst', 'med12m_TempMin', 'med12m_UmidInst', 'med12m_formITUinst', 'med12m_NDVI', 'med12m_EVI', 'med12m_preR_soja', 'med12m_preR_milho', 'med12m_preR_boi', 'cnt7d_CL_ITUinst', 'cnt1m_CL_ITUinst', 'cnt3m_CL_ITUinst', 'cnt6m_CL_ITUinst', 'cnt12m_CL_ITUinst', 'ANO', 'Motivo', 'DataAbate', 'Data_homol', 'DataAbate_6m_ANT', 'data_homol_select', 'data12m', 'data6m', 'data3m', 'data1m', 'data7d', 'classificacao', 'CATEGORIA']
+PATH_SAVE_PLOTS = ./plots
+PATH_SAVE_ESTIMATORS_REPR = ./runs/estimators_repr
+PATH_SAVE_BEST_ESTIMATORS = ./runs/best_estimators
+PATH_SAVE_RESULTS = ./runs/results
+PATH_SAVE_LOGS = ./logs
+PATH_SAVE_ENCODERS_SCALERS = ./runs/encoders_scalers
+ordinal_encoder_columns_names = {'QuestionarioClassificacaoEstabel': ['0', '21', '26', '30']}
+columns_ordinal_encoded = {}
+label_encoder_columns_names = ['CATEGORIA_BINARIA']
+columns_label_encoded = {}
+one_hot_encoder_columns_names = ['Tipificacao']
+columns_one_hot_encoded = {}
+min_max_scaler_columns_names = ['QTD_ANIMAIS_LOTE', 'PESO_MEDIO_LOTE', 'tot3m_Chuva', 'med3m_formITUinst', 'med3m_NDVI', 'med3m_preR_milho', 'med3m_preR_boi']
+columns_min_max_scaled = {}
+columns_label_binarized = {}
+simple_imputer_columns_names = []
+columns_names_drop_feature_by_correlation = []
+class_column = CATEGORIA_BINARIA
+classifiers = {}
+models_results = {}
+device_name = auto
+use_embeddings = True
+use_cat_emb_dim = True
+threshold_categorical_features = 150
+num_workers = 0
+eval_metric = ['auc', 'balanced_accuracy', 'logloss', <class 'pytorch_tabnet_tuner.tab_model_tuner.F1ScoreMacro'>]
+augmentations = None
+weights = 0
+batch_size = 1024
+virtual_batch_size = 128
+run_grid_search_cv_tuner = True
+save_results_during_run = False
+new_run = True
+PATH_OBJECTS_PERSISTED_RESULTS_RUNS = ./runs/objects_persisted_results_runs
+PARAMETERS_PERSIST_FILENAME = ./runs/objects_persisted_results_runs/parameters_persist
+RESULTS_PERSIST_FILENAME = ./runs/objects_persisted_results_runs/results_persist
+SPLIT_PERSIST_FILENAME = ./runs/objects_persisted_results_runs/split_persist
+tree_method = hist
+objective = binary:logistic
+*****FIM SHOW SETTINGS******
+
+
+*****INICIO DELETE DUPLICATE ROWS BY ATTRIBUTE******
+!!!>>> Atributo ID_ANIMAL não encontrado no DataFrame para delete duplicates rows by attibute.
+*****FIM DELETE DUPLICATE ROWS BY ATTRIBUTE*********
+Function delete_duplicate_rows_by_attribute Took 0:00:00.000054
+
+*****INICIO DELETE COLUNAS******
+!!!>>> Coluna " ID_ANIMAL " não encontrada no DataFrame para exclusão.
+*****FIM DELETE COLUNAS*********
+
+*****INICIO DELETE NAN ROWS******
+Linhas com valores NaN encontradas.
+*****FIM DELETE NAN ROWS*********
+Function delete_nan_rows Took 0:00:00.009449
+
+
+*****INICIO DELETE COLUMNS WITH SINGLE VALUE******
+>>> Nenhuma coluna com valor único encontrada.
+*****FIM DELETE COLUMNS WITH SINGLE VALUE*********
+Function delete_columns_with_single_value Took 0:00:00.010283
+
+
+*****INICIO LABEL ENCODER******
+*****FIM LABEL ENCODER*********
+Function label_encoder_columns Took 0:00:00.008177
+
+Object saved in file: ./runs/encoders_scalers/target_encoded-20-04-2023_16:07:11.joblib
+
+*****INICIO RELATÓRIO DISTRIBUIÇÃO DE CLASSES******
+Distribuição da classe 1: 50%
+Distribuição da classe 0: 50%
+Erro majoritário: 50%
+*****FIM RELATÓRIO DISTRIBUIÇÃO DE CLASSES******
+Function class_distribution Took 0:00:00.001657
+
+Number of folds for cross validation: 10
+Scoring strategy for grid search: accuracy
+Test Size: 0.2
+
+x_train shape: (37388, 22)
+y_train shape: (37388,)
+x_test shape: (9348, 22)
+y_test shape: (9348,)
+Removing all files in directory: ./runs/objects_persisted_results_runs
+Do you want to continue? (y/n): 
+All files in directory ./runs/objects_persisted_results_runs were removed.
+Fitting 10 folds for each of 1 candidates, totalling 10 fits
+--------------------- RESULTS GS1 ---------------------
+
+CSV gerado com sucesso em: ./runs/results/GS1-cv_results-20-04-2023_16:16:03.csv.
+Function generate_new_csv Took 0:00:00.010965
+
+Cross validation results:
+   mean_fit_time  std_fit_time  mean_score_time  std_score_time  ... split9_test_score mean_test_score std_test_score rank_test_score
+0     234.432990      0.935374         1.460967        0.029899  ...          0.731942        0.726303       0.006201               1
+
+[1 rows x 26 columns]
+Object saved in file: ./runs/best_estimators/GS1-best_pipe-20-04-2023_16:16:03.joblib
+Object saved in file: ./runs/best_estimators/best_estimator-RandomForestClassifier-20-04-2023_16:16:05.joblib
+Best estimator: RandomForestClassifier(criterion='entropy', max_features=0.75,
+                       n_estimators=1000, n_jobs=1, random_state=42)
+Object saved in file: ./runs/encoders_scalers/GS1-column_transformer-20-04-2023_16:16:07.joblib
+Internal CV score obtained by the best set of parameters: 0.726302844326951
+Best params: {'classifier__estimator': RandomForestClassifier(criterion='entropy', max_features=0.75,
+                       n_estimators=1000, n_jobs=1, random_state=42), 'classifier__estimator__class_weight': None, 'classifier__estimator__criterion': 'entropy', 'classifier__estimator__max_depth': None, 'classifier__estimator__max_features': 0.75, 'classifier__estimator__n_estimators': 1000, 'classifier__estimator__n_jobs': 1, 'classifier__estimator__random_state': 42}
+Scorer function: make_scorer(accuracy_score)
+The number of CV splits: 10
+Seconds used for refitting the best model on the whole dataset: 262.83250546455383
+Whether the scorers compute several metrics: False
+The number of features when fit is performed: 22
+Names of features seen during fit: ['Tipificacao' 'QTD_ANIMAIS_LOTE' 'PESO_MEDIO_LOTE'
+ 'QuestionarioClassificacaoEstabel' 'ILP' 'IFP' 'ILPF'
+ 'QuestionarioPossuiOutrosIncentiv' 'QuestionarioFabricaRacao'
+ 'regua de manejo' 'identificacao individual' 'rastreamento SISBOV'
+ 'participa de aliancas mercadolog' 'QuestionarioPraticaRecuperacaoPa'
+ 'Confinamento' 'Suplementacao_a_campo' 'SemiConfinamento' 'tot3m_Chuva'
+ 'med3m_formITUinst' 'med3m_NDVI' 'med3m_preR_milho' 'med3m_preR_boi']
+
+!!!>> When you observe high training accuracy, but low test accuracy, it is likely that you encountered overfitting problem.
+Training set score: 1.0
+Test set score: 0.7314933675652546
+
+CSV gerado com sucesso em: ./runs/results/GS1-grid_search_results-20-04-2023_16:16:20.csv.
+Function generate_new_csv Took 0:00:00.002392
+
+*****INICIO CONFUSION MATRIX DISPLAY******
+Figure confusion_matrix_display-20-04-2023_16:16:27.png saved in ./plots/ directory.
+*****FIM CONFUSION MATRIX DISPLAY******
+
+Function confusion_matrix_display Took 0:00:00.196303
+
+
+--- Test data performance ---
+Test Acurácia: 0.7314933675652546
+Test Acurácia Balanceada: 0.7314454584071833
+Test Revocação: 0.715450643776824
+Test Micro Revocação: 0.7314933675652546
+Test Macro Revocação: 0.7314454584071833
+Test Precisão: 0.7379371403275786
+Test Micro Precisão: 0.7314933675652546
+Test Macro Precisão: 0.7317014894184477
+Test F1: 0.7265199389845283
+Test Micro F1: 0.7314933675652545
+Test Macro F1: 0.7314045376788579
+Test Coeficiente Kappa: 0.46293304386375966
+Test Coeficiente de Correlação de Matthews: 0.4631468770577203
+Test Log Loss: 0.5255387813006922
+Test ROC AUC Score: 0.815652281782361
+
+CSV gerado com sucesso em: ./runs/results/GS1-performance_results-20-04-2023_16:16:27.csv.
+Function generate_new_csv Took 0:00:00.001113
+
+              precision    recall  f1-score   support
+
+           0       0.73      0.75      0.74      4688
+           1       0.74      0.72      0.73      4660
+
+    accuracy                           0.73      9348
+   macro avg       0.73      0.73      0.73      9348
+weighted avg       0.73      0.73      0.73      9348
+
+
+CSV gerado com sucesso em: ./runs/results/GS1-classification_report-20-04-2023_16:16:27.csv.
+Function generate_new_csv Took 0:00:00.000808
+
+Function run_grid_search Took 0:09:15.917124
+
