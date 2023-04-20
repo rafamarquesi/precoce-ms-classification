@@ -39,6 +39,20 @@ def load_data(csv_path: str, sep: str = ';', encoding: str = 'latin1', decimal: 
             csv_path, sep=sep, encoding=encoding, decimal=decimal, dtype=dtype_dict, parse_dates=parse_dates
         )
 
+    if ('Tipificacao' in temp_data.columns) and ('Fï¿½mea' in temp_data['Tipificacao'].array.categories):
+        temp_data['Tipificacao'] = temp_data['Tipificacao'].map(
+            {
+                'Fï¿½mea': 'Fêmea',
+                'Macho Castrado': 'Macho Castrado',
+                'Macho Inteiro': 'Macho Inteiro'
+            }
+        )
+
+    if 'CATEGORIA_BINARIA' in temp_data.columns:
+        temp_data['CATEGORIA_BINARIA'] = temp_data['CATEGORIA_BINARIA'].map(
+            {'0': 'Baixa qualidade', '1': 'Alta qualidade'}
+        )
+
     reports.informations(temp_data)
     # Used to print min and max of each column
     # reports.min_max_column(temp_data)
