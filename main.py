@@ -10,6 +10,12 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.metrics import classification_report, precision_score, recall_score, roc_auc_score, accuracy_score, f1_score, balanced_accuracy_score
 
+# from imblearn.over_sampling import SMOTE
+# from imblearn.under_sampling import RandomUnderSampler, EditedNearestNeighbours
+# from imblearn.combine import SMOTEENN
+# from imblearn.pipeline import Pipeline
+
+# from sklearn.neighbors import NearestNeighbors
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.tree import DecisionTreeClassifier
@@ -135,17 +141,16 @@ if __name__ == '__main__':
 
         # List with column names to apply the min max scaler
         settings.min_max_scaler_columns_names = [
-            'QTD_ANIMAIS_LOTE',
-            'Peso',
+            'QTD_ANIMAIS_LOTE', 'PESO_MEDIO_LOTE',
             'tot3m_Chuva', 'med3m_formITUinst', 'med3m_NDVI', 'med3m_preR_milho', 'med3m_preR_boi'
         ]
 
         # List with column names to apply the simple imputer
-        settings.simple_imputer_columns_names = [
-            'rastreamento SISBOV', 'regua de manejo', 'identificacao individual',
-            'participa de aliancas mercadolog', 'Confinamento', 'Suplementacao_a_campo',
-            'SemiConfinamento'
-        ]
+        # settings.simple_imputer_columns_names = [
+        #     'rastreamento SISBOV', 'regua de manejo', 'identificacao individual',
+        #     'participa de aliancas mercadolog', 'Confinamento', 'Suplementacao_a_campo',
+        #     'SemiConfinamento'
+        # ]
 
         # List with column names to drop feature by correlation
         # I choise the features greater than or equal to threshold 0.95, because the spearman correlation
@@ -221,32 +226,32 @@ if __name__ == '__main__':
                 data_frame=precoce_ms_data_frame, delete_columns_names=['ID_ANIMAL'])
 
             # Strategies for NaN rows
-            if is_batch_dataset:
+            # if is_batch_dataset:
 
-                # Show report for NaN rows
-                reports.nan_attributes(
-                    data_frame=precoce_ms_data_frame, total_nan=precoce_ms_data_frame.isna().sum().sum())
+            #     # Show report for NaN rows
+            #     reports.nan_attributes(
+            #         data_frame=precoce_ms_data_frame, total_nan=precoce_ms_data_frame.isna().sum().sum())
 
-                # Simple imputer for NaN rows, strategy mean
-                precoce_ms_data_frame = pre_processing.simple_imputer_dataframe(
-                    data_frame=precoce_ms_data_frame,
-                    strategy='mean',
-                    columns=settings.min_max_scaler_columns_names,
-                    verbose=True
-                )
+            #     # Simple imputer for NaN rows, strategy mean
+            #     precoce_ms_data_frame = pre_processing.simple_imputer_dataframe(
+            #         data_frame=precoce_ms_data_frame,
+            #         strategy='mean',
+            #         columns=settings.min_max_scaler_columns_names,
+            #         verbose=True
+            #     )
 
-                # Simple imputer for NaN rows, strategy most_frequent
-                precoce_ms_data_frame = pre_processing.simple_imputer_dataframe(
-                    data_frame=precoce_ms_data_frame,
-                    columns=settings.simple_imputer_columns_names,
-                    strategy='most_frequent',
-                    verbose=True
-                )
+            #     # Simple imputer for NaN rows, strategy most_frequent
+            #     precoce_ms_data_frame = pre_processing.simple_imputer_dataframe(
+            #         data_frame=precoce_ms_data_frame,
+            #         columns=settings.simple_imputer_columns_names,
+            #         strategy='most_frequent',
+            #         verbose=True
+            #     )
 
-            else:
-                # Delete NaN rows
-                precoce_ms_data_frame = pre_processing.delete_nan_rows(
-                    data_frame=precoce_ms_data_frame, print_report=True)
+            # else:
+            # Delete NaN rows
+            precoce_ms_data_frame = pre_processing.delete_nan_rows(
+                data_frame=precoce_ms_data_frame, print_report=True)
 
             # Convert pandas dtypes to numpy dtypes, some operations doesn't work with pandas dtype, for exemple, the XGBoost models
             precoce_ms_data_frame = utils.convert_pandas_dtype_to_numpy_dtype(
@@ -270,8 +275,12 @@ if __name__ == '__main__':
             #     data_frame=precoce_ms_data_frame, target=settings.class_column)
 
             # Print an attribute's outiliers
+            if is_batch_dataset:
+                attr_name = 'PESO_MEDIO_LOTE'
+            else:
+                attr_name = 'Peso'
             reports.detect_outiliers_from_attribute(
-                data_frame=precoce_ms_data_frame, attribute_name='Peso')
+                data_frame=precoce_ms_data_frame, attribute_name=attr_name)
 
             # Print the unique values for each column
             reports.unique_values_for_each_column(
@@ -477,8 +486,11 @@ if __name__ == '__main__':
             # If multi-class classification, the eval_metric 'auc' is removed from the list
             if class_number > 2:
                 settings.eval_metric.remove('auc')
-                settings.eval_metric.append('logloss')
-                settings.eval_metric.append(F1ScoreMacro)
+            # If use f1-score, the eval_metric 'accuracy' is removed from the list,
+            # and the eval_metric 'logloss' and F1ScoreMacro is added to the list
+            settings.eval_metric.remove('accuracy')
+            settings.eval_metric.append('logloss')
+            settings.eval_metric.append(F1ScoreMacro)
             # Flag to use embeddings in the tabnet model
             settings.use_embeddings = True
             # Threshold of the minimum of categorical features to use embeddings
@@ -509,14 +521,14 @@ if __name__ == '__main__':
             precoce_ms_data_frame = utils.delete_columns(
                 data_frame=precoce_ms_data_frame, delete_columns_names=['ID_ANIMAL'])
 
-            if not is_batch_dataset:
-                # Delete NaN rows
-                precoce_ms_data_frame = pre_processing.delete_nan_rows(
-                    data_frame=precoce_ms_data_frame)
+            # if not is_batch_dataset:
+            # Delete NaN rows
+            precoce_ms_data_frame = pre_processing.delete_nan_rows(
+                data_frame=precoce_ms_data_frame)
 
-                # Convert pandas dtypes to numpy dtypes, some operations doesn't work with pandas dtype, for exemple, the XGBoost models
-                precoce_ms_data_frame = utils.convert_pandas_dtype_to_numpy_dtype(
-                    data_frame=precoce_ms_data_frame, pandas_dtypes=[pd.UInt8Dtype()])
+            # Convert pandas dtypes to numpy dtypes, some operations doesn't work with pandas dtype, for exemple, the XGBoost models
+            precoce_ms_data_frame = utils.convert_pandas_dtype_to_numpy_dtype(
+                data_frame=precoce_ms_data_frame, pandas_dtypes=[pd.UInt8Dtype()])
 
             # TODO: Maybe implement remove outliers. To detect outliers, use pre_processing.detect_outliers
 
@@ -561,58 +573,58 @@ if __name__ == '__main__':
             #     )
 
             # Create the fransformers for ColumnTransformer
-            transformers = list()
-            if is_batch_dataset:
-                transformers = [
-                    pre_processing.create_simple_imputer_transformer(
-                        columns=settings.simple_imputer_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns,
-                        strategy='most_frequent'
-                    ),
-                    pre_processing.create_ordinal_encoder_transformer(
-                        ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns,
-                    ),
-                    # pre_processing.create_ordinal_encoder_transformer(
-                    #     ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
-                    #     data_frame_columns=precoce_ms_data_frame.columns,
-                    #     handle_unknown='use_encoded_value',
-                    #     unknown_value=-1,
-                    #     with_categories=False
-                    # ),
-                    pre_processing.create_one_hot_encoder_transformer(
-                        columns=settings.one_hot_encoder_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns
-                    ),
-                    pre_processing.create_min_max_scaler_transformer(
-                        columns=settings.min_max_scaler_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns,
-                        imputer=pre_processing.instance_simple_imputer(
-                            strategy='mean')
-                    )
-                ]
-            else:
-                transformers = [
-                    pre_processing.create_ordinal_encoder_transformer(
-                        ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns,
-                    ),
-                    # pre_processing.create_ordinal_encoder_transformer(
-                    #     ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
-                    #     data_frame_columns=precoce_ms_data_frame.columns,
-                    #     handle_unknown='use_encoded_value',
-                    #     unknown_value=-1,
-                    #     with_categories=False
-                    # ),
-                    pre_processing.create_one_hot_encoder_transformer(
-                        columns=settings.one_hot_encoder_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns
-                    ),
-                    pre_processing.create_min_max_scaler_transformer(
-                        columns=settings.min_max_scaler_columns_names,
-                        data_frame_columns=precoce_ms_data_frame.columns
-                    )
-                ]
+            # transformers = list()
+            # if is_batch_dataset:
+            #     transformers = [
+            #         pre_processing.create_simple_imputer_transformer(
+            #             columns=settings.simple_imputer_columns_names,
+            #             data_frame_columns=precoce_ms_data_frame.columns,
+            #             strategy='most_frequent'
+            #         ),
+            #         pre_processing.create_ordinal_encoder_transformer(
+            #             ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
+            #             data_frame_columns=precoce_ms_data_frame.columns,
+            #         ),
+            #         # pre_processing.create_ordinal_encoder_transformer(
+            #         #     ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
+            #         #     data_frame_columns=precoce_ms_data_frame.columns,
+            #         #     handle_unknown='use_encoded_value',
+            #         #     unknown_value=-1,
+            #         #     with_categories=False
+            #         # ),
+            #         pre_processing.create_one_hot_encoder_transformer(
+            #             columns=settings.one_hot_encoder_columns_names,
+            #             data_frame_columns=precoce_ms_data_frame.columns
+            #         ),
+            #         pre_processing.create_min_max_scaler_transformer(
+            #             columns=settings.min_max_scaler_columns_names,
+            #             data_frame_columns=precoce_ms_data_frame.columns,
+            #             imputer=pre_processing.instance_simple_imputer(
+            #                 strategy='mean')
+            #         )
+            #     ]
+            # else:
+            transformers = [
+                pre_processing.create_ordinal_encoder_transformer(
+                    ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
+                    data_frame_columns=precoce_ms_data_frame.columns,
+                ),
+                # pre_processing.create_ordinal_encoder_transformer(
+                #     ordinal_encoder_columns_names=settings.ordinal_encoder_columns_names,
+                #     data_frame_columns=precoce_ms_data_frame.columns,
+                #     handle_unknown='use_encoded_value',
+                #     unknown_value=-1,
+                #     with_categories=False
+                # ),
+                pre_processing.create_one_hot_encoder_transformer(
+                    columns=settings.one_hot_encoder_columns_names,
+                    data_frame_columns=precoce_ms_data_frame.columns
+                ),
+                pre_processing.create_min_max_scaler_transformer(
+                    columns=settings.min_max_scaler_columns_names,
+                    data_frame_columns=precoce_ms_data_frame.columns
+                )
+            ]
 
             # Create the ColumnTransformer, for preprocessing the data in pipeline
             preprocessor = ColumnTransformer(
@@ -638,6 +650,22 @@ if __name__ == '__main__':
             pipe = Pipeline(
                 steps=[
                     ('preprocessor', preprocessor),
+                    # ('oversampler', SMOTE(random_state=settings.random_seed, k_neighbors=NearestNeighbors(
+                    #     n_neighbors=5, algorithm='kd_tree', n_jobs=-1))),
+                    # ('undersampler', RandomUnderSampler(
+                    #     random_state=settings.random_seed)),
+                    # ('oversampler_enn', SMOTEENN(
+                    #     random_state=settings.random_seed, enn=EditedNearestNeighbours(n_neighbors=5, n_jobs=-1))),
+                    # ('oversampler', SMOTE(
+                    #     random_state=settings.random_seed,
+                    #     sampling_strategy=0.3,  # sampling_strategy=0.2 and lower, the SMOTE for binary will not work
+                    #     k_neighbors=NearestNeighbors(
+                    #         n_neighbors=5, algorithm='kd_tree', n_jobs=-1)
+                    # )),
+                    # ('undersampler', RandomUnderSampler(
+                    #     random_state=settings.random_seed,
+                    #     sampling_strategy=0.7
+                    # )),
                     ('classifier', ClfSwitcher())
                 ]
             )
@@ -699,7 +727,7 @@ if __name__ == '__main__':
                 {
                     'classifier__estimator': [RandomForestClassifier()],
                     'classifier__estimator__random_state': [settings.random_seed],
-                    'classifier__estimator__n_jobs': [4],
+                    'classifier__estimator__n_jobs': [1],
                     'classifier__estimator__criterion': ['entropy'],
                     'classifier__estimator__max_features': [0.75],
                     'classifier__estimator__n_estimators': [100, 1000],
@@ -718,7 +746,7 @@ if __name__ == '__main__':
                     'classifier__estimator__random_state': [settings.random_seed],
                     'classifier__estimator__objective': [settings.objective],
                     'classifier__estimator__num_class': [class_number],
-                    'classifier__estimator__n_jobs': [-1],
+                    'classifier__estimator__n_jobs': [1],
                     'classifier__estimator__subsample': [0.75],
                     'classifier__estimator__colsample_bytree': [0.75],
                     'classifier__estimator__n_estimators': [100, 1000],
@@ -792,10 +820,9 @@ if __name__ == '__main__':
             # TODO: Test this score: http://scikit-learn.org/stable/modules/generated/sklearn.metrics.balanced_accuracy_score.html
             # Custom refit strategy of a grid search with cross-validation (2 scores): https://scikit-learn.org/stable/auto_examples/model_selection/plot_grid_search_digits.html#sphx-glr-auto-examples-model-selection-plot-grid-search-digits-py
             # Scoring strategy for grid search
-            if class_number == 2:
-                score = 'accuracy'
-            else:
-                score = 'f1_macro'
+            # if class_number == 2:
+            # score = 'accuracy'
+            score = 'f1_macro'
             print('Scoring strategy for grid search: {}'.format(score))
 
             # Size of test in train and test split
@@ -814,7 +841,7 @@ if __name__ == '__main__':
                 n_jobs=settings.n_jobs,
                 test_size=0.2,
                 random_state=settings.random_seed,
-                error_score='raise'
+                # error_score='raise'
             )
 
         ################################################## ANALYZE RESULTS #####################################
