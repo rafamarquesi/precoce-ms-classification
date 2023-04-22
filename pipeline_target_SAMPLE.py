@@ -184,8 +184,11 @@ if __name__ == '__main__':
             # If multi-class classification, the eval_metric 'auc' is removed from the list
             if class_number > 2:
                 settings.eval_metric.remove('auc')
-                settings.eval_metric.append('logloss')
-                settings.eval_metric.append(F1ScoreMacro)
+            # If use f1-score, the eval_metric 'accuracy' is removed from the list,
+            # and the eval_metric 'logloss' and F1ScoreMacro is added to the list
+            settings.eval_metric.remove('accuracy')
+            settings.eval_metric.append('logloss')
+            settings.eval_metric.append(F1ScoreMacro)
             # Flag to use embeddings in the tabnet model
             settings.use_embeddings = True
             # Threshold of the minimum of categorical features to use embeddings
@@ -376,7 +379,7 @@ if __name__ == '__main__':
                 {
                     'classifier__estimator': [RandomForestClassifier()],
                     'classifier__estimator__random_state': [settings.random_seed],
-                    'classifier__estimator__n_jobs': [4],
+                    'classifier__estimator__n_jobs': [1],
                     'classifier__estimator__criterion': ['entropy'],
                     'classifier__estimator__max_features': [0.75],
                     'classifier__estimator__n_estimators': [100, 1000],
@@ -459,10 +462,8 @@ if __name__ == '__main__':
             )
 
             # Scoring strategy for grid search
-            if class_number == 2:
-                score = 'accuracy'
-            else:
-                score = 'f1_macro'
+            score = 'accuracy'
+            #score = 'f1_macro'
             print('Scoring strategy for grid search: {}'.format(score))
 
             # Delete unused variables

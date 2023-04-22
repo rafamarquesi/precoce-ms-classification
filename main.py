@@ -10,6 +10,12 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.metrics import classification_report, precision_score, recall_score, roc_auc_score, accuracy_score, f1_score, balanced_accuracy_score
 
+# from imblearn.over_sampling import SMOTE
+# from imblearn.under_sampling import RandomUnderSampler, EditedNearestNeighbours
+# from imblearn.combine import SMOTEENN
+# from imblearn.pipeline import Pipeline
+
+# from sklearn.neighbors import NearestNeighbors
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.tree import DecisionTreeClassifier
@@ -84,7 +90,6 @@ if __name__ == '__main__':
         # List with columns to delete when loading dataset
         settings.delete_columns_names_on_load_data = [
             'EstabelecimentoMunicipio', 'Frigorifico_ID', 'Frigorifico_CNPJ', 'Frigorifico_RazaoSocial', 'Municipio_Frigorifico',
-            'Peso',
             'Maturidade', 'Acabamento',
             'EstabelecimentoIdentificador',
             'Questionario_ID', 'FERTIIRRIGACAO', 'CONCEN_VOLUM', 'CREEPFEEDING', 'FORN_ESTRAT_SILAGEM',
@@ -136,8 +141,7 @@ if __name__ == '__main__':
 
         # List with column names to apply the min max scaler
         settings.min_max_scaler_columns_names = [
-            'QTD_ANIMAIS_LOTE',
-            'PESO_MEDIO_LOTE',
+            'QTD_ANIMAIS_LOTE', 'PESO_MEDIO_LOTE',
             'tot3m_Chuva', 'med3m_formITUinst', 'med3m_NDVI', 'med3m_preR_milho', 'med3m_preR_boi'
         ]
 
@@ -482,8 +486,11 @@ if __name__ == '__main__':
             # If multi-class classification, the eval_metric 'auc' is removed from the list
             if class_number > 2:
                 settings.eval_metric.remove('auc')
-                settings.eval_metric.append('logloss')
-                settings.eval_metric.append(F1ScoreMacro)
+            # If use f1-score, the eval_metric 'accuracy' is removed from the list,
+            # and the eval_metric 'logloss' and F1ScoreMacro is added to the list
+            settings.eval_metric.remove('accuracy')
+            settings.eval_metric.append('logloss')
+            settings.eval_metric.append(F1ScoreMacro)
             # Flag to use embeddings in the tabnet model
             settings.use_embeddings = True
             # Threshold of the minimum of categorical features to use embeddings
@@ -643,6 +650,22 @@ if __name__ == '__main__':
             pipe = Pipeline(
                 steps=[
                     ('preprocessor', preprocessor),
+                    # ('oversampler', SMOTE(random_state=settings.random_seed, k_neighbors=NearestNeighbors(
+                    #     n_neighbors=5, algorithm='kd_tree', n_jobs=-1))),
+                    # ('undersampler', RandomUnderSampler(
+                    #     random_state=settings.random_seed)),
+                    # ('oversampler_enn', SMOTEENN(
+                    #     random_state=settings.random_seed, enn=EditedNearestNeighbours(n_neighbors=5, n_jobs=-1))),
+                    # ('oversampler', SMOTE(
+                    #     random_state=settings.random_seed,
+                    #     sampling_strategy=0.3,  # sampling_strategy=0.2 and lower, the SMOTE for binary will not work
+                    #     k_neighbors=NearestNeighbors(
+                    #         n_neighbors=5, algorithm='kd_tree', n_jobs=-1)
+                    # )),
+                    # ('undersampler', RandomUnderSampler(
+                    #     random_state=settings.random_seed,
+                    #     sampling_strategy=0.7
+                    # )),
                     ('classifier', ClfSwitcher())
                 ]
             )
@@ -704,7 +727,7 @@ if __name__ == '__main__':
                 {
                     'classifier__estimator': [RandomForestClassifier()],
                     'classifier__estimator__random_state': [settings.random_seed],
-                    'classifier__estimator__n_jobs': [4],
+                    'classifier__estimator__n_jobs': [1],
                     'classifier__estimator__criterion': ['entropy'],
                     'classifier__estimator__max_features': [0.75],
                     'classifier__estimator__n_estimators': [100, 1000],
@@ -723,7 +746,7 @@ if __name__ == '__main__':
                     'classifier__estimator__random_state': [settings.random_seed],
                     'classifier__estimator__objective': [settings.objective],
                     'classifier__estimator__num_class': [class_number],
-                    'classifier__estimator__n_jobs': [-1],
+                    'classifier__estimator__n_jobs': [1],
                     'classifier__estimator__subsample': [0.75],
                     'classifier__estimator__colsample_bytree': [0.75],
                     'classifier__estimator__n_estimators': [100, 1000],
@@ -797,10 +820,9 @@ if __name__ == '__main__':
             # TODO: Test this score: http://scikit-learn.org/stable/modules/generated/sklearn.metrics.balanced_accuracy_score.html
             # Custom refit strategy of a grid search with cross-validation (2 scores): https://scikit-learn.org/stable/auto_examples/model_selection/plot_grid_search_digits.html#sphx-glr-auto-examples-model-selection-plot-grid-search-digits-py
             # Scoring strategy for grid search
-            if class_number == 2:
-                score = 'accuracy'
-            else:
-                score = 'f1_macro'
+            # if class_number == 2:
+            # score = 'accuracy'
+            score = 'f1_macro'
             print('Scoring strategy for grid search: {}'.format(score))
 
             # Size of test in train and test split
