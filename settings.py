@@ -1,20 +1,21 @@
 import os
 
-import utils
-
 import pandas as pd
 import torch
 
 # Some settings are configured by default. If you want to change any settings,
 # just follow the instruction for the specific setting.
 
+
+# Pandas max rows, None displays all rows
+PANDAS_MAX_ROWS = 5000
 # Set pandas max rows
-pd.set_option('display.max_rows', utils.PANDAS_MAX_ROWS)
+pd.set_option('display.max_rows', PANDAS_MAX_ROWS)
 
 # Set random seed
 random_seed = 42
 
-# Number of jobs to run in parallel, where -1 means using all processors. The -1 doesn't work for TabNet, instead use 1.
+# Number of jobs to run in parallel, where -1 means using all processors.
 n_jobs = 1
 
 ############################################ CSV SETTINGS ############################################
@@ -132,7 +133,10 @@ dtype_dict = {
     'ANO': 'uint16',
     'CATEGORIA': 'category',
     'classificacao': 'category',
-    'Motivo': 'category'
+    'Motivo': 'category',
+    'QTD_ANIMAIS_LOTE': 'uint16',
+    'PESO_MEDIO_LOTE': 'float32',
+    'CATEGORIA_BINARIA': 'category'
 }
 
 # List with dates to parse
@@ -161,6 +165,9 @@ PATH_SAVE_RESULTS = './runs/results'
 
 # Path to save the logs
 PATH_SAVE_LOGS = './logs'
+
+# Path to save the encoders
+PATH_SAVE_ENCODERS_SCALERS = './runs/encoders_scalers'
 
 ############################################ ENCODERS SETTINGS ############################################
 
@@ -195,6 +202,14 @@ min_max_scaler_columns_names = list()
 # Dictionary with the min max scaler object fitted for each column
 columns_min_max_scaled = dict()
 
+# Dictionary with the label binarizer object fitted for each column
+columns_label_binarized = dict()
+
+############################################ IMPUTER SETTINGS ############################################
+
+# List with column names to apply the simple imputer
+simple_imputer_columns_names = list()
+
 ############################################ CORRELATION SETTINGS ############################################
 
 # List with column names to drop feature by correlation
@@ -221,17 +236,8 @@ device_name = 'auto'
 # Flag to use embeddings in the tabnet model, default True (parameter for fit method)
 use_embeddings = True
 
-# List of categorical features indices
-cat_idxs = list()
-
-# List of categorical features number of modalities (number of unique values for a categorical feature) /!\ no new modalities can be predicted
-cat_dims = list()
-
 # Flag to use cat_emb_dim to define the embedding size for each categorical feature, with False the embedding size is 1 (parameter for fit method)
 use_cat_emb_dim = False
-
-# Embeddings size for each categorical features. (default =1)
-cat_emb_dim = 1
 
 # Threshold of the minimum of categorical features to use embeddings (parameter for fit method)
 threshold_categorical_features = 100
@@ -245,31 +251,47 @@ eval_metric = ['auc', 'balanced_accuracy', 'accuracy']
 # Apply custom data augmentation pipeline during training, the default is None (parameter for fit method)
 augmentations = None
 
+# 0 for no balancing, 1 for automated balancing, dict for custom weights per class, default 0 (parameter for fit method)
+weights = 0
+
+# Number of examples per batch. (parameter for fit method)
+batch_size = 1024
+
+# Size of the mini batches used for "Ghost Batch Normalization". /!\ virtual_batch_size should divide batch_size (parameter for fit method)
+virtual_batch_size = 128
+
 ############################################  PERSISTENCE OBJECTS DURING RUN OF PIPELINE ############################################
 
+# Flag to run the original scikit-learn Grid Search CV or the scikit-learn Tuner Grid Search CV (persisting the objects, results, during the execution of the pipeline).
+# Wheter True, the Grid Search CV Tuner will be used, otherwise the original scikit-learn Grid Search CV will be used.
+run_grid_search_cv_tuner = True
+
 # Flag to save the results of each split in the pipeline execution, to be used in a possible new execution,
-# in case the execution is interrupted. Default is True.
+# in case the execution is interrupted.
+# Used only if run_grid_search_cv_tuner = True and It works only if n_jobs = 1 (don't work in parallel).
+# If false, the results for already executed parameters will be loaded,
+# but the results for new executed parameters will not be saved.
 save_results_during_run = True
 
 # Whether True, the objects persisted in the path_objects_persisted_results_runs will be cleaned before the execution of the pipeline
-new_run = False
+new_run = True
 
 # Path to objects persisted with the results of executions of the pipeline
 PATH_OBJECTS_PERSISTED_RESULTS_RUNS = './runs/objects_persisted_results_runs'
 
 # File name to save the parameters executed in the pipeline execution
-PARAMETERS_PERSIST_FILENAME = utils.define_path_save_file(
-    path_save_file=PATH_OBJECTS_PERSISTED_RESULTS_RUNS) + 'parameters_persist'
+PARAMETERS_PERSIST_FILENAME = PATH_OBJECTS_PERSISTED_RESULTS_RUNS + '/parameters_persist'
 
 # File name to save all the results of each split of all estimator in the pipeline execution
-RESULTS_PERSIST_FILENAME = utils.define_path_save_file(
-    path_save_file=PATH_OBJECTS_PERSISTED_RESULTS_RUNS) + 'results_persist'
+RESULTS_PERSIST_FILENAME = PATH_OBJECTS_PERSISTED_RESULTS_RUNS + '/results_persist'
 
 # File name to save the results of each split of estimator in the pipeline execution
-SPLIT_PERSIST_FILENAME = utils.define_path_save_file(
-    path_save_file=PATH_OBJECTS_PERSISTED_RESULTS_RUNS) + 'split_persist'
+SPLIT_PERSIST_FILENAME = PATH_OBJECTS_PERSISTED_RESULTS_RUNS + '/split_persist'
 
 ############################################ XGBOOST SETTINGS ############################################
 
 # The tree method to use for training the model. 'gpu_hist' is recommended for GPU training. 'hist' is recommended for CPU training.
 tree_method = 'gpu_hist' if torch.cuda.is_available() else 'hist'
+
+# Specify the learning task and the corresponding learning objective. 'binary:logistic' is for binary classification.
+objective = 'binary:logistic'

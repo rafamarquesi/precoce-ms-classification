@@ -35,6 +35,7 @@ def _fit_and_score_tuner(
     split_progress=None,
     candidate_progress=None,
     error_score=np.nan,
+    save_results_during_run=True,
 ):
     """Customized function to carry out the persistence of the results obtained.
     To perform the persistence of results, the joblib library is used.
@@ -105,6 +106,14 @@ def _fit_and_score_tuner(
 
     return_estimator : bool, default=False
         Whether to return the fitted estimator.
+
+    save_results_during_run : bool, default=True 
+        Parameter created for tuner functionality, is not original from sklearn.
+        Flag to save the results of each split in the pipeline execution, to be used in a possible new execution,
+        in case the execution is interrupted.
+        Used only if run_grid_search_cv_tuner = True and It works only if n_jobs = 1 (don't work in parallel).
+        If false, the results for already executed parameters will be loaded,
+        but the results for new executed parameters will not be saved.
 
     Returns
     -------
@@ -242,39 +251,41 @@ def _fit_and_score_tuner(
         result["estimator"] = estimator
 
     # --------------------- START code to persist results ---------------------
-    if split_progress[0]+1 == 1:
-        split_persist = {
-            'parameters': parameters,
-            'result': [result]
-        }
-        dump(split_persist, settings.SPLIT_PERSIST_FILENAME)
-    elif split_progress[0]+1 == split_progress[1]:
-        split_persist = load(settings.SPLIT_PERSIST_FILENAME)
-        split_persist['result'].append(result)
+    # if settings.save_results_during_run:
+    if save_results_during_run:
+        if split_progress[0]+1 == 1:
+            split_persist = {
+                'parameters': parameters,
+                'result': [result]
+            }
+            dump(split_persist, settings.SPLIT_PERSIST_FILENAME)
+        elif split_progress[0]+1 == split_progress[1]:
+            split_persist = load(settings.SPLIT_PERSIST_FILENAME)
+            split_persist['result'].append(result)
 
-        if os.path.exists(settings.PARAMETERS_PERSIST_FILENAME):
-            parameters_persist = load(settings.PARAMETERS_PERSIST_FILENAME)
+            if os.path.exists(settings.PARAMETERS_PERSIST_FILENAME):
+                parameters_persist = load(settings.PARAMETERS_PERSIST_FILENAME)
+            else:
+                parameters_persist = []
+
+            parameters_persist.append(split_persist['parameters'])
+            dump(parameters_persist, settings.PARAMETERS_PERSIST_FILENAME)
+
+            if os.path.exists(settings.RESULTS_PERSIST_FILENAME):
+                results_persist = load(settings.RESULTS_PERSIST_FILENAME)
+            else:
+                results_persist = []
+
+            for result in split_persist['result']:
+                results_persist.append(result)
+
+            dump(results_persist, settings.RESULTS_PERSIST_FILENAME)
+
+            os.remove(settings.SPLIT_PERSIST_FILENAME)
         else:
-            parameters_persist = []
-
-        parameters_persist.append(split_persist['parameters'])
-        dump(parameters_persist, settings.PARAMETERS_PERSIST_FILENAME)
-
-        if os.path.exists(settings.RESULTS_PERSIST_FILENAME):
-            results_persist = load(settings.RESULTS_PERSIST_FILENAME)
-        else:
-            results_persist = []
-
-        for result in split_persist['result']:
-            results_persist.append(result)
-
-        dump(results_persist, settings.RESULTS_PERSIST_FILENAME)
-
-        os.remove(settings.SPLIT_PERSIST_FILENAME)
-    else:
-        split_persist = load(settings.SPLIT_PERSIST_FILENAME)
-        split_persist['result'].append(result)
-        dump(split_persist, settings.SPLIT_PERSIST_FILENAME)
+            split_persist = load(settings.SPLIT_PERSIST_FILENAME)
+            split_persist['result'].append(result)
+            dump(split_persist, settings.SPLIT_PERSIST_FILENAME)
     # --------------------- END code to persist results ---------------------
 
     return result

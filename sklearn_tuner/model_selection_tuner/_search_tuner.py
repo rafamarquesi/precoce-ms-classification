@@ -87,7 +87,9 @@ class GridSearchCVTuner(GridSearchCV):
 
         base_estimator = clone(self.estimator)
 
-        parallel = Parallel(n_jobs=self.n_jobs, pre_dispatch=self.pre_dispatch)
+        # --- custom max_nbytes=None is not in original code ---
+        parallel = Parallel(n_jobs=self.n_jobs,
+                            pre_dispatch=self.pre_dispatch, max_nbytes=None)
 
         fit_and_score_kwargs = dict(
             scorer=scorers,
@@ -98,6 +100,9 @@ class GridSearchCVTuner(GridSearchCV):
             return_parameters=False,
             error_score=self.error_score,
             verbose=self.verbose,
+            # --------------------- START code to persist results ---------------------
+            save_results_during_run=settings.save_results_during_run
+            # --------------------- END code to persist results ---------------------
         )
         results = {}
         with parallel:
@@ -204,7 +209,7 @@ class GridSearchCVTuner(GridSearchCV):
                     )
 
                 out = parallel(
-                    delayed(_fit_and_score_tuner)(  # _fit_and_score_tuner is a custom function to persist results
+                    delayed(_fit_and_score_tuner)(  # --- custom _fit_and_score_tuner is a custom function to persist results ---
                         clone(base_estimator),
                         X,
                         y,

@@ -3,6 +3,7 @@ from typing import Union
 
 import utils
 import pre_processing
+import settings
 
 from sys import displayhook
 
@@ -15,6 +16,7 @@ import matplotlib.pyplot as plt
 import missingno as msno
 
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import ConfusionMatrixDisplay
 
 from sklearn.linear_model import SGDClassifier
 from sklearn.linear_model import LogisticRegression
@@ -115,7 +117,7 @@ def duplicate_rows_by_attribute(data_frame: pd.DataFrame, rows_duplicated: pd.Da
         rows_duplicated = data_frame.loc[data_frame[attribute] == id]
         for column_name, column_data in rows_duplicated.iteritems():
             comparison = column_data.ne(
-                column_data.shift().bfill().astype(column_data.dtype.name)).astype('uint8').values
+                column_data.shift().bfill().astype(column_data.dtype.name)).values
             if not np.all(comparison == comparison[0]):
                 print('Nome coluna que diverge: {}'.format(column_name))
                 print('Index das linhas e valor na coluna que diverge:\n{}'.format(
@@ -143,7 +145,7 @@ def all_attributes(data_frame: pd.DataFrame) -> None:
         print('Descrição:\n{}'.format(column_data.describe()))
         print('Número de nan: {}'.format(column_data.isna().sum()))
         print('-------------------------------')
-    pd.set_option('display.max_rows', utils.PANDAS_MAX_ROWS)
+    pd.set_option('display.max_rows', settings.PANDAS_MAX_ROWS)
     print('*****FIM RELATÓRIO ATRIBUTOS******')
 
 
@@ -172,7 +174,7 @@ def class_distribution(y: np.array) -> None:
 
 
 @utils.timeit
-def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = None, display_matrix: bool = False, export_matrix: bool = False, path_save_matrix: str = None, print_corr_matrix_summarized: bool = False, lower_limit: float = -0.5, upper_limit: float = 0.5) -> None:
+def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = None, display_matrix: bool = False, export_matrix: bool = False, path_save_matrix: str = None, print_corr_matrix_summarized: bool = False, lower_limit: float = -0.5, upper_limit: float = 0.5, to_latex: bool = False) -> None:
     """Create a correlation matrix from the DataFrame.
 
     Args:
@@ -185,6 +187,7 @@ def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = N
         print_corr_matrix_summarized (bool, optional): Flag to display the results of the correlation matrix in a summarized form, that is, the values that are in the range passed as a parameter. Works only when attribute is None. If false, results will not be displayed. Defaults to False.
         lower_limit (float, optional): Lower limit of the interval in the correlation matrix summarized. Defaults to -0.5.
         upper_limit (float, optional): Upper limit of the interval in the correlation matrix summarized. Defaults to 0.5.
+        to_latex (bool, optional): Flag to export the correlation matrix to latex. Defaults to False.
     """
     print('\n*****INICIO CORRELATION MATRIX******')
     if attribute is None:
@@ -192,7 +195,7 @@ def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = N
 
         if print_corr_matrix_summarized:
             __print_correlation_matrix_summarized(
-                correlation_matrix=correlation_matrix, lower_limit=lower_limit, upper_limit=upper_limit)
+                correlation_matrix=correlation_matrix, lower_limit=lower_limit, upper_limit=upper_limit, to_latex=to_latex)
 
         cmap = sns.diverging_palette(5, 250, as_cmap=True)
 
@@ -206,6 +209,11 @@ def correlation_matrix(data_frame: pd.DataFrame, method: str, attribute: str = N
             method=method).astype('float32')[attribute]
 
         correlation_matrix = correlation_matrix.sort_values(ascending=False)
+
+        if to_latex:
+            print('Correlantion matrix in latex format:')
+            print(correlation_matrix.to_latex(
+                index=False, float_format="%.2f"))
 
         styled_table = correlation_matrix.to_frame().style.background_gradient(
             cmap=sns.light_palette((260, 75, 60), input="husl", as_cmap=True))
@@ -652,9 +660,9 @@ def histogram(data_frame: pd.DataFrame, save_fig: bool = False, path_save_fig: s
     for column in data_frame.columns:
         plt.figure(figsize=(10, 8))
         plt.hist(data_frame[column])
-        plt.xticks(rotation='vertical')
+        plt.xticks(rotation=80, fontsize=7)
         plt.tight_layout()
-        plt.title('Histogram of {}'.format(column))
+        plt.title('Histograma de {}'.format(column))
         if save_fig:
             path_save_fig = utils.define_path_save_file(
                 path_save_file=path_save_fig)
@@ -708,7 +716,7 @@ def histogram_grouped_by_target(data_frame: pd.DataFrame, target: str, save_fig:
 
             plt.hist(x, **kwargs, color=colors[i], label=target_attr_unique[i])
 
-        plt.gca().set(title='Histogram of {} grouped by {}'.format(
+        plt.gca().set(title='Histograma de {} agrupado por {}'.format(
             column, target), ylabel='Frequency')
         plt.xticks(rotation=80, fontsize=7)
         plt.tight_layout()
@@ -747,7 +755,7 @@ def boxplot(data_frame: pd.DataFrame, save_fig: bool = False, path_save_fig: str
         plt.boxplot(data_frame[column], labels=[column])
         plt.xticks(rotation='horizontal')
         plt.tight_layout()
-        plt.title('Boxplot of {}'.format(column))
+        plt.title('Boxplot de {}'.format(column))
         if save_fig:
             path_save_fig = utils.define_path_save_file(
                 path_save_file=path_save_fig)
@@ -798,7 +806,7 @@ def boxplot_grouped_by_target(data_frame: pd.DataFrame, target: str, save_fig: b
 
         plt.xticks(rotation='horizontal')
         plt.tight_layout()
-        plt.title('Boxplot of {} grouped by {}'.format(column, target))
+        plt.title('Boxplot de {} agrupado por {}'.format(column, target))
         if save_fig:
             path_save_fig = utils.define_path_save_file(
                 path_save_file=path_save_fig)
@@ -1008,6 +1016,41 @@ def show_settings(settings: object) -> None:
     print('*****FIM SHOW SETTINGS******\n')
 
 
+@utils.timeit
+def confusion_matrix_display(y_true: np.array, y_pred: np.array, display_figure: bool = True, save_fig: bool = True, path_save_fig: str = None) -> None:
+    """Display the confusion matrix, based in ConfusionMatrixDisplay.from_predictions from scikit-learn, and save it in a file.
+
+    Args:
+        y_true (np.array): True labels.
+        y_pred (np.array): Predicted labels.
+        display_figure (bool, optional): Flag to display the results, for example in jupyter notebook. Defaults to False.
+        save_fig (bool, optional): Flag to save the figures. Defaults to False.
+        path_save_fig (str, optional): Path to save the figures. If None, save the figures in root path of project. Defaults to None.
+    """
+
+    print('*****INICIO CONFUSION MATRIX DISPLAY******')
+
+    plt.figure(figsize=(10, 8))
+    ConfusionMatrixDisplay.from_predictions(y_true, y_pred)
+
+    if save_fig:
+        path_save_fig = utils.define_path_save_file(
+            path_save_file=path_save_fig)
+
+        name_figure = 'confusion_matrix_display-{}.png'.format(
+            utils.get_current_datetime())
+        plt.savefig(
+            ''.join([path_save_fig, name_figure]), bbox_inches='tight')
+        print('Figure {} saved in {} directory.'.format(
+            name_figure, path_save_fig))
+
+    if display_figure:
+        plt.show()
+
+    plt.close()
+
+    print('*****FIM CONFUSION MATRIX DISPLAY******\n')
+
 ################################################## PRIVATE METHODS ##################################################
 
 
@@ -1052,35 +1095,50 @@ def __execute_delete_columns_with_low_variance(x: pd.DataFrame, thresholds: np.a
     return x, results
 
 
-def __print_correlation_matrix_summarized(correlation_matrix: pd.DataFrame, lower_limit: float, upper_limit: float) -> None:
+def __print_correlation_matrix_summarized(correlation_matrix: pd.DataFrame, lower_limit: float, upper_limit: float, to_latex: bool = False) -> None:
     """Print the correlation matrix summarized.
 
     Args:
         correlation_matrix(pd.DataFrame): Correlation matrix.
         lower_limit(float): Lower limit of the interval.
         upper_limit(float): Upper limit of the interval.
+        to_latex(bool, optional): Flag to print the results in latex format. Defaults to False.
     """
     indexes = correlation_matrix.index
     columns = correlation_matrix.columns
 
-    correlation_summarized = pd.DataFrame(columns=['Corr_Between', 'Value'])
+    correlation_summarized_tmp = pd.DataFrame(columns=['Corr_Between'])
+    correlation_summarized = pd.DataFrame(
+        columns=['Atributo 1', 'Atributo 2', 'Correlação'])
 
     keyword = '-and-'
     for column in columns:
         for index in indexes:
             value = correlation_matrix.loc[index, column]
-            if ((value < lower_limit) or (value > upper_limit)):
-                if ((keyword.join([index, column]) not in correlation_summarized['Corr_Between'].values) and (keyword.join([column, index]) not in correlation_summarized['Corr_Between'].values)):
+            if (((value < lower_limit) or (value > upper_limit)) and value != 1.0):
+                if ((keyword.join([index, column]) not in correlation_summarized_tmp['Corr_Between'].values) and (keyword.join([column, index]) not in correlation_summarized_tmp['Corr_Between'].values)):
+                    correlation_summarized_tmp = pd.concat([correlation_summarized_tmp, pd.DataFrame.from_records(
+                        [
+                            {
+                                'Corr_Between': keyword.join([index, column])
+                            }
+                        ])])
                     correlation_summarized = pd.concat([correlation_summarized, pd.DataFrame.from_records(
                         [
                             {
-                                'Corr_Between': keyword.join([index, column]),
-                                'Value': value
+                                'Atributo 1': index,
+                                'Atributo 2': column,
+                                'Correlação': value
                             }
                         ])])
 
     correlation_summarized = correlation_summarized.sort_values(
-        by=['Value'], ascending=False)
+        by=['Correlação'], ascending=False)
 
     print('Correlation summarized:')
     displayhook(correlation_summarized)
+
+    if to_latex:
+        print('Correlation summarized in latex format:')
+        print(correlation_summarized.to_latex(
+            index=False, float_format="%.2f"))
