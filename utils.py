@@ -1,7 +1,7 @@
 import os
 import shutil
 import time
-from joblib import dump
+from joblib import dump, load
 
 from functools import wraps
 from typing import Callable
@@ -12,11 +12,18 @@ import pandas as pd
 
 from sklearn.utils import estimator_html_repr
 
+from xgboost import XGBClassifier
+from pytorch_tabnet_tuner.tab_model_tuner import TabNetClassifierTuner
+
+import settings
+
+_ESTIMATORS_WITH_SAVE_LOAD_METHOD = [
+    XGBClassifier().__class__.__name__,
+    TabNetClassifierTuner().__class__.__name__
+]
+
 # Types of columns to be excluded from the DataFrame
 TYPES_EXCLUDE_DF = [pd.CategoricalDtype, pd.DatetimeTZDtype, np.datetime64]
-
-# Pandas max rows, None displays all rows
-PANDAS_MAX_ROWS = 5000
 
 
 def get_current_datetime() -> str:
@@ -250,7 +257,7 @@ def define_path_save_file(path_save_file: str) -> str:
     """
     if path_save_file is None:
         path_save_file = ''
-    else:
+    elif path_save_file[-1] != '/':
         path_save_file = path_save_file + '/'
     return path_save_file
 
@@ -309,6 +316,79 @@ def dump_joblib(object: object, file_name: str, path_save_file: str = None) -> N
     )
     dump(object, file)
     print('Object saved in file: {}'.format(file))
+
+
+def save_best_estimator(best_estimator: object) -> None:
+    """
+    Save the best estimator of grid search.
+
+    Args:
+        best_estimator (object): Estimator will be saved.
+    """
+
+    file_name = 'best_estimator'
+
+    if best_estimator.__class__.__name__ not in _ESTIMATORS_WITH_SAVE_LOAD_METHOD:
+        dump_joblib(
+            object=best_estimator,
+            file_name='-'.join([file_name, best_estimator.__class__.__name__]),
+            path_save_file=settings.PATH_SAVE_BEST_ESTIMATORS
+        )
+    else:
+        file = '{}{}-{}-{}'.format(
+            define_path_save_file(
+                path_save_file=settings.PATH_SAVE_BEST_ESTIMATORS),
+            file_name,
+            best_estimator.__class__.__name__,
+            get_current_datetime()
+        )
+        # If XGBoost
+        if best_estimator.__class__.__name__ == _ESTIMATORS_WITH_SAVE_LOAD_METHOD[0]:
+            file = ''.join([file, '.json'])
+            best_estimator.save_model(file)
+        # If TabNetClassifier
+        elif best_estimator.__class__.__name__ == _ESTIMATORS_WITH_SAVE_LOAD_METHOD[1]:
+            best_estimator.save_model(file)
+        print('Object saved in file: {}'.format(file))
+
+
+def load_object(file_path: str) -> object:
+    """
+    Loads the objects saved during of grid search, for example, the best estimator.
+    Wtih the file is not in the list of estimators with save and load methods, the load method from joblib is used.
+
+    Args:
+        file_path (str): Path of the file will be loaded.
+    Returns:
+        object: File loaded.
+    """
+
+    object_ = object
+    object_name = str
+
+    for estimator in _ESTIMATORS_WITH_SAVE_LOAD_METHOD:
+        initial_index = file_path.find(estimator)
+        if initial_index != -1:
+            final_index = initial_index + len(estimator)
+            object_name = file_path[initial_index:final_index]
+            break
+
+    if object_name not in _ESTIMATORS_WITH_SAVE_LOAD_METHOD:
+        object_ = load(file_path)
+    else:
+        # If XGBoost
+        if object_name == _ESTIMATORS_WITH_SAVE_LOAD_METHOD[0]:
+            object_ = XGBClassifier()
+            object_.load_model(file_path)
+        # If TabNetClassifier
+        elif object_name == _ESTIMATORS_WITH_SAVE_LOAD_METHOD[1]:
+            object_ = TabNetClassifierTuner(device_name=settings.device_name)
+            object_.load_model(file_path)
+        else:
+            raise ValueError(
+                'File not found. Please, check the path ({}).'.format(file_path))
+
+    return object_
 
 #################### DECORATORS ####################
 
